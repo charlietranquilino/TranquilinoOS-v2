@@ -1,33 +1,76 @@
 // =========================================================
 // TRANQUILINO OS v2.0
 // Charlie Tranquilino Edition
-// Main Interface Controller
+// Main System Controller
 // =========================================================
 
 
 // =========================================================
-// DOM ELEMENTS
+// DOM REFERENCES
 // =========================================================
 
-const startupScreen = document.getElementById("startup-screen");
-const initializationScreen = document.getElementById("initialization-screen");
-const mainOS = document.getElementById("main-os");
+const startupScreen =
+  document.getElementById("startup-screen");
 
-const initializeBtn = document.getElementById("initialize-btn");
+const initializationScreen =
+  document.getElementById("initialization-screen");
 
-const telemetryCPU = document.getElementById("telemetry-cpu");
-const telemetryMemory = document.getElementById("telemetry-memory");
+const mainOS =
+  document.getElementById("main-os");
 
-const initRows = document.querySelectorAll(".init-row");
+const initializeBtn =
+  document.getElementById("initialize-btn");
 
-const moduleCards = document.querySelectorAll(".module-card");
+const telemetryCPU =
+  document.getElementById("telemetry-cpu");
 
-const moduleWorkspace = document.getElementById("module-workspace");
-const workspaceLabel = document.getElementById("workspace-label");
-const workspaceTitle = document.getElementById("workspace-title");
-const workspaceContent = document.getElementById("workspace-content");
+const telemetryMemory =
+  document.getElementById("telemetry-memory");
 
-const closeWorkspace = document.getElementById("close-workspace");
+const initRows =
+  document.querySelectorAll(".init-row");
+
+
+// CORE MODULES
+
+const moduleCards =
+  document.querySelectorAll(".module-card");
+
+const moduleWorkspace =
+  document.getElementById("module-workspace");
+
+const workspaceLabel =
+  document.getElementById("workspace-label");
+
+const workspaceTitle =
+  document.getElementById("workspace-title");
+
+const workspaceContent =
+  document.getElementById("workspace-content");
+
+const closeWorkspace =
+  document.getElementById("close-workspace");
+
+
+// SYSTEM BUILDS
+
+const buildCards =
+  document.querySelectorAll(".build-card");
+
+const buildWorkspace =
+  document.getElementById("build-workspace");
+
+const buildWorkspaceLabel =
+  document.getElementById("build-workspace-label");
+
+const buildWorkspaceTitle =
+  document.getElementById("build-workspace-title");
+
+const buildWorkspaceContent =
+  document.getElementById("build-workspace-content");
+
+const closeBuild =
+  document.getElementById("close-build");
 
 
 // =========================================================
@@ -38,6 +81,12 @@ function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function randomNumber(min, max) {
+  return Math.floor(
+    Math.random() * (max - min + 1)
+  ) + min;
+}
+
 
 // =========================================================
 // LIVE STARTUP TELEMETRY
@@ -46,24 +95,21 @@ function wait(ms) {
 function updateTelemetry() {
 
   if (telemetryCPU) {
-    const cpu = Math.floor(Math.random() * 18) + 10;
-
-    telemetryCPU.textContent = `${cpu}%`;
+    telemetryCPU.textContent =
+      `${randomNumber(10, 28)}%`;
   }
 
   if (telemetryMemory) {
-    const memory = Math.floor(Math.random() * 15) + 34;
-
-    telemetryMemory.textContent = `${memory}%`;
+    telemetryMemory.textContent =
+      `${randomNumber(34, 49)}%`;
   }
+
 }
 
 
-// initial telemetry values
 updateTelemetry();
 
 
-// update telemetry every few seconds
 setInterval(() => {
 
   if (
@@ -73,7 +119,7 @@ setInterval(() => {
     updateTelemetry();
   }
 
-}, 2600);
+}, 2400);
 
 
 // =========================================================
@@ -82,8 +128,10 @@ setInterval(() => {
 
 async function runInitialization() {
 
-  // stop repeat clicks
+  if (!initializeBtn) return;
+
   initializeBtn.disabled = true;
+
 
   const buttonText =
     initializeBtn.querySelector(".button-text");
@@ -93,112 +141,156 @@ async function runInitialization() {
 
 
   if (buttonText) {
-    buttonText.textContent = "INITIALIZING";
+    buttonText.textContent =
+      "INITIALIZING";
   }
 
   if (buttonArrow) {
-    buttonArrow.textContent = "•••";
+    buttonArrow.textContent =
+      "•••";
   }
 
 
-  // allow button state to be visible
-  await wait(650);
+  await wait(550);
 
 
-  // fade startup screen
-  startupScreen.classList.add("startup-exit");
-
-  await wait(650);
-
-
-  // completely remove startup
-  startupScreen.classList.add("hidden");
-
-
-  // show initialization environment
-  initializationScreen.classList.remove("hidden");
-
-
-  await wait(350);
-
-
-  // activate each subsystem one at a time
-  for (let i = 0; i < initRows.length; i++) {
-
-    const row = initRows[i];
-
-    row.classList.add("init-active");
-
-    await wait(320);
-
-    row.classList.add("init-complete");
-
-    await wait(120);
+  if (startupScreen) {
+    startupScreen.classList.add(
+      "startup-exit"
+    );
   }
 
 
-  await wait(500);
+  await wait(650);
 
 
-  // show final ready state
-  initializationScreen.classList.add(
-    "initialization-complete"
-  );
+  if (startupScreen) {
+    startupScreen.classList.add(
+      "hidden"
+    );
+  }
 
 
-  await wait(700);
+  if (initializationScreen) {
+    initializationScreen.classList.remove(
+      "hidden"
+    );
+  }
 
 
-  // hide initialization
-  initializationScreen.classList.add("hidden");
+  await wait(300);
 
 
-  // reveal OS
-  mainOS.classList.remove("hidden");
+  for (const row of initRows) {
 
-  mainOS.classList.add("os-enter");
+    const status =
+      row.querySelector("strong");
+
+
+    row.classList.add(
+      "init-active"
+    );
+
+
+    if (status) {
+      status.textContent =
+        "INITIALIZING";
+    }
+
+
+    await wait(260);
+
+
+    row.classList.add(
+      "init-complete"
+    );
+
+
+    if (status) {
+      status.textContent =
+        "ONLINE";
+    }
+
+
+    await wait(110);
+  }
+
+
+  await wait(420);
+
+
+  if (initializationScreen) {
+
+    initializationScreen.classList.add(
+      "initialization-complete"
+    );
+
+  }
+
+
+  await wait(650);
+
+
+  if (initializationScreen) {
+    initializationScreen.classList.add(
+      "hidden"
+    );
+  }
+
+
+  if (mainOS) {
+
+    mainOS.classList.remove(
+      "hidden"
+    );
+
+    mainOS.classList.add(
+      "os-enter"
+    );
+
+  }
 
 
   showNotification(
     "SYSTEM ONLINE",
     "TranquilinoOS environment initialized"
   );
+
 }
 
-
-// =========================================================
-// INITIALIZE BUTTON
-// =========================================================
 
 if (initializeBtn) {
 
-  initializeBtn.addEventListener("click", () => {
-
-    runInitialization();
-
-  });
+  initializeBtn.addEventListener(
+    "click",
+    runInitialization
+  );
 
 }
 
 
 // =========================================================
-// MODULE DATA
+// CORE MODULE DATA
 // =========================================================
 
 const modules = {
 
   endpoints: {
 
-    label: "CORE MODULE 01",
+    label:
+      "CORE MODULE // 01",
 
-    title: "Endpoint Systems",
+    title:
+      "Endpoint Systems",
 
-    notification: "ENDPOINT MODULE MOUNTED",
+    notification:
+      "ENDPOINT MODULE MOUNTED",
 
     content: `
       <div class="workspace-grid">
 
         <div class="workspace-block">
+
           <span class="workspace-tag">
             DEVICE MANAGEMENT
           </span>
@@ -208,16 +300,19 @@ const modules = {
           </h3>
 
           <p>
-            Endpoint configuration, compliance,
-            application deployment, device management,
-            and operational standardization.
+            Centralized endpoint configuration,
+            policy delivery, compliance,
+            application deployment,
+            and Windows device administration.
           </p>
+
         </div>
 
 
         <div class="workspace-block">
+
           <span class="workspace-tag">
-            DEPLOYMENT
+            PROVISIONING
           </span>
 
           <h3>
@@ -225,44 +320,56 @@ const modules = {
           </h3>
 
           <p>
-            Cloud-driven provisioning, device enrollment,
-            deployment profiles, pre-provisioning,
-            application delivery, and standardized builds.
+            Cloud-driven enrollment,
+            deployment profiles,
+            pre-provisioning,
+            standardized Windows builds,
+            and endpoint readiness.
           </p>
+
         </div>
 
 
         <div class="workspace-block">
+
           <span class="workspace-tag">
             SECURITY
           </span>
 
           <h3>
-            Compliance
+            Compliance + Configuration
           </h3>
 
           <p>
-            Device health, configuration standards,
-            BitLocker, security posture, remediation,
-            and endpoint readiness.
+            Device health requirements,
+            configuration standards,
+            security policy enforcement,
+            and endpoint remediation.
           </p>
+
         </div>
 
 
         <div class="workspace-block">
+
           <span class="workspace-tag">
-            OPERATIONS
+            LIFECYCLE
           </span>
 
           <h3>
-            Lifecycle Management
+            Endpoint Operations
           </h3>
 
           <p>
-            Provisioning, reprovisioning, deployment,
-            troubleshooting, recovery, inventory,
-            and endpoint lifecycle support.
+            Provisioning,
+            reprovisioning,
+            deployment,
+            troubleshooting,
+            recovery,
+            inventory,
+            and lifecycle management.
           </p>
+
         </div>
 
       </div>
@@ -272,16 +379,20 @@ const modules = {
 
   identity: {
 
-    label: "CORE MODULE 02",
+    label:
+      "CORE MODULE // 02",
 
-    title: "Identity + Access",
+    title:
+      "Identity + Access",
 
-    notification: "IDENTITY LAYER MOUNTED",
+    notification:
+      "IDENTITY LAYER MOUNTED",
 
     content: `
       <div class="workspace-grid">
 
         <div class="workspace-block">
+
           <span class="workspace-tag">
             IDENTITY
           </span>
@@ -291,33 +402,20 @@ const modules = {
           </h3>
 
           <p>
-            User identity, account administration,
-            device identities, groups, authentication,
-            and cloud access management.
+            User identity,
+            device identity,
+            groups,
+            cloud authentication,
+            and access administration.
           </p>
+
         </div>
 
 
         <div class="workspace-block">
+
           <span class="workspace-tag">
-            ACCESS
-          </span>
-
-          <h3>
-            Access Administration
-          </h3>
-
-          <p>
-            User provisioning, group membership,
-            permissions, licensing, account lifecycle,
-            and authentication support.
-          </p>
-        </div>
-
-
-        <div class="workspace-block">
-          <span class="workspace-tag">
-            SECURITY
+            ACCESS CONTROL
           </span>
 
           <h3>
@@ -325,14 +423,16 @@ const modules = {
           </h3>
 
           <p>
-            Identity-driven access controls designed
-            to strengthen authentication and secure
-            access to organizational resources.
+            Identity-based controls designed
+            to strengthen access to managed
+            applications and cloud resources.
           </p>
+
         </div>
 
 
         <div class="workspace-block">
+
           <span class="workspace-tag">
             AUTHENTICATION
           </span>
@@ -342,10 +442,34 @@ const modules = {
           </h3>
 
           <p>
-            Multi-factor authentication support,
-            authentication troubleshooting,
-            and secure account recovery workflows.
+            Multi-factor authentication,
+            secure account recovery,
+            registration support,
+            and authentication troubleshooting.
           </p>
+
+        </div>
+
+
+        <div class="workspace-block">
+
+          <span class="workspace-tag">
+            ADMINISTRATION
+          </span>
+
+          <h3>
+            Identity Lifecycle
+          </h3>
+
+          <p>
+            User provisioning,
+            access changes,
+            group membership,
+            licensing,
+            account management,
+            and offboarding workflows.
+          </p>
+
         </div>
 
       </div>
@@ -355,33 +479,41 @@ const modules = {
 
   infrastructure: {
 
-    label: "CORE MODULE 03",
+    label:
+      "CORE MODULE // 03",
 
-    title: "Infrastructure",
+    title:
+      "Infrastructure",
 
-    notification: "INFRASTRUCTURE CONNECTED",
+    notification:
+      "INFRASTRUCTURE CONNECTED",
 
     content: `
       <div class="workspace-grid">
 
         <div class="workspace-block">
+
           <span class="workspace-tag">
-            NETWORK
+            NETWORKING
           </span>
 
           <h3>
-            Multi-Site Networking
+            Multi-Site Connectivity
           </h3>
 
           <p>
-            Supporting connectivity, network appliances,
-            switches, site communication, troubleshooting,
-            and infrastructure availability.
+            Supporting distributed connectivity,
+            network appliances,
+            site communication,
+            troubleshooting,
+            and operational uptime.
           </p>
+
         </div>
 
 
         <div class="workspace-block">
+
           <span class="workspace-tag">
             COMPUTE
           </span>
@@ -391,14 +523,18 @@ const modules = {
           </h3>
 
           <p>
-            Supporting physical server environments,
-            system availability, recovery planning,
-            standardization, and infrastructure operations.
+            Physical server support,
+            system management,
+            resiliency planning,
+            backup strategy,
+            and infrastructure standards.
           </p>
+
         </div>
 
 
         <div class="workspace-block">
+
           <span class="workspace-tag">
             BUSINESS SYSTEMS
           </span>
@@ -408,14 +544,18 @@ const modules = {
           </h3>
 
           <p>
-            Configuration and troubleshooting of
-            business-critical POS systems, kiosks,
-            tablets, and specialized endpoints.
+            Supporting business-critical
+            POS platforms,
+            kiosks,
+            tablets,
+            and specialized endpoint environments.
           </p>
+
         </div>
 
 
         <div class="workspace-block">
+
           <span class="workspace-tag">
             OPERATIONS
           </span>
@@ -425,10 +565,14 @@ const modules = {
           </h3>
 
           <p>
-            Supporting cameras, phones, connectivity,
-            network appliances, peripherals,
+            Cameras,
+            voice systems,
+            peripherals,
+            remote support tools,
+            network devices,
             and operational technology.
           </p>
+
         </div>
 
       </div>
@@ -438,16 +582,20 @@ const modules = {
 
   automation: {
 
-    label: "CORE MODULE 04",
+    label:
+      "CORE MODULE // 04",
 
-    title: "Automation",
+    title:
+      "Automation",
 
-    notification: "AUTOMATION ENGINE READY",
+    notification:
+      "AUTOMATION ENGINE READY",
 
     content: `
       <div class="workspace-grid">
 
         <div class="workspace-block">
+
           <span class="workspace-tag">
             SCRIPTING
           </span>
@@ -457,14 +605,19 @@ const modules = {
           </h3>
 
           <p>
-            Building scripts and utilities that reduce
-            repetitive administration and improve
-            endpoint provisioning workflows.
+            Administrative automation
+            supporting endpoint discovery,
+            validation,
+            provisioning,
+            updates,
+            and repeatable operations.
           </p>
+
         </div>
 
 
         <div class="workspace-block">
+
           <span class="workspace-tag">
             PROVISIONING
           </span>
@@ -474,174 +627,51 @@ const modules = {
           </h3>
 
           <p>
-            Automating device registration,
-            configuration, updates, application delivery,
-            and provisioning operations.
+            Reducing repetitive setup steps
+            and creating predictable
+            endpoint deployment workflows.
           </p>
+
         </div>
 
 
         <div class="workspace-block">
+
+          <span class="workspace-tag">
+            VALIDATION
+          </span>
+
+          <h3>
+            Health + Discovery
+          </h3>
+
+          <p>
+            Read-only assessment,
+            configuration discovery,
+            health validation,
+            and troubleshooting support.
+          </p>
+
+        </div>
+
+
+        <div class="workspace-block">
+
           <span class="workspace-tag">
             STANDARDIZATION
           </span>
 
           <h3>
-            Repeatable Workflows
+            Repeatable Operations
           </h3>
 
           <p>
-            Turning manual technical procedures into
-            documented, predictable, repeatable systems.
+            Converting manual technical processes
+            into documented,
+            consistent,
+            and reusable workflows.
           </p>
-        </div>
 
-
-        <div class="workspace-block">
-          <span class="workspace-tag">
-            OPERATIONS
-          </span>
-
-          <h3>
-            Administrative Efficiency
-          </h3>
-
-          <p>
-            Identifying repetitive work and creating
-            better technical workflows to improve
-            consistency and reduce manual effort.
-          </p>
-        </div>
-
-      </div>
-    `
-  },
-
-
-  experience: {
-
-    label: "EXPERIENCE INDEX",
-
-    title: "Career Timeline",
-
-    notification: "EXPERIENCE INDEX MOUNTED",
-
-    content: `
-      <div class="timeline">
-
-        <div class="timeline-item">
-          <span class="timeline-year">
-            2026
-          </span>
-
-          <div class="timeline-content">
-            <h3>
-              IT Systems Administrator
-            </h3>
-
-            <p>
-              Endpoint management, identity,
-              infrastructure, automation,
-              cloud administration, and
-              multi-site IT operations.
-            </p>
-          </div>
-        </div>
-
-
-        <div class="timeline-item">
-          <span class="timeline-year">
-            2025
-          </span>
-
-          <div class="timeline-content">
-            <h3>
-              Desktop Engineer / Help Desk Analyst
-            </h3>
-
-            <p>
-              Enterprise endpoint deployment,
-              Intune, Autopilot, Entra ID,
-              Active Directory, networking,
-              collaboration technology,
-              and lifecycle support.
-            </p>
-          </div>
-        </div>
-
-
-        <div class="timeline-item">
-          <span class="timeline-year">
-            2025
-          </span>
-
-          <div class="timeline-content">
-            <h3>
-              Technical Operations Lead
-            </h3>
-
-            <p>
-              Technical operations, AI integration,
-              documentation, Jira workflows,
-              process coordination,
-              and knowledge management.
-            </p>
-          </div>
-        </div>
-
-
-        <div class="timeline-item">
-          <span class="timeline-year">
-            2024
-          </span>
-
-          <div class="timeline-content">
-            <h3>
-              IT Lifecycle Refresh
-            </h3>
-
-            <p>
-              Enterprise healthcare device deployment,
-              imaging, ServiceNow,
-              inventory management,
-              asset lifecycle operations,
-              and endpoint refresh.
-            </p>
-          </div>
-        </div>
-
-      </div>
-    `
-  },
-
-
-  creative: {
-
-    label: "ARCHIVE MODULE",
-
-    title: "Creative Archive",
-
-    notification: "CREATIVE ARCHIVE MOUNTED",
-
-    content: `
-      <div class="creative-placeholder">
-
-        <span class="workspace-tag">
-          ARCHIVE STATUS
-        </span>
-
-        <h3>
-          Creative Projects Incoming
-        </h3>
-
-        <p>
-          Graphic design, visual experiments,
-          personal artwork, and future creative
-          projects will live inside this archive.
-        </p>
-
-        <div class="archive-status">
-          COLLECTION INITIALIZED
         </div>
 
       </div>
@@ -652,45 +682,390 @@ const modules = {
 
 
 // =========================================================
-// MODULE OPENING
+// SYSTEM BUILDS
 // =========================================================
 
-function openModule(moduleName, card) {
+const systemBuilds = {
 
-  const module = modules[moduleName];
+  autopilot: {
 
-  if (!module) return;
+    label:
+      "SYSTEM BUILD // 01",
+
+    title:
+      "Windows Autopilot Provisioning System",
+
+    notification:
+      "BUILD 01 MOUNTED",
+
+    status:
+      "ACTIVE DEVELOPMENT",
+
+    objective:
+      "Develop a repeatable Windows provisioning workflow that improves device consistency, reduces manual configuration, and supports scalable endpoint deployment.",
+
+    technologies: [
+      "Microsoft Intune",
+      "Windows Autopilot",
+      "Microsoft Entra ID",
+      "PowerShell",
+      "Windows 11"
+    ],
+
+    architecture: [
+      "Device Registration",
+      "Autopilot",
+      "Intune Enrollment",
+      "Identity",
+      "Configuration",
+      "Applications",
+      "Validation"
+    ],
+
+    contribution: [
+      "Designed the standardized provisioning workflow",
+      "Built repeatable device registration processes",
+      "Implemented deployment and pre-provisioning concepts",
+      "Structured policy and application delivery",
+      "Developed validation and troubleshooting procedures",
+      "Documented the process for repeatable technical use"
+    ],
+
+    evidence: [
+      "Provisioning architecture diagram",
+      "Sanitized enrollment workflow",
+      "Deployment profile overview",
+      "Provisioning process documentation"
+    ]
+
+  },
 
 
-  // remove active state from all cards
-  moduleCards.forEach(item => {
-    item.classList.remove("module-active");
-  });
+  "endpoint-architecture": {
+
+    label:
+      "SYSTEM BUILD // 02",
+
+    title:
+      "Endpoint Management Architecture",
+
+    notification:
+      "BUILD 02 MOUNTED",
+
+    status:
+      "ACTIVE DEVELOPMENT",
+
+    objective:
+      "Establish centralized standards for Windows endpoint configuration, compliance, security, application delivery, and device lifecycle management.",
+
+    technologies: [
+      "Microsoft Intune",
+      "Microsoft Entra ID",
+      "Windows 11",
+      "Endpoint Security",
+      "Configuration Profiles"
+    ],
+
+    architecture: [
+      "Enrollment",
+      "Device Groups",
+      "Configuration",
+      "Compliance",
+      "Security",
+      "Applications",
+      "Reporting"
+    ],
+
+    contribution: [
+      "Evaluated existing endpoint management requirements",
+      "Defined standardized device management approaches",
+      "Structured configuration and compliance policies",
+      "Developed application assignment strategy",
+      "Designed endpoint security standards",
+      "Created repeatable administrative documentation"
+    ],
+
+    evidence: [
+      "Endpoint architecture diagram",
+      "Sanitized policy structure",
+      "Configuration workflow",
+      "Device management model"
+    ]
+
+  },
 
 
-  // activate clicked card
-  if (card) {
-    card.classList.add("module-active");
+  "automation-toolkit": {
+
+    label:
+      "SYSTEM BUILD // 03",
+
+    title:
+      "Endpoint Automation Toolkit",
+
+    notification:
+      "BUILD 03 MOUNTED",
+
+    status:
+      "ACTIVE DEVELOPMENT",
+
+    objective:
+      "Reduce repetitive endpoint administration by creating reusable automation workflows for discovery, validation, updates, provisioning, and technical operations.",
+
+    technologies: [
+      "PowerShell",
+      "Windows",
+      "Microsoft Intune",
+      "Automation",
+      "Endpoint Management"
+    ],
+
+    architecture: [
+      "Discovery",
+      "Assessment",
+      "Validation",
+      "Updates",
+      "Provisioning",
+      "Reporting"
+    ],
+
+    contribution: [
+      "Automated endpoint discovery and validation processes",
+      "Developed system health assessment workflows",
+      "Created automated update processes",
+      "Reduced repetitive provisioning steps",
+      "Designed reusable technical utilities",
+      "Documented workflow usage and troubleshooting"
+    ],
+
+    evidence: [
+      "Automation workflow diagram",
+      "Sanitized example output",
+      "Process architecture",
+      "System health report example"
+    ]
+
+  },
+
+
+  "identity-security": {
+
+    label:
+      "SYSTEM BUILD // 04",
+
+    title:
+      "Identity Security Architecture",
+
+    notification:
+      "BUILD 04 MOUNTED",
+
+    status:
+      "DESIGN + IMPLEMENTATION",
+
+    objective:
+      "Develop a modern cloud identity framework centered on authentication, access controls, user lifecycle management, and secure application access.",
+
+    technologies: [
+      "Microsoft Entra ID",
+      "Conditional Access",
+      "MFA",
+      "Microsoft 365",
+      "SSO"
+    ],
+
+    architecture: [
+      "Identity",
+      "Authentication",
+      "MFA",
+      "Conditional Access",
+      "Applications",
+      "Cloud Resources"
+    ],
+
+    contribution: [
+      "Developed identity administration standards",
+      "Evaluated authentication and access requirements",
+      "Designed Conditional Access approaches",
+      "Evaluated application SSO opportunities",
+      "Structured user and group administration workflows",
+      "Documented identity security processes"
+    ],
+
+    evidence: [
+      "Identity architecture diagram",
+      "Authentication flow",
+      "Sanitized access policy model",
+      "SSO integration concept"
+    ]
+
+  },
+
+
+  "infrastructure-standardization": {
+
+    label:
+      "SYSTEM BUILD // 05",
+
+    title:
+      "Multi-Site Infrastructure Standardization",
+
+    notification:
+      "BUILD 05 MOUNTED",
+
+    status:
+      "ACTIVE DEVELOPMENT",
+
+    objective:
+      "Improve consistency, supportability, visibility, and resiliency across distributed business technology and site infrastructure.",
+
+    technologies: [
+      "Networking",
+      "SonicWall",
+      "Windows Servers",
+      "POS Systems",
+      "Kiosks",
+      "VoIP",
+      "Remote Support"
+    ],
+
+    architecture: [
+      "Network",
+      "Firewall",
+      "Servers",
+      "Endpoints",
+      "POS",
+      "Kiosks",
+      "Cameras",
+      "Voice"
+    ],
+
+    contribution: [
+      "Evaluated existing multi-site technology",
+      "Identified infrastructure inconsistencies",
+      "Developed support and management standards",
+      "Improved technical documentation",
+      "Troubleshot site infrastructure dependencies",
+      "Identified backup, recovery, and resiliency opportunities"
+    ],
+
+    evidence: [
+      "Generalized site architecture",
+      "Infrastructure support workflow",
+      "Standardization model",
+      "Sanitized environment diagram"
+    ]
+
+  },
+
+
+  "application-deployment": {
+
+    label:
+      "SYSTEM BUILD // 06",
+
+    title:
+      "Managed Application Deployment",
+
+    notification:
+      "BUILD 06 MOUNTED",
+
+    status:
+      "ACTIVE DEVELOPMENT",
+
+    objective:
+      "Transform manually installed applications into predictable and manageable deployment workflows across centrally managed Windows endpoints.",
+
+    technologies: [
+      "Microsoft Intune",
+      "Win32 Applications",
+      "Windows",
+      "Application Packaging",
+      "Deployment Testing"
+    ],
+
+    architecture: [
+      "Installer Analysis",
+      "Packaging",
+      "Detection",
+      "Assignment",
+      "Deployment",
+      "Validation"
+    ],
+
+    contribution: [
+      "Evaluated application installer behavior",
+      "Defined deployment and detection requirements",
+      "Built and tested managed application packages",
+      "Troubleshot deployment failures",
+      "Structured assignment approaches",
+      "Documented repeatable application deployment workflows"
+    ],
+
+    evidence: [
+      "Application deployment workflow",
+      "Sanitized deployment status",
+      "Packaging lifecycle diagram",
+      "Testing methodology"
+    ]
+
+  }
+
+};
+
+
+// =========================================================
+// CORE MODULE RENDERING
+// =========================================================
+
+function openModule(name, card) {
+
+  const module =
+    modules[name];
+
+
+  if (
+    !module ||
+    !moduleWorkspace ||
+    !workspaceLabel ||
+    !workspaceTitle ||
+    !workspaceContent
+  ) {
+    return;
   }
 
 
-  workspaceLabel.textContent = module.label;
-
-  workspaceTitle.textContent = module.title;
-
-  workspaceContent.innerHTML = module.content;
-
-
-  moduleWorkspace.classList.remove("hidden");
-
-  moduleWorkspace.classList.remove("workspace-enter");
+  moduleCards.forEach(item => {
+    item.classList.remove(
+      "module-active"
+    );
+  });
 
 
-  // restart animation
-  void moduleWorkspace.offsetWidth;
+  if (card) {
+    card.classList.add(
+      "module-active"
+    );
+  }
 
 
-  moduleWorkspace.classList.add("workspace-enter");
+  workspaceLabel.textContent =
+    module.label;
+
+  workspaceTitle.textContent =
+    module.title;
+
+  workspaceContent.innerHTML =
+    module.content;
+
+
+  moduleWorkspace.classList.remove(
+    "hidden"
+  );
+
+
+  restartAnimation(
+    moduleWorkspace
+  );
 
 
   showNotification(
@@ -699,7 +1074,6 @@ function openModule(moduleName, card) {
   );
 
 
-  // bring workspace into view
   setTimeout(() => {
 
     moduleWorkspace.scrollIntoView({
@@ -707,46 +1081,435 @@ function openModule(moduleName, card) {
       block: "start"
     });
 
-  }, 100);
+  }, 80);
+
 }
 
 
 // =========================================================
-// MODULE BUTTON EVENTS
+// CORE MODULE EVENTS
 // =========================================================
 
 moduleCards.forEach(card => {
 
-  card.addEventListener("click", () => {
+  card.addEventListener(
+    "click",
+    () => {
 
-    const moduleName =
-      card.getAttribute("data-module");
+      openModule(
+        card.dataset.module,
+        card
+      );
 
-    openModule(moduleName, card);
-
-  });
+    }
+  );
 
 });
 
 
-// =========================================================
-// CLOSE MODULE WORKSPACE
-// =========================================================
-
 if (closeWorkspace) {
 
-  closeWorkspace.addEventListener("click", () => {
+  closeWorkspace.addEventListener(
+    "click",
+    () => {
 
-    moduleWorkspace.classList.add("hidden");
+      moduleWorkspace.classList.add(
+        "hidden"
+      );
 
-    moduleCards.forEach(card => {
-      card.classList.remove("module-active");
+
+      moduleCards.forEach(card => {
+
+        card.classList.remove(
+          "module-active"
+        );
+
+      });
+
+
+      showNotification(
+        "MODULE UNMOUNTED",
+        "Core workspace closed"
+      );
+
+    }
+  );
+
+}
+
+
+// =========================================================
+// SYSTEM BUILD RENDERING
+// =========================================================
+
+function renderBuild(build) {
+
+  const architectureHTML =
+    build.architecture
+      .map((item, index) => {
+
+        const arrow =
+          index < build.architecture.length - 1
+            ? `<span class="flow-arrow">→</span>`
+            : "";
+
+        return `
+          <span class="flow-item">
+            ${item}
+          </span>
+
+          ${arrow}
+        `;
+
+      })
+      .join("");
+
+
+  const technologyHTML =
+    build.technologies
+      .map(item => `
+        <span class="technology-tag">
+          ${item}
+        </span>
+      `)
+      .join("");
+
+
+  const contributionHTML =
+    build.contribution
+      .map(item => `
+        <li>
+          ${item}
+        </li>
+      `)
+      .join("");
+
+
+  const evidenceHTML =
+    build.evidence
+      .map((item, index) => `
+        <div class="evidence-card">
+
+          <div class="evidence-number">
+            0${index + 1}
+          </div>
+
+          <span>
+            PROJECT EVIDENCE
+          </span>
+
+          <strong>
+            ${item}
+          </strong>
+
+          <small>
+            Sanitized artifact placeholder
+          </small>
+
+        </div>
+      `)
+      .join("");
+
+
+  return `
+    <div class="build-detail">
+
+
+      <div class="build-summary-grid">
+
+
+        <div class="build-objective">
+
+          <span class="workspace-tag">
+            OBJECTIVE
+          </span>
+
+          <p>
+            ${build.objective}
+          </p>
+
+        </div>
+
+
+        <div class="build-state-panel">
+
+          <span class="workspace-tag">
+            BUILD STATE
+          </span>
+
+          <strong>
+            ${build.status}
+          </strong>
+
+          <div class="build-state-line">
+
+            <span class="status-dot"></span>
+
+            SYSTEM INDEXED
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+
+      <div class="detail-section">
+
+        <span class="workspace-tag">
+          SYSTEM FLOW
+        </span>
+
+        <div class="architecture-flow">
+          ${architectureHTML}
+        </div>
+
+      </div>
+
+
+
+      <div class="detail-section">
+
+        <span class="workspace-tag">
+          TECHNOLOGY STACK
+        </span>
+
+        <div class="technology-list">
+          ${technologyHTML}
+        </div>
+
+      </div>
+
+
+
+      <div class="detail-section">
+
+        <span class="workspace-tag">
+          MY CONTRIBUTION
+        </span>
+
+        <ul class="contribution-list">
+          ${contributionHTML}
+        </ul>
+
+      </div>
+
+
+
+      <div class="detail-section">
+
+        <span class="workspace-tag">
+          PROJECT EVIDENCE
+        </span>
+
+        <p class="privacy-note">
+          Technical evidence is intentionally limited to
+          sanitized diagrams, screenshots, workflow models,
+          and non-confidential output. Internal source code,
+          credentials, tenant identifiers, internal addresses,
+          and proprietary configuration data are excluded.
+        </p>
+
+        <div class="evidence-grid">
+          ${evidenceHTML}
+        </div>
+
+      </div>
+
+
+    </div>
+  `;
+
+}
+
+
+// =========================================================
+// OPEN SYSTEM BUILD
+// =========================================================
+
+function openBuild(name, card) {
+
+  const build =
+    systemBuilds[name];
+
+
+  if (
+    !build ||
+    !buildWorkspace ||
+    !buildWorkspaceLabel ||
+    !buildWorkspaceTitle ||
+    !buildWorkspaceContent
+  ) {
+    return;
+  }
+
+
+  buildCards.forEach(item => {
+
+    item.classList.remove(
+      "build-active"
+    );
+
+  });
+
+
+  if (card) {
+
+    card.classList.add(
+      "build-active"
+    );
+
+  }
+
+
+  buildWorkspaceLabel.textContent =
+    build.label;
+
+  buildWorkspaceTitle.textContent =
+    build.title;
+
+  buildWorkspaceContent.innerHTML =
+    renderBuild(build);
+
+
+  buildWorkspace.classList.remove(
+    "hidden"
+  );
+
+
+  restartAnimation(
+    buildWorkspace
+  );
+
+
+  showNotification(
+    build.notification,
+    build.title
+  );
+
+
+  setTimeout(() => {
+
+    buildWorkspace.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
     });
 
+  }, 80);
 
-    showNotification(
-      "MODULE UNMOUNTED",
-      "Workspace closed"
+}
+
+
+// =========================================================
+// BUILD EVENTS
+// =========================================================
+
+buildCards.forEach(card => {
+
+  card.addEventListener(
+    "click",
+    () => {
+
+      openBuild(
+        card.dataset.build,
+        card
+      );
+
+    }
+  );
+
+});
+
+
+if (closeBuild) {
+
+  closeBuild.addEventListener(
+    "click",
+    () => {
+
+      buildWorkspace.classList.add(
+        "hidden"
+      );
+
+
+      buildCards.forEach(card => {
+
+        card.classList.remove(
+          "build-active"
+        );
+
+      });
+
+
+      showNotification(
+        "BUILD UNMOUNTED",
+        "System build workspace closed"
+      );
+
+    }
+  );
+
+}
+
+
+// =========================================================
+// RESTART ELEMENT ANIMATION
+// =========================================================
+
+function restartAnimation(element) {
+
+  element.classList.remove(
+    "workspace-enter"
+  );
+
+
+  void element.offsetWidth;
+
+
+  element.classList.add(
+    "workspace-enter"
+  );
+
+}
+
+
+// =========================================================
+// CURSOR LIGHTING
+// =========================================================
+
+function addCursorLighting(cards) {
+
+  cards.forEach(card => {
+
+    card.addEventListener(
+      "mousemove",
+      event => {
+
+        const rect =
+          card.getBoundingClientRect();
+
+
+        const x =
+          event.clientX - rect.left;
+
+        const y =
+          event.clientY - rect.top;
+
+
+        card.style.setProperty(
+          "--mouse-x",
+          `${x}px`
+        );
+
+
+        card.style.setProperty(
+          "--mouse-y",
+          `${y}px`
+        );
+
+      }
     );
 
   });
@@ -754,14 +1517,29 @@ if (closeWorkspace) {
 }
 
 
+addCursorLighting(
+  moduleCards
+);
+
+addCursorLighting(
+  buildCards
+);
+
+
 // =========================================================
 // NOTIFICATION SYSTEM
 // =========================================================
 
-function showNotification(title, message) {
+function showNotification(
+  title,
+  message
+) {
 
   const existing =
-    document.querySelector(".system-notification");
+    document.querySelector(
+      ".system-notification"
+    );
+
 
   if (existing) {
     existing.remove();
@@ -777,16 +1555,27 @@ function showNotification(title, message) {
 
 
   notification.innerHTML = `
+
     <div class="notification-dot"></div>
 
-    <div>
-      <strong>${title}</strong>
-      <span>${message}</span>
+    <div class="notification-copy">
+
+      <strong>
+        ${title}
+      </strong>
+
+      <span>
+        ${message}
+      </span>
+
     </div>
+
   `;
 
 
-  document.body.appendChild(notification);
+  document.body.appendChild(
+    notification
+  );
 
 
   requestAnimationFrame(() => {
@@ -807,82 +1596,55 @@ function showNotification(title, message) {
 
     setTimeout(() => {
 
-      notification.remove();
+      if (
+        document.body.contains(
+          notification
+        )
+      ) {
+        notification.remove();
+      }
 
     }, 350);
 
   }, 2200);
+
 }
 
 
 // =========================================================
-// CARD CURSOR LIGHTING
+// KEYBOARD COMMAND PLACEHOLDER
 // =========================================================
 
-moduleCards.forEach(card => {
+document.addEventListener(
+  "keydown",
+  event => {
 
-  card.addEventListener("mousemove", event => {
-
-    const rect =
-      card.getBoundingClientRect();
-
-
-    const x =
-      event.clientX - rect.left;
-
-    const y =
-      event.clientY - rect.top;
+    const commandKey =
+      event.ctrlKey ||
+      event.metaKey;
 
 
-    card.style.setProperty(
-      "--mouse-x",
-      `${x}px`
-    );
+    if (
+      commandKey &&
+      event.key.toLowerCase() === "k"
+    ) {
+
+      event.preventDefault();
 
 
-    card.style.setProperty(
-      "--mouse-y",
-      `${y}px`
-    );
+      showNotification(
+        "COMMAND INTERFACE",
+        "Command palette reserved for a future build"
+      );
 
-  });
-
-});
-
-
-// =========================================================
-// KEYBOARD COMMAND SHORTCUT
-// =========================================================
-
-// Future command palette hook.
-// Ctrl + K / Cmd + K will eventually open search.
-
-document.addEventListener("keydown", event => {
-
-  const commandKey =
-    event.ctrlKey || event.metaKey;
-
-
-  if (
-    commandKey &&
-    event.key.toLowerCase() === "k"
-  ) {
-
-    event.preventDefault();
-
-
-    showNotification(
-      "COMMAND INTERFACE",
-      "Command palette module reserved for next build"
-    );
+    }
 
   }
-
-});
+);
 
 
 // =========================================================
-// SYSTEM READY
+// SYSTEM CONSOLE
 // =========================================================
 
 console.log(
@@ -890,6 +1652,7 @@ console.log(
   "background:#050505;color:#d7a83d;font-size:16px;padding:8px;"
 );
 
+
 console.log(
-  "System controller loaded successfully."
+  "Main system controller loaded."
 );
