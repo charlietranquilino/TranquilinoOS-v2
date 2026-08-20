@@ -74,12 +74,33 @@ const closeBuild =
 
 
 // =========================================================
+// IMPORTANT FIX:
+// MOVE POPUP WINDOWS OUTSIDE MAIN OS
+// =========================================================
+
+// position: fixed breaks when an ancestor has transform.
+// main-os uses an entrance transform animation.
+//
+// Moving these directly under <body> means their fixed
+// positioning is ALWAYS relative to the browser viewport.
+
+if (moduleWorkspace) {
+  document.body.appendChild(moduleWorkspace);
+}
+
+if (buildWorkspace) {
+  document.body.appendChild(buildWorkspace);
+}
+
+
+// =========================================================
 // HELPERS
 // =========================================================
 
 function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
 
 function randomNumber(min, max) {
   return Math.floor(
@@ -89,19 +110,230 @@ function randomNumber(min, max) {
 
 
 // =========================================================
-// LIVE STARTUP TELEMETRY
+// MODAL STATE
+// =========================================================
+
+let modalOpen = false;
+
+
+// =========================================================
+// PAGE LOCK
+// =========================================================
+
+// We don't reposition the body anymore.
+// We simply prevent scrolling while a system window is open.
+
+function lockPageScroll() {
+
+  document.documentElement.style.overflow =
+    "hidden";
+
+  document.body.style.overflow =
+    "hidden";
+
+  modalOpen = true;
+}
+
+
+function unlockPageScroll() {
+
+  document.documentElement.style.overflow =
+    "";
+
+  document.body.style.overflow =
+    "";
+
+  modalOpen = false;
+}
+
+
+// =========================================================
+// CLOSE ALL WINDOWS
+// =========================================================
+
+function closeAllWorkspaces() {
+
+  if (moduleWorkspace) {
+
+    moduleWorkspace.classList.add(
+      "hidden"
+    );
+
+    moduleWorkspace.classList.remove(
+      "workspace-enter"
+    );
+
+  }
+
+
+  if (buildWorkspace) {
+
+    buildWorkspace.classList.add(
+      "hidden"
+    );
+
+    buildWorkspace.classList.remove(
+      "workspace-enter"
+    );
+
+  }
+
+
+  moduleCards.forEach(card => {
+
+    card.classList.remove(
+      "module-active"
+    );
+
+  });
+
+
+  buildCards.forEach(card => {
+
+    card.classList.remove(
+      "build-active"
+    );
+
+  });
+
+
+  unlockPageScroll();
+}
+
+
+// =========================================================
+// TYPE EFFECT
+// =========================================================
+
+async function typeStatus(
+  element,
+  text,
+  minDelay,
+  maxDelay
+) {
+
+  if (!element) return;
+
+
+  element.textContent = "";
+
+  let index = 0;
+
+
+  while (index < text.length) {
+
+    const chunkSize =
+      Math.random() < 0.4
+        ? 2
+        : 1;
+
+
+    element.textContent +=
+      text.slice(
+        index,
+        index + chunkSize
+      );
+
+
+    index += chunkSize;
+
+
+    await wait(
+      randomNumber(
+        minDelay,
+        maxDelay
+      )
+    );
+
+  }
+
+}
+
+
+// =========================================================
+// INITIALIZATION STATUS CYCLE
+// =========================================================
+
+async function runStatusCycle(status) {
+
+  if (!status) return;
+
+
+  status.classList.remove(
+    "status-online"
+  );
+
+  status.classList.add(
+    "status-typing"
+  );
+
+
+  // FAST STANDBY
+
+  await typeStatus(
+    status,
+    "STANDBY",
+    22,
+    40
+  );
+
+
+  await wait(220);
+
+
+  status.textContent = "";
+
+
+  await wait(100);
+
+
+  // SLOW INITIALIZING
+
+  await typeStatus(
+    status,
+    "INITIALIZING",
+    75,
+    120
+  );
+
+
+  await wait(350);
+
+
+  // SNAP ONLINE
+
+  status.classList.remove(
+    "status-typing"
+  );
+
+  status.classList.add(
+    "status-online"
+  );
+
+  status.textContent =
+    "ONLINE";
+}
+
+
+// =========================================================
+// LIVE TELEMETRY
 // =========================================================
 
 function updateTelemetry() {
 
   if (telemetryCPU) {
+
     telemetryCPU.textContent =
       `${randomNumber(10, 28)}%`;
+
   }
 
+
   if (telemetryMemory) {
+
     telemetryMemory.textContent =
       `${randomNumber(34, 49)}%`;
+
   }
 
 }
@@ -114,9 +346,13 @@ setInterval(() => {
 
   if (
     startupScreen &&
-    !startupScreen.classList.contains("hidden")
+    !startupScreen.classList.contains(
+      "hidden"
+    )
   ) {
+
     updateTelemetry();
+
   }
 
 }, 2400);
@@ -130,34 +366,34 @@ async function runInitialization() {
 
   if (!initializeBtn) return;
 
+
   initializeBtn.disabled = true;
 
 
   const buttonText =
-    initializeBtn.querySelector(".button-text");
+    initializeBtn.querySelector(
+      ".button-text"
+    );
 
   const buttonArrow =
-    initializeBtn.querySelector(".button-arrow");
+    initializeBtn.querySelector(
+      ".button-arrow"
+    );
 
 
   if (buttonText) {
+
     buttonText.textContent =
       "INITIALIZING";
+
   }
+
 
   if (buttonArrow) {
+
     buttonArrow.textContent =
       "•••";
-  }
 
-
-  await wait(550);
-
-
-  if (startupScreen) {
-    startupScreen.classList.add(
-      "startup-exit"
-    );
   }
 
 
@@ -165,21 +401,67 @@ async function runInitialization() {
 
 
   if (startupScreen) {
+
+    startupScreen.classList.add(
+      "startup-exit"
+    );
+
+  }
+
+
+  await wait(700);
+
+
+  if (startupScreen) {
+
     startupScreen.classList.add(
       "hidden"
     );
+
   }
 
 
   if (initializationScreen) {
+
     initializationScreen.classList.remove(
       "hidden"
     );
+
   }
 
 
-  await wait(300);
+  await wait(500);
 
+
+  // Reset every status first
+
+  initRows.forEach(row => {
+
+    row.classList.remove(
+      "init-active",
+      "init-complete"
+    );
+
+
+    const status =
+      row.querySelector("strong");
+
+
+    if (status) {
+
+      status.classList.remove(
+        "status-online",
+        "status-typing"
+      );
+
+      status.textContent = "";
+
+    }
+
+  });
+
+
+  // Bring services online
 
   for (const row of initRows) {
 
@@ -192,13 +474,14 @@ async function runInitialization() {
     );
 
 
-    if (status) {
-      status.textContent =
-        "INITIALIZING";
-    }
+    await runStatusCycle(
+      status
+    );
 
 
-    await wait(260);
+    row.classList.remove(
+      "init-active"
+    );
 
 
     row.classList.add(
@@ -206,17 +489,13 @@ async function runInitialization() {
     );
 
 
-    if (status) {
-      status.textContent =
-        "ONLINE";
-    }
+    await wait(250);
 
-
-    await wait(110);
   }
 
 
-  await wait(420);
+  // Hold all ONLINE statuses
+  await wait(1000);
 
 
   if (initializationScreen) {
@@ -228,13 +507,27 @@ async function runInitialization() {
   }
 
 
+  await wait(900);
+
+
+  if (initializationScreen) {
+
+    initializationScreen.classList.add(
+      "initialization-exit"
+    );
+
+  }
+
+
   await wait(650);
 
 
   if (initializationScreen) {
+
     initializationScreen.classList.add(
       "hidden"
     );
+
   }
 
 
@@ -682,7 +975,7 @@ const modules = {
 
 
 // =========================================================
-// SYSTEM BUILDS
+// SYSTEM BUILD DATA
 // =========================================================
 
 const systemBuilds = {
@@ -1014,37 +1307,257 @@ const systemBuilds = {
 
 
 // =========================================================
-// CORE MODULE RENDERING
+// RENDER BUILD
 // =========================================================
 
-function openModule(name, card) {
+function renderBuild(build) {
+
+  const architectureHTML =
+    build.architecture
+      .map((item, index) => {
+
+        const arrow =
+          index <
+          build.architecture.length - 1
+            ? `
+              <span class="flow-arrow">
+                →
+              </span>
+            `
+            : "";
+
+
+        return `
+
+          <span class="flow-item">
+            ${item}
+          </span>
+
+          ${arrow}
+
+        `;
+
+      })
+      .join("");
+
+
+  const technologyHTML =
+    build.technologies
+      .map(item => `
+
+        <span class="technology-tag">
+          ${item}
+        </span>
+
+      `)
+      .join("");
+
+
+  const contributionHTML =
+    build.contribution
+      .map(item => `
+
+        <li>
+          ${item}
+        </li>
+
+      `)
+      .join("");
+
+
+  const evidenceHTML =
+    build.evidence
+      .map((item, index) => `
+
+        <div class="evidence-card">
+
+          <div class="evidence-number">
+            0${index + 1}
+          </div>
+
+          <span>
+            PROJECT EVIDENCE
+          </span>
+
+          <strong>
+            ${item}
+          </strong>
+
+          <small>
+            Sanitized artifact placeholder
+          </small>
+
+        </div>
+
+      `)
+      .join("");
+
+
+  return `
+
+    <div class="build-detail">
+
+
+      <div class="build-summary-grid">
+
+
+        <div class="build-objective">
+
+          <span class="workspace-tag">
+            OBJECTIVE
+          </span>
+
+          <p>
+            ${build.objective}
+          </p>
+
+        </div>
+
+
+        <div class="build-state-panel">
+
+          <span class="workspace-tag">
+            BUILD STATE
+          </span>
+
+          <strong>
+            ${build.status}
+          </strong>
+
+
+          <div class="build-state-line">
+
+            <span class="status-dot"></span>
+
+            SYSTEM INDEXED
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+
+      <div class="detail-section">
+
+        <span class="workspace-tag">
+          SYSTEM FLOW
+        </span>
+
+
+        <div class="architecture-flow">
+          ${architectureHTML}
+        </div>
+
+      </div>
+
+
+
+      <div class="detail-section">
+
+        <span class="workspace-tag">
+          TECHNOLOGY STACK
+        </span>
+
+
+        <div class="technology-list">
+          ${technologyHTML}
+        </div>
+
+      </div>
+
+
+
+      <div class="detail-section">
+
+        <span class="workspace-tag">
+          MY CONTRIBUTION
+        </span>
+
+
+        <ul class="contribution-list">
+          ${contributionHTML}
+        </ul>
+
+      </div>
+
+
+
+      <div class="detail-section">
+
+        <span class="workspace-tag">
+          PROJECT EVIDENCE
+        </span>
+
+
+        <p class="privacy-note">
+
+          Technical evidence is limited to
+          sanitized diagrams, screenshots,
+          workflow models, and
+          non-confidential output.
+
+          Internal source code,
+          credentials,
+          tenant identifiers,
+          internal addresses,
+          and proprietary configurations
+          are excluded.
+
+        </p>
+
+
+        <div class="evidence-grid">
+          ${evidenceHTML}
+        </div>
+
+      </div>
+
+
+    </div>
+
+  `;
+
+}
+
+
+// =========================================================
+// OPEN CORE MODULE
+// =========================================================
+
+function openModule(
+  name,
+  card
+) {
 
   const module =
     modules[name];
 
 
-  if (
-    !module ||
-    !moduleWorkspace ||
-    !workspaceLabel ||
-    !workspaceTitle ||
-    !workspaceContent
-  ) {
-    return;
-  }
+  if (!module) return;
+
+
+  // Close anything else
+  closeAllWorkspaces();
 
 
   moduleCards.forEach(item => {
+
     item.classList.remove(
       "module-active"
     );
+
   });
 
 
   if (card) {
+
     card.classList.add(
       "module-active"
     );
+
   }
 
 
@@ -1063,7 +1576,10 @@ function openModule(name, card) {
   );
 
 
-  restartAnimation(
+  lockPageScroll();
+
+
+  restartWindowAnimation(
     moduleWorkspace
   );
 
@@ -1072,16 +1588,6 @@ function openModule(name, card) {
     module.notification,
     module.title
   );
-
-
-  setTimeout(() => {
-
-    moduleWorkspace.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-
-  }, 80);
 
 }
 
@@ -1113,18 +1619,7 @@ if (closeWorkspace) {
     "click",
     () => {
 
-      moduleWorkspace.classList.add(
-        "hidden"
-      );
-
-
-      moduleCards.forEach(card => {
-
-        card.classList.remove(
-          "module-active"
-        );
-
-      });
+      closeAllWorkspaces();
 
 
       showNotification(
@@ -1139,211 +1634,22 @@ if (closeWorkspace) {
 
 
 // =========================================================
-// SYSTEM BUILD RENDERING
-// =========================================================
-
-function renderBuild(build) {
-
-  const architectureHTML =
-    build.architecture
-      .map((item, index) => {
-
-        const arrow =
-          index < build.architecture.length - 1
-            ? `<span class="flow-arrow">→</span>`
-            : "";
-
-        return `
-          <span class="flow-item">
-            ${item}
-          </span>
-
-          ${arrow}
-        `;
-
-      })
-      .join("");
-
-
-  const technologyHTML =
-    build.technologies
-      .map(item => `
-        <span class="technology-tag">
-          ${item}
-        </span>
-      `)
-      .join("");
-
-
-  const contributionHTML =
-    build.contribution
-      .map(item => `
-        <li>
-          ${item}
-        </li>
-      `)
-      .join("");
-
-
-  const evidenceHTML =
-    build.evidence
-      .map((item, index) => `
-        <div class="evidence-card">
-
-          <div class="evidence-number">
-            0${index + 1}
-          </div>
-
-          <span>
-            PROJECT EVIDENCE
-          </span>
-
-          <strong>
-            ${item}
-          </strong>
-
-          <small>
-            Sanitized artifact placeholder
-          </small>
-
-        </div>
-      `)
-      .join("");
-
-
-  return `
-    <div class="build-detail">
-
-
-      <div class="build-summary-grid">
-
-
-        <div class="build-objective">
-
-          <span class="workspace-tag">
-            OBJECTIVE
-          </span>
-
-          <p>
-            ${build.objective}
-          </p>
-
-        </div>
-
-
-        <div class="build-state-panel">
-
-          <span class="workspace-tag">
-            BUILD STATE
-          </span>
-
-          <strong>
-            ${build.status}
-          </strong>
-
-          <div class="build-state-line">
-
-            <span class="status-dot"></span>
-
-            SYSTEM INDEXED
-
-          </div>
-
-        </div>
-
-
-      </div>
-
-
-
-      <div class="detail-section">
-
-        <span class="workspace-tag">
-          SYSTEM FLOW
-        </span>
-
-        <div class="architecture-flow">
-          ${architectureHTML}
-        </div>
-
-      </div>
-
-
-
-      <div class="detail-section">
-
-        <span class="workspace-tag">
-          TECHNOLOGY STACK
-        </span>
-
-        <div class="technology-list">
-          ${technologyHTML}
-        </div>
-
-      </div>
-
-
-
-      <div class="detail-section">
-
-        <span class="workspace-tag">
-          MY CONTRIBUTION
-        </span>
-
-        <ul class="contribution-list">
-          ${contributionHTML}
-        </ul>
-
-      </div>
-
-
-
-      <div class="detail-section">
-
-        <span class="workspace-tag">
-          PROJECT EVIDENCE
-        </span>
-
-        <p class="privacy-note">
-          Technical evidence is intentionally limited to
-          sanitized diagrams, screenshots, workflow models,
-          and non-confidential output. Internal source code,
-          credentials, tenant identifiers, internal addresses,
-          and proprietary configuration data are excluded.
-        </p>
-
-        <div class="evidence-grid">
-          ${evidenceHTML}
-        </div>
-
-      </div>
-
-
-    </div>
-  `;
-
-}
-
-
-// =========================================================
 // OPEN SYSTEM BUILD
 // =========================================================
 
-function openBuild(name, card) {
+function openBuild(
+  name,
+  card
+) {
 
   const build =
     systemBuilds[name];
 
 
-  if (
-    !build ||
-    !buildWorkspace ||
-    !buildWorkspaceLabel ||
-    !buildWorkspaceTitle ||
-    !buildWorkspaceContent
-  ) {
-    return;
-  }
+  if (!build) return;
+
+
+  closeAllWorkspaces();
 
 
   buildCards.forEach(item => {
@@ -1379,7 +1685,10 @@ function openBuild(name, card) {
   );
 
 
-  restartAnimation(
+  lockPageScroll();
+
+
+  restartWindowAnimation(
     buildWorkspace
   );
 
@@ -1388,16 +1697,6 @@ function openBuild(name, card) {
     build.notification,
     build.title
   );
-
-
-  setTimeout(() => {
-
-    buildWorkspace.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-
-  }, 80);
 
 }
 
@@ -1429,18 +1728,7 @@ if (closeBuild) {
     "click",
     () => {
 
-      buildWorkspace.classList.add(
-        "hidden"
-      );
-
-
-      buildCards.forEach(card => {
-
-        card.classList.remove(
-          "build-active"
-        );
-
-      });
+      closeAllWorkspaces();
 
 
       showNotification(
@@ -1455,10 +1743,15 @@ if (closeBuild) {
 
 
 // =========================================================
-// RESTART ELEMENT ANIMATION
+// WINDOW ANIMATION
 // =========================================================
 
-function restartAnimation(element) {
+function restartWindowAnimation(
+  element
+) {
+
+  if (!element) return;
+
 
   element.classList.remove(
     "workspace-enter"
@@ -1476,10 +1769,63 @@ function restartAnimation(element) {
 
 
 // =========================================================
+// ESCAPE TO CLOSE
+// =========================================================
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "Escape" &&
+      modalOpen
+    ) {
+
+      closeAllWorkspaces();
+
+
+      showNotification(
+        "WINDOW CLOSED",
+        "System workspace unmounted"
+      );
+
+
+      return;
+
+    }
+
+
+    const commandKey =
+      event.ctrlKey ||
+      event.metaKey;
+
+
+    if (
+      commandKey &&
+      event.key.toLowerCase() === "k"
+    ) {
+
+      event.preventDefault();
+
+
+      showNotification(
+        "COMMAND INTERFACE",
+        "Command palette reserved for future build"
+      );
+
+    }
+
+  }
+);
+
+
+// =========================================================
 // CURSOR LIGHTING
 // =========================================================
 
-function addCursorLighting(cards) {
+function addCursorLighting(
+  cards
+) {
 
   cards.forEach(card => {
 
@@ -1492,10 +1838,12 @@ function addCursorLighting(cards) {
 
 
         const x =
-          event.clientX - rect.left;
+          event.clientX -
+          rect.left;
 
         const y =
-          event.clientY - rect.top;
+          event.clientY -
+          rect.top;
 
 
         card.style.setProperty(
@@ -1527,7 +1875,7 @@ addCursorLighting(
 
 
 // =========================================================
-// NOTIFICATION SYSTEM
+// NOTIFICATIONS
 // =========================================================
 
 function showNotification(
@@ -1557,6 +1905,7 @@ function showNotification(
   notification.innerHTML = `
 
     <div class="notification-dot"></div>
+
 
     <div class="notification-copy">
 
@@ -1601,7 +1950,9 @@ function showNotification(
           notification
         )
       ) {
+
         notification.remove();
+
       }
 
     }, 350);
@@ -1609,38 +1960,6 @@ function showNotification(
   }, 2200);
 
 }
-
-
-// =========================================================
-// KEYBOARD COMMAND PLACEHOLDER
-// =========================================================
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    const commandKey =
-      event.ctrlKey ||
-      event.metaKey;
-
-
-    if (
-      commandKey &&
-      event.key.toLowerCase() === "k"
-    ) {
-
-      event.preventDefault();
-
-
-      showNotification(
-        "COMMAND INTERFACE",
-        "Command palette reserved for a future build"
-      );
-
-    }
-
-  }
-);
 
 
 // =========================================================
