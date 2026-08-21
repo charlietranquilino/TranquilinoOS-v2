@@ -1336,7 +1336,7 @@ function renderBuild(build) {
           build.architecture.length - 1
             ? `
               <span class="flow-arrow">
-                →
+                
               </span>
             `
             : "";
