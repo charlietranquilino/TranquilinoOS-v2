@@ -251,53 +251,65 @@ async function typeStatus(
 
 
 // =========================================================
-// INITIALIZATION STATUS CYCLE
+// FASTER INITIALIZATION STATUS CYCLE
 // =========================================================
 
-async function runStatusCycle(status) {
+async function runStatusCycle(
+  status
+) {
 
-  if (!status) return;
+  if (!status) {
+    return;
+  }
 
 
   status.classList.remove(
     "status-online"
   );
 
+
   status.classList.add(
     "status-typing"
   );
 
 
-  // FAST STANDBY
+  // QUICK STANDBY
 
   await typeStatus(
     status,
     "STANDBY",
-    22,
+    10,
+    20
+  );
+
+
+  await wait(
+    90
+  );
+
+
+  status.textContent =
+    "";
+
+
+  await wait(
     40
   );
 
 
-  await wait(220);
-
-
-  status.textContent = "";
-
-
-  await wait(100);
-
-
-  // SLOW INITIALIZING
+  // INITIALIZING — still slower than standby
 
   await typeStatus(
     status,
     "INITIALIZING",
-    75,
-    120
+    30,
+    48
   );
 
 
-  await wait(350);
+  await wait(
+    120
+  );
 
 
   // SNAP ONLINE
@@ -306,12 +318,15 @@ async function runStatusCycle(status) {
     "status-typing"
   );
 
+
   status.classList.add(
     "status-online"
   );
 
+
   status.textContent =
     "ONLINE";
+
 }
 
 
@@ -397,7 +412,7 @@ async function runInitialization() {
   }
 
 
-  await wait(650);
+  await wait(300);
 
 
   if (startupScreen) {
@@ -409,7 +424,7 @@ async function runInitialization() {
   }
 
 
-  await wait(700);
+  await wait(350);
 
 
   if (startupScreen) {
@@ -430,7 +445,7 @@ async function runInitialization() {
   }
 
 
-  await wait(500);
+  await wait(250);
 
 
   // Reset every status first
@@ -489,13 +504,13 @@ async function runInitialization() {
     );
 
 
-    await wait(250);
+    await wait(90);
 
   }
 
 
   // Hold all ONLINE statuses
-  await wait(1000);
+  await wait(350);
 
 
   if (initializationScreen) {
@@ -507,7 +522,7 @@ async function runInitialization() {
   }
 
 
-  await wait(900);
+  await wait(400);
 
 
   if (initializationScreen) {
@@ -519,7 +534,7 @@ async function runInitialization() {
   }
 
 
-  await wait(650);
+  await wait(300);
 
 
   if (initializationScreen) {
@@ -1524,222 +1539,1656 @@ function renderBuild(build) {
 
 
 // =========================================================
-// OPEN CORE MODULE
+// UNIVERSAL PROJECTOR REFERENCES
 // =========================================================
 
-function openModule(
-  name,
-  card
+const projectionBackground =
+  document.getElementById("projection-background");
+
+const projectionLayer =
+  document.getElementById("projection-layer");
+
+const projectionBeam =
+  document.getElementById("projection-beam");
+
+const projectionLabel =
+  document.getElementById("projection-label");
+
+const projectionTitle =
+  document.getElementById("projection-title");
+
+const projectionStateText =
+  document.getElementById("projection-state-text");
+
+const projectionBody =
+  document.getElementById("projection-body");
+
+const closeProjection =
+  document.getElementById("close-projection");
+
+
+let activeProjectionCard =
+  null;
+
+let floatingProjectionCard =
+  null;
+
+let projectionClosing =
+  false;
+
+
+// =========================================================
+// MOVE PROJECTOR TO BODY
+// =========================================================
+
+if (projectionBackground) {
+  document.body.appendChild(
+    projectionBackground
+  );
+}
+
+if (projectionLayer) {
+  document.body.appendChild(
+    projectionLayer
+  );
+}
+
+
+// =========================================================
+// ENDPOINT MODULE PROJECTION
+// =========================================================
+
+function renderEndpointProjection() {
+
+  projectionBody.innerHTML = `
+
+    <div class="endpoint-projection-layout">
+
+
+      <article
+        class="projected-block projection-piece"
+      >
+
+        <span class="projected-tag">
+          DEVICE MANAGEMENT
+        </span>
+
+        <h3>
+          Microsoft Intune
+        </h3>
+
+        <p>
+          Configuration profiles, policy targeting,
+          managed applications, compliance,
+          and centralized endpoint administration.
+        </p>
+
+      </article>
+
+
+
+      <section
+        class="endpoint-projection-center projection-piece"
+      >
+
+        <div class="endpoint-projection-flow">
+
+
+          <div class="projection-flow-node">
+            DEVICE REGISTRATION
+          </div>
+
+          <div class="projection-flow-arrow"></div>
+
+
+          <div class="projection-flow-node">
+            WINDOWS AUTOPILOT
+          </div>
+
+          <div class="projection-flow-arrow"></div>
+
+
+          <div class="projection-flow-node">
+            INTUNE ENROLLMENT
+          </div>
+
+          <div class="projection-flow-arrow"></div>
+
+
+          <div class="projection-flow-node">
+            CONFIGURATION + APPS
+          </div>
+
+          <div class="projection-flow-arrow"></div>
+
+
+          <div class="projection-flow-node">
+            COMPLIANT / USER READY
+          </div>
+
+
+        </div>
+
+      </section>
+
+
+
+      <article
+        class="projected-block projection-piece"
+      >
+
+        <span class="projected-tag">
+          SECURITY
+        </span>
+
+        <h3>
+          Compliance + Device Health
+        </h3>
+
+        <p>
+          Security posture, compliance requirements,
+          health validation, remediation visibility,
+          and managed endpoint standards.
+        </p>
+
+      </article>
+
+
+
+      <article
+        class="projected-block projection-piece"
+      >
+
+        <span class="projected-tag">
+          APPLICATION DELIVERY
+        </span>
+
+        <h3>
+          Managed Software
+        </h3>
+
+        <p>
+          Win32 packaging, detection logic,
+          assignments, testing, and standardized
+          application deployment.
+        </p>
+
+      </article>
+
+
+
+      <article
+        class="projected-block projection-piece"
+      >
+
+        <span class="projected-tag">
+          OPERATIONS
+        </span>
+
+        <h3>
+          Endpoint Lifecycle
+        </h3>
+
+        <p>
+          Provisioning, validation, troubleshooting,
+          recovery, refresh, and reprovisioning.
+        </p>
+
+      </article>
+
+
+
+      <div
+        class="endpoint-lifecycle-bar projection-piece"
+      >
+
+        <div class="endpoint-lifecycle-step">
+          PROVISION
+        </div>
+
+        <div class="endpoint-lifecycle-step">
+          MANAGE
+        </div>
+
+        <div class="endpoint-lifecycle-step">
+          VALIDATE
+        </div>
+
+        <div class="endpoint-lifecycle-step">
+          RECOVER
+        </div>
+
+      </div>
+
+
+    </div>
+
+  `;
+
+}
+
+
+// =========================================================
+// IDENTITY PROJECTION
+// =========================================================
+
+function renderIdentityProjection() {
+
+  projectionBody.innerHTML = `
+
+    <div class="identity-projection-layout">
+
+
+      <article
+        class="projected-block projection-piece"
+      >
+
+        <span class="projected-tag">
+          ADMINISTRATION
+        </span>
+
+        <h3>
+          Identity Lifecycle
+        </h3>
+
+        <p>
+          User provisioning, groups, licensing,
+          access changes, onboarding,
+          administration, and offboarding.
+        </p>
+
+      </article>
+
+
+
+      <section
+        class="identity-projection-core projection-piece"
+      >
+
+        <div class="identity-projection-node">
+          USER / DEVICE IDENTITY
+        </div>
+
+
+        <div class="identity-projection-branch"></div>
+
+
+        <div class="identity-projection-node">
+          MICROSOFT ENTRA ID
+        </div>
+
+
+        <div class="identity-projection-branch"></div>
+
+
+        <div class="identity-projection-spokes">
+
+          <div class="identity-projection-spoke">
+            MFA
+          </div>
+
+          <div class="identity-projection-spoke">
+            CONDITIONAL ACCESS
+          </div>
+
+          <div class="identity-projection-spoke">
+            SSO
+          </div>
+
+        </div>
+
+
+        <div class="identity-projection-branch"></div>
+
+
+        <div class="identity-projection-node">
+          BUSINESS APPLICATIONS
+        </div>
+
+      </section>
+
+
+
+      <article
+        class="projected-block projection-piece"
+      >
+
+        <span class="projected-tag">
+          AUTHENTICATION
+        </span>
+
+        <h3>
+          Multi-Factor Authentication
+        </h3>
+
+        <p>
+          Secure authentication, registration,
+          recovery, troubleshooting,
+          and account protection.
+        </p>
+
+      </article>
+
+
+
+      <article
+        class="projected-block projection-piece"
+      >
+
+        <span class="projected-tag">
+          ACCESS CONTROL
+        </span>
+
+        <h3>
+          Conditional Access
+        </h3>
+
+        <p>
+          Access decisions based on identity,
+          authentication context, device state,
+          applications, and cloud resources.
+        </p>
+
+      </article>
+
+
+
+      <article
+        class="projected-block projection-piece"
+      >
+
+        <span class="projected-tag">
+          APPLICATION ACCESS
+        </span>
+
+        <h3>
+          Single Sign-On
+        </h3>
+
+        <p>
+          Centralized authentication
+          across Microsoft 365
+          and business applications.
+        </p>
+
+      </article>
+
+
+    </div>
+
+  `;
+
+}
+
+
+// =========================================================
+// INFRASTRUCTURE PROJECTION
+// =========================================================
+
+function renderInfrastructureProjection() {
+
+  projectionBody.innerHTML = `
+
+    <div class="infrastructure-projection-layout">
+
+
+      <article
+        class="projected-block projection-piece"
+      >
+
+        <span class="projected-tag">
+          COMPUTE
+        </span>
+
+        <h3>
+          Server Infrastructure
+        </h3>
+
+        <p>
+          Physical server support,
+          resiliency planning, backup,
+          recovery, and lifecycle standards.
+        </p>
+
+      </article>
+
+
+
+      <section
+        class="infrastructure-network-map projection-piece"
+      >
+
+        <div class="infrastructure-network-node">
+          INTERNET / WAN
+        </div>
+
+
+        <div class="infrastructure-network-line"></div>
+
+
+        <div class="infrastructure-network-node">
+          SONICWALL
+        </div>
+
+
+        <div class="infrastructure-network-line"></div>
+
+
+        <div class="infrastructure-network-branches">
+
+          <div class="infrastructure-network-branch">
+            SERVER
+          </div>
+
+          <div class="infrastructure-network-branch">
+            POS / XPT
+          </div>
+
+          <div class="infrastructure-network-branch">
+            KIOSKS
+          </div>
+
+        </div>
+
+
+        <div class="infrastructure-network-line"></div>
+
+
+        <div class="infrastructure-network-branches">
+
+          <div class="infrastructure-network-branch">
+            CAMERAS
+          </div>
+
+          <div class="infrastructure-network-branch">
+            VOICE
+          </div>
+
+          <div class="infrastructure-network-branch">
+            REMOTE SUPPORT
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <article
+        class="projected-block projection-piece"
+      >
+
+        <span class="projected-tag">
+          NETWORKING
+        </span>
+
+        <h3>
+          Multi-Site Connectivity
+        </h3>
+
+        <p>
+          Distributed connectivity,
+          firewall dependencies,
+          site troubleshooting,
+          and operational uptime.
+        </p>
+
+      </article>
+
+
+
+      <article
+        class="projected-block projection-piece"
+      >
+
+        <span class="projected-tag">
+          BUSINESS SYSTEMS
+        </span>
+
+        <h3>
+          POS + XPT
+        </h3>
+
+        <p>
+          Business-critical site systems,
+          workstation profiles,
+          connectivity, and readiness.
+        </p>
+
+      </article>
+
+
+
+      <article
+        class="projected-block projection-piece"
+      >
+
+        <span class="projected-tag">
+          SITE TECHNOLOGY
+        </span>
+
+        <h3>
+          Kiosks + Cameras + Voice
+        </h3>
+
+        <p>
+          Specialized endpoints,
+          camera systems, VoIP,
+          tablets, and remote support.
+        </p>
+
+      </article>
+
+
+    </div>
+
+  `;
+
+}
+
+
+// =========================================================
+// AUTOMATION PROJECTION
+// =========================================================
+
+function renderAutomationProjection() {
+
+  projectionBody.innerHTML = `
+
+    <div class="automation-projection-layout">
+
+
+      <section
+        class="automation-projection-pipeline projection-piece"
+      >
+
+
+        <div class="automation-pipeline-step">
+
+          <span>
+            01 // DISCOVER
+          </span>
+
+          <span>
+            SYSTEM STATE
+          </span>
+
+        </div>
+
+
+        <div class="automation-pipeline-step">
+
+          <span>
+            02 // VALIDATE
+          </span>
+
+          <span>
+            READINESS
+          </span>
+
+        </div>
+
+
+        <div class="automation-pipeline-step">
+
+          <span>
+            03 // DECIDE
+          </span>
+
+          <span>
+            CONDITIONS
+          </span>
+
+        </div>
+
+
+        <div class="automation-pipeline-step">
+
+          <span>
+            04 // EXECUTE
+          </span>
+
+          <span>
+            WORKFLOW
+          </span>
+
+        </div>
+
+
+        <div class="automation-pipeline-step">
+
+          <span>
+            05 // VERIFY
+          </span>
+
+          <span>
+            OUTCOME
+          </span>
+
+        </div>
+
+
+        <div class="automation-pipeline-step">
+
+          <span>
+            06 // REPORT
+          </span>
+
+          <span>
+            RESULTS
+          </span>
+
+        </div>
+
+
+      </section>
+
+
+
+      <section class="automation-projection-side">
+
+
+        <article
+          class="projected-block projection-piece"
+        >
+
+          <span class="projected-tag">
+            SCRIPTING
+          </span>
+
+          <h3>
+            PowerShell
+          </h3>
+
+          <p>
+            Administrative tooling for discovery,
+            validation, provisioning,
+            updates, and endpoint operations.
+          </p>
+
+        </article>
+
+
+
+        <article
+          class="projected-block projection-piece"
+        >
+
+          <span class="projected-tag">
+            PROVISIONING
+          </span>
+
+          <h3>
+            Deployment Workflows
+          </h3>
+
+          <p>
+            Device preparation,
+            registration, drivers,
+            enrollment, and deployment validation.
+          </p>
+
+        </article>
+
+
+
+        <article
+          class="projected-block projection-piece"
+        >
+
+          <span class="projected-tag">
+            STANDARDIZATION
+          </span>
+
+          <h3>
+            Repeatable Operations
+          </h3>
+
+          <p>
+            Turning manual processes
+            into reusable tools,
+            SOPs, checks, and workflows.
+          </p>
+
+        </article>
+
+
+      </section>
+
+
+    </div>
+
+  `;
+
+}
+
+
+// =========================================================
+// MODULE ROUTER
+// =========================================================
+
+function renderModuleProjection(
+  name
 ) {
 
   const module =
     modules[name];
 
 
-  if (!module) return;
+  if (!module) {
+    return;
+  }
 
 
-  // Close anything else
-  closeAllWorkspaces();
+  projectionLabel.textContent =
+    "CORE MODULE // ARCHITECTURE VIEW";
 
 
-  moduleCards.forEach(item => {
-
-    item.classList.remove(
-      "module-active"
-    );
-
-  });
+  projectionTitle.textContent =
+    module.title;
 
 
-  if (card) {
+  projectionStateText.textContent =
+    "MODULE ONLINE";
 
-    card.classList.add(
-      "module-active"
-    );
+
+  if (
+    name === "endpoints"
+  ) {
+
+    renderEndpointProjection();
 
   }
 
 
-  workspaceLabel.textContent =
-    module.label;
+  if (
+    name === "identity"
+  ) {
 
-  workspaceTitle.textContent =
-    module.title;
+    renderIdentityProjection();
 
-  workspaceContent.innerHTML =
-    module.content;
-
-
-  moduleWorkspace.classList.remove(
-    "hidden"
-  );
+  }
 
 
-  lockPageScroll();
+  if (
+    name === "infrastructure"
+  ) {
+
+    renderInfrastructureProjection();
+
+  }
 
 
-  restartWindowAnimation(
-    moduleWorkspace
-  );
+  if (
+    name === "automation"
+  ) {
 
+    renderAutomationProjection();
 
-  showNotification(
-    module.notification,
-    module.title
-  );
+  }
 
 }
 
 
 // =========================================================
-// CORE MODULE EVENTS
+// BUILD PROJECTION
 // =========================================================
 
-moduleCards.forEach(card => {
-
-  card.addEventListener(
-    "click",
-    () => {
-
-      openModule(
-        card.dataset.module,
-        card
-      );
-
-    }
-  );
-
-});
-
-
-if (closeWorkspace) {
-
-  closeWorkspace.addEventListener(
-    "click",
-    () => {
-
-      closeAllWorkspaces();
-
-
-      showNotification(
-        "MODULE UNMOUNTED",
-        "Core workspace closed"
-      );
-
-    }
-  );
-
-}
-
-
-// =========================================================
-// OPEN SYSTEM BUILD
-// =========================================================
-
-function openBuild(
-  name,
-  card
+function renderBuildProjection(
+  name
 ) {
 
   const build =
     systemBuilds[name];
 
 
-  if (!build) return;
+  if (!build) {
+    return;
+  }
 
 
-  closeAllWorkspaces();
+  projectionLabel.textContent =
+    build.label;
 
 
-  buildCards.forEach(item => {
+  projectionTitle.textContent =
+    build.title;
 
-    item.classList.remove(
-      "build-active"
+
+  projectionStateText.textContent =
+    "BUILD ONLINE";
+
+
+  const architectureHTML =
+    build.architecture
+      .map(
+        (item, index) => `
+
+          <div class="build-architecture-node">
+
+            <span>
+              ${String(index + 1).padStart(2, "0")}
+            </span>
+
+            <strong>
+              ${item}
+            </strong>
+
+          </div>
+
+        `
+      )
+      .join("");
+
+
+  const technologyHTML =
+    build.technologies
+      .map(
+        item => `
+
+          <span class="build-tech-pill">
+            ${item}
+          </span>
+
+        `
+      )
+      .join("");
+
+
+  const contributionHTML =
+    build.contribution
+      .map(
+        item => `
+
+          <li>
+            ${item}
+          </li>
+
+        `
+      )
+      .join("");
+
+
+  projectionBody.innerHTML = `
+
+    <div class="build-projection-layout">
+
+
+      <section
+        class="build-projection-objective projection-piece"
+      >
+
+        <div>
+
+          <span class="projected-tag">
+            PROJECT OBJECTIVE
+          </span>
+
+          <p>
+            ${build.objective}
+          </p>
+
+        </div>
+
+
+        <div class="build-projection-status">
+
+          <span>
+            STATUS
+          </span>
+
+          <strong>
+            ${build.status}
+          </strong>
+
+        </div>
+
+      </section>
+
+
+
+      <section
+        class="build-projection-architecture projection-piece"
+      >
+
+        <span class="projected-tag">
+          SYSTEM ARCHITECTURE
+        </span>
+
+        ${architectureHTML}
+
+      </section>
+
+
+
+      <section class="build-projection-side">
+
+
+        <div
+          class="build-projection-stack projection-piece"
+        >
+
+          <span class="projected-tag">
+            TECHNOLOGY STACK
+          </span>
+
+
+          <div class="build-tech-stack">
+
+            ${technologyHTML}
+
+          </div>
+
+        </div>
+
+
+
+        <div
+          class="build-projection-contribution projection-piece"
+        >
+
+          <span class="projected-tag">
+            MY CONTRIBUTION
+          </span>
+
+
+          <ul class="build-contribution-list">
+
+            ${contributionHTML}
+
+          </ul>
+
+        </div>
+
+
+      </section>
+
+
+    </div>
+
+  `;
+
+}
+
+
+// =========================================================
+// POSITION BEAM
+// =========================================================
+
+function positionProjectionBeam() {
+
+  if (!projectionBeam) {
+    return;
+  }
+
+
+  const projectorHeight =
+    128;
+
+
+  const projectorTop =
+    window.innerHeight -
+    projectorHeight -
+    2;
+
+
+  projectionBeam.style.bottom =
+    `${
+      window.innerHeight -
+      projectorTop -
+      6
+    }px`;
+
+}
+
+
+// =========================================================
+// CREATE FLOATING PROJECTOR CARD
+// =========================================================
+
+function createProjectionCard(
+  card,
+  title
+) {
+
+  const rect =
+    card.getBoundingClientRect();
+
+
+  floatingProjectionCard =
+    card.cloneNode(true);
+
+
+  floatingProjectionCard.classList.remove(
+    "module-card",
+    "build-card",
+    "module-active",
+    "build-active",
+    "projection-source",
+    "projection-returning",
+    "projection-return-visible"
+  );
+
+
+  floatingProjectionCard.classList.add(
+    "floating-projection-card",
+    "projection-travelling"
+  );
+
+
+  floatingProjectionCard.style.left =
+    `${rect.left}px`;
+
+
+  floatingProjectionCard.style.top =
+    `${rect.top}px`;
+
+
+  floatingProjectionCard.style.width =
+    `${rect.width}px`;
+
+
+  floatingProjectionCard.style.height =
+    `${rect.height}px`;
+
+
+  floatingProjectionCard.innerHTML += `
+
+    <div class="projector-hardware">
+
+      <div class="projector-ring"></div>
+
+      <div class="projector-core"></div>
+
+    </div>
+
+
+    <div class="projector-card-label">
+      PROJECTING // ${title}
+    </div>
+
+  `;
+
+
+  document.body.appendChild(
+    floatingProjectionCard
+  );
+
+
+  /*
+    Original disappears only after
+    identical clone exists above it.
+  */
+
+  card.classList.add(
+    "projection-source"
+  );
+
+
+  void floatingProjectionCard.offsetWidth;
+
+
+  const destinationWidth =
+    Math.min(
+      440,
+      window.innerWidth * 0.76
     );
 
-  });
+
+  const destinationHeight =
+    128;
 
 
-  if (card) {
+  const destinationLeft =
+    window.innerWidth / 2 -
+    destinationWidth / 2;
 
-    card.classList.add(
-      "build-active"
+
+  const destinationTop =
+    window.innerHeight -
+    destinationHeight -
+    2;
+
+
+  floatingProjectionCard.style.left =
+    `${destinationLeft}px`;
+
+
+  floatingProjectionCard.style.top =
+    `${destinationTop}px`;
+
+
+  floatingProjectionCard.style.width =
+    `${destinationWidth}px`;
+
+
+  floatingProjectionCard.style.height =
+    `${destinationHeight}px`;
+
+
+  /*
+    Card physically reaches dock.
+  */
+
+  setTimeout(
+    () => {
+
+      if (!floatingProjectionCard) {
+        return;
+      }
+
+
+      floatingProjectionCard.classList.remove(
+        "projection-travelling"
+      );
+
+
+      floatingProjectionCard.classList.add(
+        "projection-docked"
+      );
+
+    },
+    900
+  );
+
+
+  /*
+    Card turns into projector.
+  */
+
+  setTimeout(
+    () => {
+
+      if (!floatingProjectionCard) {
+        return;
+      }
+
+
+      floatingProjectionCard.classList.add(
+        "projection-projecting"
+      );
+
+    },
+    1150
+  );
+
+}
+
+
+// =========================================================
+// OPEN UNIVERSAL PROJECTION
+// =========================================================
+
+function openProjection(
+  card
+) {
+
+  if (
+    activeProjectionCard ||
+    projectionClosing
+  ) {
+
+    return;
+
+  }
+
+
+  const type =
+    card.dataset.projection;
+
+
+  let title =
+    "";
+
+
+  if (
+    type === "module"
+  ) {
+
+    const name =
+      card.dataset.module;
+
+
+    const module =
+      modules[name];
+
+
+    if (!module) {
+      return;
+    }
+
+
+    title =
+      module.title;
+
+
+    renderModuleProjection(
+      name
     );
 
   }
 
 
-  buildWorkspaceLabel.textContent =
-    build.label;
+  if (
+    type === "build"
+  ) {
 
-  buildWorkspaceTitle.textContent =
-    build.title;
-
-  buildWorkspaceContent.innerHTML =
-    renderBuild(build);
+    const name =
+      card.dataset.build;
 
 
-  buildWorkspace.classList.remove(
-    "hidden"
-  );
+    const build =
+      systemBuilds[name];
+
+
+    if (!build) {
+      return;
+    }
+
+
+    title =
+      build.title;
+
+
+    renderBuildProjection(
+      name
+    );
+
+  }
+
+
+  if (!title) {
+    return;
+  }
+
+
+  activeProjectionCard =
+    card;
 
 
   lockPageScroll();
 
 
-  restartWindowAnimation(
-    buildWorkspace
+  document.body.classList.add(
+    "projection-open"
+  );
+
+
+  createProjectionCard(
+    card,
+    title
+  );
+
+
+  positionProjectionBeam();
+
+
+  /*
+    Let selected card visibly dock first.
+  */
+
+  setTimeout(
+    () => {
+
+      if (
+        !projectionLayer ||
+        !activeProjectionCard
+      ) {
+
+        return;
+
+      }
+
+
+      projectionLayer.classList.add(
+        "projection-active"
+      );
+
+
+      projectionLayer.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+    },
+    1450
+  );
+
+
+  /*
+    Once projection is established,
+    physical projector almost disappears.
+  */
+
+  setTimeout(
+    () => {
+
+      if (
+        floatingProjectionCard
+      ) {
+
+        floatingProjectionCard.classList.add(
+          "projector-faded"
+        );
+
+      }
+
+    },
+    3200
   );
 
 
   showNotification(
-    build.notification,
-    build.title
+    type === "module"
+      ? "MODULE PROJECTED"
+      : "SYSTEM BUILD PROJECTED",
+
+    title
   );
 
 }
 
 
 // =========================================================
-// BUILD EVENTS
+// CLOSE UNIVERSAL PROJECTION
 // =========================================================
 
-buildCards.forEach(card => {
+function closeUniversalProjection() {
 
-  card.addEventListener(
-    "click",
-    () => {
+  if (
+    !activeProjectionCard ||
+    !floatingProjectionCard ||
+    projectionClosing
+  ) {
 
-      openBuild(
-        card.dataset.build,
-        card
-      );
+    return;
 
-    }
+  }
+
+
+  projectionClosing =
+    true;
+
+
+  projectionLayer.classList.remove(
+    "projection-active"
   );
 
-});
+
+  projectionLayer.setAttribute(
+    "aria-hidden",
+    "true"
+  );
 
 
-if (closeBuild) {
+  /*
+    Keep returning projector ghosted.
+  */
 
-  closeBuild.addEventListener(
+  floatingProjectionCard.classList.remove(
+    "projector-faded"
+  );
+
+
+  floatingProjectionCard.classList.add(
+    "return-dissolve"
+  );
+
+
+  /*
+    Real card prepares underneath.
+  */
+
+  activeProjectionCard.classList.remove(
+    "projection-source"
+  );
+
+
+  activeProjectionCard.classList.add(
+    "projection-returning"
+  );
+
+
+  /*
+    Ghost clone moves home.
+  */
+
+  setTimeout(
+    () => {
+
+      if (
+        !floatingProjectionCard ||
+        !activeProjectionCard
+      ) {
+
+        return;
+
+      }
+
+
+      const rect =
+        activeProjectionCard
+          .getBoundingClientRect();
+
+
+      floatingProjectionCard.style.left =
+        `${rect.left}px`;
+
+
+      floatingProjectionCard.style.top =
+        `${rect.top}px`;
+
+
+      floatingProjectionCard.style.width =
+        `${rect.width}px`;
+
+
+      floatingProjectionCard.style.height =
+        `${rect.height}px`;
+
+    },
+    120
+  );
+
+
+  /*
+    Real card fades back in.
+  */
+
+  setTimeout(
+    () => {
+
+      if (
+        activeProjectionCard
+      ) {
+
+        activeProjectionCard.classList.add(
+          "projection-return-visible"
+        );
+
+      }
+
+    },
+    420
+  );
+
+
+  /*
+    Restore page.
+  */
+
+  setTimeout(
+    () => {
+
+      document.body.classList.remove(
+        "projection-open"
+      );
+
+
+      unlockPageScroll();
+
+    },
+    650
+  );
+
+
+  /*
+    Cleanup.
+  */
+
+  setTimeout(
+    () => {
+
+      if (
+        floatingProjectionCard
+      ) {
+
+        floatingProjectionCard.remove();
+
+
+        floatingProjectionCard =
+          null;
+
+      }
+
+
+      if (
+        activeProjectionCard
+      ) {
+
+        activeProjectionCard.classList.remove(
+          "projection-returning",
+          "projection-return-visible"
+        );
+
+      }
+
+
+      activeProjectionCard =
+        null;
+
+
+      projectionClosing =
+        false;
+
+    },
+    1050
+  );
+
+}
+
+
+// =========================================================
+// ALL PROJECTABLE CARDS
+// =========================================================
+
+const projectionCards =
+  document.querySelectorAll(
+    '[data-projection="module"], [data-projection="build"]'
+  );
+
+
+projectionCards.forEach(
+  card => {
+
+    card.addEventListener(
+      "click",
+      () => {
+
+        openProjection(
+          card
+        );
+
+      }
+    );
+
+  }
+);
+
+
+// =========================================================
+// CLOSE BUTTON
+// =========================================================
+
+if (
+  closeProjection
+) {
+
+  closeProjection.addEventListener(
     "click",
     () => {
 
-      closeAllWorkspaces();
+      closeUniversalProjection();
 
 
       showNotification(
-        "BUILD UNMOUNTED",
-        "System build workspace closed"
+        "SYSTEM UNMOUNTED",
+        "Projection closed"
       );
 
     }
   );
 
 }
+
+
+// =========================================================
+// RESIZE
+// =========================================================
+
+window.addEventListener(
+  "resize",
+  () => {
+
+    if (
+      !floatingProjectionCard ||
+      !activeProjectionCard ||
+      projectionClosing
+    ) {
+
+      return;
+
+    }
+
+
+    const destinationWidth =
+      Math.min(
+        440,
+        window.innerWidth * 0.76
+      );
+
+
+    const destinationHeight =
+      128;
+
+
+    floatingProjectionCard.style.left =
+      `${
+        window.innerWidth / 2 -
+        destinationWidth / 2
+      }px`;
+
+
+    floatingProjectionCard.style.top =
+      `${
+        window.innerHeight -
+        destinationHeight -
+        2
+      }px`;
+
+
+    floatingProjectionCard.style.width =
+      `${destinationWidth}px`;
+
+
+    floatingProjectionCard.style.height =
+      `${destinationHeight}px`;
+
+
+    positionProjectionBeam();
+
+  }
+);
 
 
 // =========================================================
