@@ -2865,3 +2865,1932 @@ a {
   }
 
 }
+
+
+/* =========================================================
+   UNIVERSAL HOLOGRAPHIC PROJECTOR
+   TRANQUILINO OS v2.0
+========================================================= */
+
+
+/* =========================================================
+   PAGE STATE
+========================================================= */
+
+body.projection-open {
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   DARKENED ENVIRONMENT
+========================================================= */
+
+.projection-background {
+  position: fixed;
+  inset: 0;
+
+  z-index: 3000;
+
+  opacity: 0;
+  visibility: hidden;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(215, 168, 61, 0.075),
+      transparent 42%
+    ),
+    rgba(0, 0, 0, 0.86);
+
+  backdrop-filter:
+    blur(5px)
+    brightness(0.32);
+
+  transition:
+    opacity 0.55s ease,
+    visibility 0s linear 0.55s;
+}
+
+
+body.projection-open
+.projection-background {
+  opacity: 1;
+  visibility: visible;
+
+  transition:
+    opacity 0.55s ease,
+    visibility 0s linear 0s;
+}
+
+
+/* =========================================================
+   FADE REST OF PAGE
+========================================================= */
+
+body.projection-open
+.module-card:not(.projection-source),
+
+body.projection-open
+.build-card:not(.projection-source),
+
+body.projection-open
+.section-heading,
+
+body.projection-open
+.section-intro {
+  opacity: 0.03;
+
+  filter:
+    blur(4px)
+    brightness(0.25);
+
+  pointer-events: none;
+
+  transition:
+    opacity 0.45s ease,
+    filter 0.45s ease;
+}
+
+
+/* =========================================================
+   ORIGINAL SOURCE CARD
+========================================================= */
+
+.projection-source {
+  opacity: 0 !important;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   REAL CARD RETURN
+========================================================= */
+
+.projection-returning {
+  opacity: 0 !important;
+
+  filter:
+    blur(3px)
+    brightness(0.6);
+
+  transition:
+    opacity 0.65s ease,
+    filter 0.65s ease;
+}
+
+
+.projection-returning.projection-return-visible {
+  opacity: 1 !important;
+
+  filter:
+    blur(0)
+    brightness(1);
+}
+
+
+/* =========================================================
+   FLOATING CLONED CARD
+========================================================= */
+
+.floating-projection-card {
+  position: fixed !important;
+
+  z-index: 6000 !important;
+
+  margin: 0 !important;
+
+  min-height: 0 !important;
+
+  transform: none !important;
+
+  overflow: hidden;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 25px 80px
+    rgba(0, 0, 0, 0.5);
+
+  will-change:
+    left,
+    top,
+    width,
+    height,
+    opacity;
+
+  transition:
+    left 0.9s cubic-bezier(0.16,1,0.3,1),
+    top 0.9s cubic-bezier(0.16,1,0.3,1),
+    width 0.9s cubic-bezier(0.16,1,0.3,1),
+    height 0.9s cubic-bezier(0.16,1,0.3,1),
+    opacity 0.5s ease,
+    filter 0.5s ease,
+    border-color 0.45s ease,
+    background 0.45s ease,
+    box-shadow 0.45s ease !important;
+}
+
+
+/* stop normal hover decoration while cloned */
+
+.floating-projection-card:hover {
+  transform: none !important;
+}
+
+
+.floating-projection-card::after,
+.floating-projection-card::before {
+  pointer-events: none !important;
+}
+
+
+/* =========================================================
+   TRAVEL STATE
+========================================================= */
+
+.floating-projection-card.projection-travelling {
+  border-color:
+    rgba(255, 232, 163, 0.72) !important;
+
+  box-shadow:
+    0 0 32px
+    rgba(215, 168, 61, 0.16),
+
+    0 35px 100px
+    rgba(0, 0, 0, 0.62) !important;
+}
+
+
+/* =========================================================
+   DOCKED PROJECTOR
+========================================================= */
+
+.floating-projection-card.projection-docked {
+  border-color:
+    rgba(255, 232, 163, 0.64) !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(32, 22, 7, 0.88),
+      rgba(7, 7, 7, 0.98)
+    ) !important;
+
+  box-shadow:
+    0 0 30px
+    rgba(215, 168, 61, 0.18),
+
+    0 0 90px
+    rgba(215, 168, 61, 0.07) !important;
+}
+
+
+/* =========================================================
+   HIDE ORIGINAL CARD CONTENT AFTER DOCKING
+========================================================= */
+
+.floating-projection-card
+.module-number,
+
+.floating-projection-card
+.module-content,
+
+.floating-projection-card
+.module-arrow,
+
+.floating-projection-card
+.build-topline,
+
+.floating-projection-card
+h3,
+
+.floating-projection-card
+> p,
+
+.floating-projection-card
+.build-tags,
+
+.floating-projection-card
+.build-open {
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
+}
+
+
+.floating-projection-card.projection-projecting
+.module-number,
+
+.floating-projection-card.projection-projecting
+.module-content,
+
+.floating-projection-card.projection-projecting
+.module-arrow,
+
+.floating-projection-card.projection-projecting
+.build-topline,
+
+.floating-projection-card.projection-projecting
+h3,
+
+.floating-projection-card.projection-projecting
+> p,
+
+.floating-projection-card.projection-projecting
+.build-tags,
+
+.floating-projection-card.projection-projecting
+.build-open {
+  opacity: 0;
+
+  transform:
+    translateY(8px);
+}
+
+
+/* =========================================================
+   PROJECTING LABEL
+========================================================= */
+
+.projector-card-label {
+  position: absolute;
+
+  left: 18px;
+  right: 18px;
+
+  bottom: 7px;
+
+  text-align: center;
+
+  color:
+    var(--gold-light);
+
+  font-size: 0.52rem;
+
+  letter-spacing: 0.14rem;
+
+  text-transform: uppercase;
+
+  opacity: 0;
+
+  transform:
+    translateY(5px);
+
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
+}
+
+
+.floating-projection-card.projection-projecting
+.projector-card-label {
+  opacity: 0.72;
+
+  transform:
+    translateY(0);
+}
+
+
+/* =========================================================
+   PROJECTOR HARDWARE
+========================================================= */
+
+.projector-hardware {
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition:
+    opacity 0.5s ease;
+}
+
+
+.floating-projection-card.projection-projecting
+.projector-hardware {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   EMITTER RING
+========================================================= */
+
+.projector-ring {
+  position: absolute;
+
+  width: 185px;
+  height: 62px;
+
+  border-radius: 50%;
+
+  border:
+    1px solid
+    rgba(255, 232, 163, 0.62);
+
+  background:
+    radial-gradient(
+      ellipse,
+      rgba(255, 232, 163, 0.21),
+      rgba(215, 168, 61, 0.08) 45%,
+      transparent 75%
+    );
+
+  box-shadow:
+    0 0 28px
+    rgba(215, 168, 61, 0.24),
+
+    0 0 75px
+    rgba(215, 168, 61, 0.08);
+
+  animation:
+    universalEmitterPulse
+    1.3s
+    ease-in-out
+    infinite alternate;
+}
+
+
+/* =========================================================
+   EMITTER CORE
+========================================================= */
+
+.projector-core {
+  width: 58px;
+  height: 15px;
+
+  border-radius: 50%;
+
+  background:
+    var(--gold-light);
+
+  box-shadow:
+    0 0 17px
+    var(--gold),
+
+    0 0 50px
+    rgba(215, 168, 61, 0.48);
+}
+
+
+@keyframes universalEmitterPulse {
+
+  from {
+    opacity: 0.68;
+
+    transform:
+      scale(0.95);
+  }
+
+
+  to {
+    opacity: 1;
+
+    transform:
+      scale(1.05);
+  }
+
+}
+
+
+/* =========================================================
+   PROJECTOR FADES AFTER INTERFACE BUILDS
+========================================================= */
+
+.floating-projection-card.projector-faded {
+  opacity:
+    0.045 !important;
+
+  border-color:
+    rgba(255, 232, 163, 0.03) !important;
+
+  background:
+    rgba(8, 8, 8, 0.015) !important;
+
+  box-shadow:
+    none !important;
+}
+
+
+.floating-projection-card.projector-faded
+.projector-card-label {
+  opacity: 0.12;
+}
+
+
+.floating-projection-card.projector-faded
+.projector-hardware {
+  opacity: 0.1;
+}
+
+
+/* =========================================================
+   SUBTLE RETURN
+========================================================= */
+
+.floating-projection-card.return-dissolve {
+  opacity:
+    0.025 !important;
+
+  filter:
+    blur(4px)
+    brightness(0.45);
+
+  box-shadow:
+    none !important;
+
+  transition:
+    left 0.85s cubic-bezier(0.16,1,0.3,1),
+    top 0.85s cubic-bezier(0.16,1,0.3,1),
+    width 0.85s cubic-bezier(0.16,1,0.3,1),
+    height 0.85s cubic-bezier(0.16,1,0.3,1),
+    opacity 0.28s ease,
+    filter 0.28s ease !important;
+}
+
+
+/* =========================================================
+   UNIVERSAL PROJECTION LAYER
+========================================================= */
+
+.projection-layer {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 5000;
+
+  opacity: 0;
+  visibility: hidden;
+
+  pointer-events: none;
+
+  transition:
+    opacity 0.2s ease,
+    visibility 0s linear 0.2s;
+}
+
+
+.projection-layer.projection-active {
+  opacity: 1;
+  visibility: visible;
+
+  transition:
+    opacity 0.2s ease,
+    visibility 0s linear 0s;
+}
+
+
+/* =========================================================
+   LIGHT BEAM
+========================================================= */
+
+.projection-beam {
+  position: fixed;
+
+  left: 50%;
+
+  width: 470px;
+  height: 54vh;
+
+  transform:
+    translateX(-50%)
+    scaleY(0.01);
+
+  transform-origin:
+    bottom center;
+
+  clip-path:
+    polygon(
+      43% 100%,
+      57% 100%,
+      100% 0,
+      0 0
+    );
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(215, 168, 61, 0.24),
+      rgba(215, 168, 61, 0.07) 40%,
+      rgba(255, 232, 163, 0.018) 72%,
+      transparent
+    );
+
+  filter:
+    blur(18px);
+
+  opacity: 0;
+
+  z-index: 5050;
+}
+
+
+.projection-layer.projection-active
+.projection-beam {
+  animation:
+    universalBeamRise
+    0.75s
+    ease
+    forwards;
+}
+
+
+@keyframes universalBeamRise {
+
+  0% {
+    opacity: 0;
+
+    transform:
+      translateX(-50%)
+      scaleY(0.01);
+  }
+
+
+  40% {
+    opacity: 0.7;
+  }
+
+
+  100% {
+    opacity: 0.20;
+
+    transform:
+      translateX(-50%)
+      scaleY(1);
+  }
+
+}
+
+
+/* =========================================================
+   PROJECTED FRAME
+========================================================= */
+
+.projection-frame {
+  position: fixed;
+
+  left: 50%;
+  top: 42%;
+
+  width:
+    min(92vw, 1120px);
+
+  height:
+    min(73vh, 700px);
+
+  transform:
+    translate(-50%, -50%);
+
+  opacity: 0;
+
+  z-index: 5300;
+}
+
+
+.projection-layer.projection-active
+.projection-frame {
+  opacity: 1;
+}
+
+
+/* =========================================================
+   FRAME LINES
+========================================================= */
+
+.projection-frame-line {
+  position: absolute;
+
+  box-shadow:
+    0 0 12px
+    rgba(215, 168, 61, 0.4);
+}
+
+
+.projection-frame-horizontal {
+  width: 0;
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      var(--gold-light),
+      var(--gold),
+      transparent
+    );
+}
+
+
+.projection-frame-vertical {
+  width: 1px;
+  height: 0;
+
+  background:
+    linear-gradient(
+      to bottom,
+      transparent,
+      var(--gold-light),
+      var(--gold),
+      transparent
+    );
+}
+
+
+.projection-frame-top {
+  top: 0;
+  left: 50%;
+
+  transform:
+    translateX(-50%);
+}
+
+
+.projection-frame-bottom {
+  bottom: 0;
+  left: 50%;
+
+  transform:
+    translateX(-50%);
+}
+
+
+.projection-frame-left {
+  left: 0;
+  top: 50%;
+
+  transform:
+    translateY(-50%);
+}
+
+
+.projection-frame-right {
+  right: 0;
+  top: 50%;
+
+  transform:
+    translateY(-50%);
+}
+
+
+/* =========================================================
+   FRAME BUILD
+========================================================= */
+
+.projection-layer.projection-active
+.projection-frame-top {
+  animation:
+    universalBuildHorizontal
+    0.45s ease
+    0.18s forwards;
+}
+
+
+.projection-layer.projection-active
+.projection-frame-left {
+  animation:
+    universalBuildVertical
+    0.4s ease
+    0.56s forwards;
+}
+
+
+.projection-layer.projection-active
+.projection-frame-right {
+  animation:
+    universalBuildVertical
+    0.4s ease
+    0.66s forwards;
+}
+
+
+.projection-layer.projection-active
+.projection-frame-bottom {
+  animation:
+    universalBuildHorizontal
+    0.45s ease
+    0.94s forwards;
+}
+
+
+@keyframes universalBuildHorizontal {
+
+  to {
+    width: 100%;
+  }
+
+}
+
+
+@keyframes universalBuildVertical {
+
+  to {
+    height: 100%;
+  }
+
+}
+
+
+/* =========================================================
+   PROJECTED CONTENT
+========================================================= */
+
+.projection-content {
+  position: absolute;
+
+  inset: 3%;
+
+  height: 94%;
+
+  opacity: 0;
+
+  filter:
+    blur(8px);
+
+  transform:
+    translateY(12px);
+}
+
+
+.projection-layer.projection-active
+.projection-content {
+  animation:
+    universalProjectionAppear
+    0.55s ease
+    1.15s forwards;
+}
+
+
+@keyframes universalProjectionAppear {
+
+  to {
+    opacity: 1;
+
+    filter:
+      blur(0);
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================================================
+   PROJECTION HEADER
+========================================================= */
+
+.projection-header {
+  height: 95px;
+
+  display: flex;
+
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 20px;
+
+  padding:
+    13px 16px;
+
+  border:
+    1px solid
+    var(--border);
+
+  background:
+    rgba(8, 8, 8, 0.74);
+
+  backdrop-filter:
+    blur(7px);
+}
+
+
+.projection-label {
+  color:
+    var(--gold);
+
+  font-size:
+    0.49rem;
+
+  letter-spacing:
+    0.14rem;
+}
+
+
+.projection-header h2 {
+  margin-top: 6px;
+
+  color:
+    var(--text);
+
+  font-size:
+    clamp(
+      1.65rem,
+      4vw,
+      2.45rem
+    );
+
+  font-weight: 400;
+}
+
+
+.projection-state {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color:
+    var(--gold-light);
+
+  font-size:
+    0.53rem;
+
+  letter-spacing:
+    0.1rem;
+
+  white-space:
+    nowrap;
+}
+
+
+/* =========================================================
+   BODY AREA
+========================================================= */
+
+.projection-body {
+  height:
+    calc(100% - 104px);
+
+  margin-top: 9px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   COMMON PROJECTED BLOCK
+========================================================= */
+
+.projected-block {
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.2);
+
+  background:
+    rgba(8, 8, 8, 0.67);
+
+  backdrop-filter:
+    blur(6px);
+
+  padding: 14px;
+}
+
+
+.projected-tag {
+  color:
+    var(--gold);
+
+  font-size:
+    0.45rem;
+
+  letter-spacing:
+    0.1rem;
+}
+
+
+.projected-block h3 {
+  margin-top: 7px;
+
+  color:
+    var(--text);
+
+  font-size:
+    0.9rem;
+
+  font-weight: 500;
+}
+
+
+.projected-block p {
+  margin-top: 6px;
+
+  color:
+    var(--muted);
+
+  font-size:
+    0.63rem;
+
+  line-height:
+    1.45;
+}
+
+
+/* =========================================================
+   MODULE PROJECTION PIECES
+========================================================= */
+
+.projection-piece {
+  opacity: 0;
+
+  transform:
+    translateY(8px)
+    scale(0.98);
+}
+
+
+.projection-layer.projection-active
+.projection-piece {
+  animation:
+    universalPieceBuild
+    0.38s ease
+    forwards;
+}
+
+
+.projection-layer.projection-active
+.projection-piece:nth-child(1) {
+  animation-delay: 1.45s;
+}
+
+
+.projection-layer.projection-active
+.projection-piece:nth-child(2) {
+  animation-delay: 1.55s;
+}
+
+
+.projection-layer.projection-active
+.projection-piece:nth-child(3) {
+  animation-delay: 1.65s;
+}
+
+
+.projection-layer.projection-active
+.projection-piece:nth-child(4) {
+  animation-delay: 1.75s;
+}
+
+
+.projection-layer.projection-active
+.projection-piece:nth-child(5) {
+  animation-delay: 1.85s;
+}
+
+
+.projection-layer.projection-active
+.projection-piece:nth-child(6) {
+  animation-delay: 1.95s;
+}
+
+
+@keyframes universalPieceBuild {
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+}
+
+
+/* =========================================================
+   ENDPOINT MODULE
+========================================================= */
+
+.endpoint-projection-layout {
+  height: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 1.45fr 1fr;
+
+  grid-template-rows:
+    1fr 0.72fr;
+
+  gap: 9px;
+}
+
+
+.endpoint-projection-center {
+  grid-column: 2;
+
+  grid-row:
+    1 / 3;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+.endpoint-projection-flow {
+  width: 82%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+.projection-flow-node {
+  width: 100%;
+
+  padding:
+    10px 12px;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.24);
+
+  background:
+    rgba(215, 168, 61, 0.035);
+
+  text-align: center;
+
+  color:
+    var(--gold-light);
+
+  font-size:
+    0.68rem;
+}
+
+
+.projection-flow-arrow {
+  width: 1px;
+
+  height: 18px;
+
+  background:
+    linear-gradient(
+      var(--gold),
+      transparent
+    );
+}
+
+
+.endpoint-lifecycle-bar {
+  display: flex;
+
+  gap: 6px;
+
+  margin-top: 12px;
+}
+
+
+.endpoint-lifecycle-step {
+  flex: 1;
+
+  padding: 7px;
+
+  text-align: center;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.16);
+
+  color:
+    var(--muted);
+
+  font-size:
+    0.52rem;
+}
+
+
+/* =========================================================
+   IDENTITY MODULE
+========================================================= */
+
+.identity-projection-layout {
+  height: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    0.8fr 1.4fr 0.8fr;
+
+  grid-template-rows:
+    1fr 0.62fr;
+
+  gap: 9px;
+}
+
+
+.identity-projection-core {
+  grid-column: 2;
+
+  grid-row:
+    1 / 3;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+}
+
+
+.identity-projection-node {
+  width: 75%;
+
+  padding: 11px;
+
+  text-align: center;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.25);
+
+  color:
+    var(--gold-light);
+
+  font-size:
+    0.7rem;
+}
+
+
+.identity-projection-branch {
+  width: 1px;
+
+  height: 20px;
+
+  background:
+    var(--gold);
+}
+
+
+.identity-projection-spokes {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 7px;
+}
+
+
+.identity-projection-spoke {
+  padding: 8px;
+
+  text-align: center;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.16);
+
+  color:
+    var(--muted);
+
+  font-size:
+    0.53rem;
+}
+
+
+/* =========================================================
+   INFRASTRUCTURE MODULE
+========================================================= */
+
+.infrastructure-projection-layout {
+  height: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 1.3fr 1fr;
+
+  grid-template-rows:
+    1fr 1fr;
+
+  gap: 9px;
+}
+
+
+.infrastructure-network-map {
+  grid-column: 2;
+
+  grid-row:
+    1 / 3;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+}
+
+
+.infrastructure-network-node {
+  min-width: 68%;
+
+  padding: 9px;
+
+  text-align: center;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.22);
+
+  color:
+    var(--gold-light);
+
+  font-size:
+    0.65rem;
+}
+
+
+.infrastructure-network-line {
+  width: 1px;
+
+  height: 15px;
+
+  background:
+    var(--gold);
+}
+
+
+.infrastructure-network-branches {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 7px;
+}
+
+
+.infrastructure-network-branch {
+  padding: 8px;
+
+  text-align: center;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.15);
+
+  color:
+    var(--muted);
+
+  font-size:
+    0.52rem;
+}
+
+
+/* =========================================================
+   AUTOMATION MODULE
+========================================================= */
+
+.automation-projection-layout {
+  height: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    1.4fr 0.8fr;
+
+  gap: 9px;
+}
+
+
+.automation-projection-pipeline {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 5px;
+}
+
+
+.automation-pipeline-step {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding:
+    10px 12px;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.19);
+
+  background:
+    rgba(215, 168, 61, 0.025);
+
+  font-size:
+    0.64rem;
+}
+
+
+.automation-pipeline-step
+span:first-child {
+  color:
+    var(--gold-light);
+}
+
+
+.automation-pipeline-step
+span:last-child {
+  color:
+    var(--muted);
+
+  font-size:
+    0.52rem;
+}
+
+
+.automation-projection-side {
+  display: grid;
+
+  grid-template-rows:
+    repeat(3, 1fr);
+
+  gap: 9px;
+}
+
+
+/* =========================================================
+   BUILD PROJECTION LAYOUT
+========================================================= */
+
+.build-projection-layout {
+  height: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    1.15fr 0.85fr;
+
+  grid-template-rows:
+    auto 1fr;
+
+  gap: 9px;
+}
+
+
+/* =========================================================
+   BUILD OBJECTIVE
+========================================================= */
+
+.build-projection-objective {
+  grid-column:
+    1 / 3;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 14px;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.2);
+
+  background:
+    rgba(8, 8, 8, 0.68);
+}
+
+
+.build-projection-objective
+p {
+  max-width: 780px;
+
+  color:
+    var(--muted);
+
+  font-size:
+    0.64rem;
+
+  line-height:
+    1.5;
+}
+
+
+.build-projection-status {
+  min-width: 150px;
+
+  text-align: right;
+}
+
+
+.build-projection-status
+span {
+  display: block;
+
+  color:
+    var(--gold);
+
+  font-size:
+    0.44rem;
+
+  letter-spacing:
+    0.1rem;
+}
+
+
+.build-projection-status
+strong {
+  display: block;
+
+  margin-top: 7px;
+
+  color:
+    var(--gold-light);
+
+  font-size:
+    0.68rem;
+}
+
+
+/* =========================================================
+   BUILD ARCHITECTURE
+========================================================= */
+
+.build-projection-architecture {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 14px;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.2);
+
+  background:
+    rgba(8, 8, 8, 0.65);
+}
+
+
+.build-architecture-node {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding:
+    8px 10px;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.15);
+}
+
+
+.build-architecture-node
+span {
+  color:
+    var(--gold);
+
+  font-size:
+    0.47rem;
+}
+
+
+.build-architecture-node
+strong {
+  color:
+    var(--text);
+
+  font-size:
+    0.65rem;
+
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   BUILD INFORMATION SIDE
+========================================================= */
+
+.build-projection-side {
+  display: grid;
+
+  grid-template-rows:
+    auto 1fr;
+
+  gap: 9px;
+}
+
+
+.build-projection-stack {
+  padding: 14px;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.2);
+
+  background:
+    rgba(8, 8, 8, 0.65);
+}
+
+
+.build-tech-stack {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 6px;
+
+  margin-top: 10px;
+}
+
+
+.build-tech-pill {
+  padding:
+    6px 8px;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.18);
+
+  color:
+    var(--gold-light);
+
+  font-size:
+    0.5rem;
+}
+
+
+/* =========================================================
+   CONTRIBUTIONS
+========================================================= */
+
+.build-projection-contribution {
+  padding: 14px;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.2);
+
+  background:
+    rgba(8, 8, 8, 0.65);
+}
+
+
+.build-contribution-list {
+  margin:
+    10px 0 0 16px;
+
+  color:
+    var(--muted);
+
+  font-size:
+    0.59rem;
+
+  line-height:
+    1.5;
+}
+
+
+.build-contribution-list li {
+  margin-bottom: 6px;
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
+
+.close-projection {
+  position: fixed;
+
+  top: 18px;
+  right: 22px;
+
+  z-index: 7000;
+
+  padding:
+    9px 15px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(7, 7, 7, 0.9);
+
+  color:
+    var(--muted);
+
+  font-size:
+    0.58rem;
+
+  letter-spacing:
+    0.09rem;
+
+  cursor: pointer;
+
+  pointer-events: auto;
+
+  opacity: 0;
+}
+
+
+.projection-layer.projection-active
+.close-projection {
+  animation:
+    universalCloseAppear
+    0.3s ease
+    2s forwards;
+}
+
+
+@keyframes universalCloseAppear {
+
+  to {
+    opacity: 1;
+  }
+
+}
+
+
+.close-projection:hover {
+  color:
+    var(--gold-light);
+
+  border-color:
+    var(--gold);
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .projection-frame {
+    top: 42%;
+
+    width: 95vw;
+
+    height: 76vh;
+  }
+
+
+  .endpoint-projection-layout,
+
+  .identity-projection-layout,
+
+  .infrastructure-projection-layout,
+
+  .automation-projection-layout,
+
+  .build-projection-layout {
+    display: block;
+
+    height: 100%;
+
+    overflow-y: auto;
+
+    padding-right: 4px;
+  }
+
+
+  .projected-block,
+
+  .endpoint-projection-center,
+
+  .identity-projection-core,
+
+  .infrastructure-network-map,
+
+  .automation-projection-pipeline,
+
+  .automation-projection-side,
+
+  .build-projection-objective,
+
+  .build-projection-architecture,
+
+  .build-projection-stack,
+
+  .build-projection-contribution {
+    margin-bottom: 9px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .projection-frame {
+    top: 43%;
+
+    width: 96vw;
+
+    height: 78vh;
+  }
+
+
+  .projection-header {
+    height: 88px;
+
+    padding:
+      11px 12px;
+  }
+
+
+  .projection-header h2 {
+    font-size: 1.45rem;
+  }
+
+
+  .projection-state {
+    display: none;
+  }
+
+
+  .projection-body {
+    height:
+      calc(100% - 97px);
+  }
+
+
+  .projection-beam {
+    width: 310px;
+  }
+
+
+  .floating-projection-card {
+    padding: 18px !important;
+  }
+
+
+  .build-projection-objective {
+    display: block;
+  }
+
+
+  .build-projection-status {
+    margin-top: 12px;
+
+    text-align: left;
+  }
+
+}
+
+
+/* =========================================================
+   PROJECTOR CARD VISUAL FIX
+========================================================= */
+
+.floating-projection-card {
+  position: fixed !important;
+
+  margin: 0 !important;
+
+  z-index: 6000 !important;
+
+  transform: none !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(16, 14, 9, 0.98),
+      rgba(6, 6, 6, 0.98)
+    ) !important;
+
+  color:
+    var(--text) !important;
+
+  border:
+    1px solid
+    rgba(215, 168, 61, 0.45) !important;
+
+  box-shadow:
+    0 0 30px
+    rgba(215, 168, 61, 0.08),
+
+    0 30px 80px
+    rgba(0, 0, 0, 0.65) !important;
+}
+
+
+/* Kill normal hover movement while flying */
+
+.floating-projection-card:hover {
+  transform: none !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(16, 14, 9, 0.98),
+      rgba(6, 6, 6, 0.98)
+    ) !important;
+}
+
+
+/* Keep text styled correctly */
+
+.floating-projection-card h3 {
+  color:
+    var(--text) !important;
+}
+
+
+.floating-projection-card p {
+  color:
+    var(--muted) !important;
+}
+
+
+.floating-projection-card
+.module-number,
+
+.floating-projection-card
+.build-topline {
+  color:
+    var(--gold) !important;
+}
