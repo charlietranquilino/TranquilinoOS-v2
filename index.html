@@ -337,7 +337,7 @@
       </span>
 
       <span class="button-arrow">
-        
+        →
       </span>
 
     </button>
@@ -393,136 +393,330 @@
   class="initialization-screen hidden"
 >
 
-  <div class="initialization-core">
+  <div class="initialization-shell">
 
 
-    <!-- MINI SYSTEM CORE -->
+    <header class="init-system-header">
 
-    <div class="init-logo-frame">
-
-      <img
-        src="./ct-logo.png"
-        alt="TranquilinoOS Core"
-        class="init-logo"
-      >
-
-    </div>
-
-
-
-    <!-- INITIALIZATION IDENTITY -->
-
-    <div class="initialization-heading">
-
-      <span>
-        TRANQUILINO OS
-      </span>
-
-      <h2>
-        Initializing Environment
-      </h2>
-
-      <p>
-        Mounting system architecture
-      </p>
-
-    </div>
-
-
-
-    <!-- INITIALIZATION SERVICES -->
-
-    <div class="initialization-status">
-
-
-      <div class="init-row">
-
-        <span>
-          ENDPOINT MANAGEMENT CORE
+      <div>
+        <span class="init-kicker">
+          TRANQUILINO OS // BOOT MANAGER
         </span>
 
-        <strong>
-          STANDBY
-        </strong>
-
+        <h2>
+          Mounting System Architecture
+        </h2>
       </div>
 
 
-      <div class="init-row">
+      <div class="init-session-state">
 
-        <span>
-          IDENTITY SERVICES
-        </span>
+        <span class="status-dot"></span>
 
-        <strong>
-          STANDBY
-        </strong>
+        SECURE BOOT
 
       </div>
 
-
-      <div class="init-row">
-
-        <span>
-          INFRASTRUCTURE INTERFACE
-        </span>
-
-        <strong>
-          STANDBY
-        </strong>
-
-      </div>
-
-
-      <div class="init-row">
-
-        <span>
-          AUTOMATION ENGINE
-        </span>
-
-        <strong>
-          STANDBY
-        </strong>
-
-      </div>
-
-
-      <div class="init-row">
-
-        <span>
-          SECURITY LAYER
-        </span>
-
-        <strong>
-          STANDBY
-        </strong>
-
-      </div>
-
-
-      <div class="init-row">
-
-        <span>
-          SYSTEM BUILD INDEX
-        </span>
-
-        <strong>
-          STANDBY
-        </strong>
-
-      </div>
-
-    </div>
+    </header>
 
 
 
-    <!-- FINAL READY STATE -->
+    <div class="init-dashboard">
 
-    <div class="initialization-final">
 
-      <span class="status-dot"></span>
+      <!-- LEFT SYSTEM CORE -->
 
-      SYSTEM READY
+      <aside class="init-core-panel">
+
+        <div class="init-logo-frame">
+
+          <img
+            src="./ct-logo.png"
+            alt="TranquilinoOS Core"
+            class="init-logo"
+          >
+
+        </div>
+
+
+        <div class="init-core-copy">
+
+          <span>
+            CORE INSTANCE
+          </span>
+
+          <strong>
+            TRANQUILINO OS
+          </strong>
+
+          <small>
+            BUILD 2.0.26
+          </small>
+
+        </div>
+
+
+        <div class="init-core-metrics">
+
+          <div>
+            <span>MODE</span>
+            <strong>AUTOMATED</strong>
+          </div>
+
+          <div>
+            <span>SESSION</span>
+            <strong>SECURE</strong>
+          </div>
+
+          <div>
+            <span>THREADS</span>
+            <strong>06 ACTIVE</strong>
+          </div>
+
+        </div>
+
+      </aside>
+
+
+
+      <!-- RIGHT TRANSFER ENGINE -->
+
+      <main class="init-transfer-panel">
+
+
+        <div class="transfer-summary">
+
+          <div>
+
+            <span class="transfer-label">
+              SYSTEM DEPLOYMENT
+            </span>
+
+            <strong id="init-overall-percent">
+              0%
+            </strong>
+
+          </div>
+
+
+          <div class="transfer-time">
+
+            <span>
+              EST. REMAINING
+            </span>
+
+            <strong id="init-eta">
+              00:05
+            </strong>
+
+          </div>
+
+        </div>
+
+
+
+        <div class="overall-progress-track">
+
+          <div
+            id="init-overall-bar"
+            class="overall-progress-bar"
+          ></div>
+
+        </div>
+
+
+
+        <div class="initialization-status">
+
+
+          <div class="init-row">
+
+            <div class="init-service-copy">
+
+              <span>
+                ENDPOINT MANAGEMENT CORE
+              </span>
+
+              <small>
+                endpoint.core
+              </small>
+
+            </div>
+
+            <div class="init-progress-track">
+
+              <div class="init-progress-bar"></div>
+
+            </div>
+
+            <strong>
+              STANDBY
+            </strong>
+
+          </div>
+
+
+
+          <div class="init-row">
+
+            <div class="init-service-copy">
+
+              <span>
+                IDENTITY SERVICES
+              </span>
+
+              <small>
+                identity.service
+              </small>
+
+            </div>
+
+            <div class="init-progress-track">
+
+              <div class="init-progress-bar"></div>
+
+            </div>
+
+            <strong>
+              STANDBY
+            </strong>
+
+          </div>
+
+
+
+          <div class="init-row">
+
+            <div class="init-service-copy">
+
+              <span>
+                INFRASTRUCTURE INTERFACE
+              </span>
+
+              <small>
+                infrastructure.sys
+              </small>
+
+            </div>
+
+            <div class="init-progress-track">
+
+              <div class="init-progress-bar"></div>
+
+            </div>
+
+            <strong>
+              STANDBY
+            </strong>
+
+          </div>
+
+
+
+          <div class="init-row">
+
+            <div class="init-service-copy">
+
+              <span>
+                AUTOMATION ENGINE
+              </span>
+
+              <small>
+                automation.engine
+              </small>
+
+            </div>
+
+            <div class="init-progress-track">
+
+              <div class="init-progress-bar"></div>
+
+            </div>
+
+            <strong>
+              STANDBY
+            </strong>
+
+          </div>
+
+
+
+          <div class="init-row">
+
+            <div class="init-service-copy">
+
+              <span>
+                SECURITY LAYER
+              </span>
+
+              <small>
+                security.layer
+              </small>
+
+            </div>
+
+            <div class="init-progress-track">
+
+              <div class="init-progress-bar"></div>
+
+            </div>
+
+            <strong>
+              STANDBY
+            </strong>
+
+          </div>
+
+
+
+          <div class="init-row">
+
+            <div class="init-service-copy">
+
+              <span>
+                SYSTEM BUILD INDEX
+              </span>
+
+              <small>
+                builds.index
+              </small>
+
+            </div>
+
+            <div class="init-progress-track">
+
+              <div class="init-progress-bar"></div>
+
+            </div>
+
+            <strong>
+              STANDBY
+            </strong>
+
+          </div>
+
+
+        </div>
+
+
+        <footer class="init-transfer-footer">
+
+          <span id="init-transfer-message">
+            Preparing transfer queue...
+          </span>
+
+          <div class="initialization-final">
+
+            <span class="status-dot"></span>
+
+            SYSTEM READY
+
+          </div>
+
+        </footer>
+
+
+      </main>
 
     </div>
 
@@ -836,8 +1030,8 @@
 
 
       <span class="module-arrow">
-        
-      </span>
+  OPEN
+</span>
 
     </button>
 
@@ -1038,8 +1232,8 @@
 
 
       <span class="build-open">
-        PROJECT BUILD 
-      </span>
+  PROJECT BUILD
+</span>
 
     </button>
 
@@ -1717,6 +1911,7 @@
         </strong>
 
         <span>
+          
         </span>
 
       </a>
@@ -1739,6 +1934,7 @@
         </strong>
 
         <span>
+          
         </span>
 
       </a>
