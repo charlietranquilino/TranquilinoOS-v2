@@ -6185,3 +6185,114 @@ strong {
 .projection-frame-line {
   pointer-events: none !important;
 }
+
+
+/* =========================================================
+   RESPONSIVE STARTUP LOGO SCALE
+========================================================= */
+
+/* DESKTOP / LAPTOP */
+
+.ct-logo {
+  max-width: 285px !important;
+}
+
+.logo-frame {
+  width: 300px !important;
+  height: 225px !important;
+}
+
+
+/* TABLET */
+
+@media (max-width: 900px) {
+
+  .ct-logo {
+    max-width: 225px !important;
+  }
+
+  .logo-frame {
+    width: 240px !important;
+    height: 185px !important;
+  }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+  .ct-logo {
+    max-width: 175px !important;
+  }
+
+  .logo-frame {
+    width: 190px !important;
+    height: 150px !important;
+  }
+
+}
+
+
+/* =========================================================
+   STARTUP LOGO DESKTOP SPACING
+========================================================= */
+
+@media (min-width: 901px) {
+
+  .startup-logo {
+    margin-bottom: 34px;
+  }
+
+  .logo-frame {
+    height: 235px !important;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE CLOSE BUTTON FIX
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .close-projection {
+    position: fixed !important;
+
+    top: 18px !important;
+    right: 16px !important;
+
+    bottom: auto !important;
+    left: auto !important;
+
+    z-index: 10000 !important;
+
+    min-width: 132px;
+    min-height: 46px;
+
+    padding: 11px 16px !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    pointer-events: auto !important;
+
+    touch-action: manipulation;
+
+    background:
+      rgba(5, 5, 5, 0.96) !important;
+
+    border:
+      1px solid
+      rgba(215, 168, 61, 0.55) !important;
+
+    border-radius: 999px;
+
+    color:
+      var(--gold-light);
+  }
+
+}
