@@ -1,7 +1,8 @@
 // =========================================================
 // TRANQUILINO OS v2.0
-// Charlie Tranquilino Edition
-// Main System Controller
+// MAIN SYSTEM CONTROLLER
+// DYNAMIC PARALLEL INITIALIZATION ENGINE
+// FULL REPLACEMENT
 // =========================================================
 
 
@@ -10,87 +11,51 @@
 // =========================================================
 
 const startupScreen =
-  document.getElementById("startup-screen");
+  document.getElementById(
+    "startup-screen"
+  );
 
 const initializationScreen =
-  document.getElementById("initialization-screen");
+  document.getElementById(
+    "initialization-screen"
+  );
 
 const mainOS =
-  document.getElementById("main-os");
+  document.getElementById(
+    "main-os"
+  );
 
-const initializeBtn =
-  document.getElementById("initialize-btn");
+const initializeButton =
+  document.getElementById(
+    "initialize-btn"
+  );
 
 const telemetryCPU =
-  document.getElementById("telemetry-cpu");
+  document.getElementById(
+    "telemetry-cpu"
+  );
 
 const telemetryMemory =
-  document.getElementById("telemetry-memory");
-
-const initRows =
-  document.querySelectorAll(".init-row");
-
-
-// CORE MODULES
-
-const moduleCards =
-  document.querySelectorAll(".module-card");
-
-const moduleWorkspace =
-  document.getElementById("module-workspace");
-
-const workspaceLabel =
-  document.getElementById("workspace-label");
-
-const workspaceTitle =
-  document.getElementById("workspace-title");
-
-const workspaceContent =
-  document.getElementById("workspace-content");
-
-const closeWorkspace =
-  document.getElementById("close-workspace");
-
-
-// SYSTEM BUILDS
-
-const buildCards =
-  document.querySelectorAll(".build-card");
-
-const buildWorkspace =
-  document.getElementById("build-workspace");
-
-const buildWorkspaceLabel =
-  document.getElementById("build-workspace-label");
-
-const buildWorkspaceTitle =
-  document.getElementById("build-workspace-title");
-
-const buildWorkspaceContent =
-  document.getElementById("build-workspace-content");
-
-const closeBuild =
-  document.getElementById("close-build");
+  document.getElementById(
+    "telemetry-memory"
+  );
 
 
 // =========================================================
-// IMPORTANT FIX:
-// MOVE POPUP WINDOWS OUTSIDE MAIN OS
+// STATE
 // =========================================================
 
-// position: fixed breaks when an ancestor has transform.
-// main-os uses an entrance transform animation.
-//
-// Moving these directly under <body> means their fixed
-// positioning is ALWAYS relative to the browser viewport.
+let initializationRunning =
+  false;
 
-if (moduleWorkspace) {
-  document.body.appendChild(moduleWorkspace);
-}
+let initializationComplete =
+  false;
 
-if (buildWorkspace) {
-  document.body.appendChild(buildWorkspace);
-}
+let headerActivityTimer =
+  null;
+
+let signalActivityTimer =
+  null;
 
 
 // =========================================================
@@ -98,465 +63,1958 @@ if (buildWorkspace) {
 // =========================================================
 
 function wait(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
-
-function randomNumber(min, max) {
-  return Math.floor(
-    Math.random() * (max - min + 1)
-  ) + min;
-}
-
-
-// =========================================================
-// MODAL STATE
-// =========================================================
-
-let modalOpen = false;
-
-
-// =========================================================
-// PAGE LOCK
-// =========================================================
-
-// We don't reposition the body anymore.
-// We simply prevent scrolling while a system window is open.
-
-function lockPageScroll() {
-
-  document.documentElement.style.overflow =
-    "hidden";
-
-  document.body.style.overflow =
-    "hidden";
-
-  modalOpen = true;
-}
-
-
-function unlockPageScroll() {
-
-  document.documentElement.style.overflow =
-    "";
-
-  document.body.style.overflow =
-    "";
-
-  modalOpen = false;
-}
-
-
-// =========================================================
-// CLOSE ALL WINDOWS
-// =========================================================
-
-function closeAllWorkspaces() {
-
-  if (moduleWorkspace) {
-
-    moduleWorkspace.classList.add(
-      "hidden"
-    );
-
-    moduleWorkspace.classList.remove(
-      "workspace-enter"
-    );
-
-  }
-
-
-  if (buildWorkspace) {
-
-    buildWorkspace.classList.add(
-      "hidden"
-    );
-
-    buildWorkspace.classList.remove(
-      "workspace-enter"
-    );
-
-  }
-
-
-  moduleCards.forEach(card => {
-
-    card.classList.remove(
-      "module-active"
-    );
-
-  });
-
-
-  buildCards.forEach(card => {
-
-    card.classList.remove(
-      "build-active"
-    );
-
-  });
-
-
-  unlockPageScroll();
-}
-
-
-// =========================================================
-// TYPE EFFECT
-// =========================================================
-
-async function typeStatus(
-  element,
-  text,
-  minDelay,
-  maxDelay
-) {
-
-  if (!element) return;
-
-
-  element.textContent = "";
-
-  let index = 0;
-
-
-  while (index < text.length) {
-
-    const chunkSize =
-      Math.random() < 0.4
-        ? 2
-        : 1;
-
-
-    element.textContent +=
-      text.slice(
-        index,
-        index + chunkSize
-      );
-
-
-    index += chunkSize;
-
-
-    await wait(
-      randomNumber(
-        minDelay,
-        maxDelay
+  return new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        ms
       )
-    );
-
-  }
+  );
 
 }
 
 
-// =========================================================
-// FASTER INITIALIZATION STATUS CYCLE
-// =========================================================
-
-async function runStatusCycle(
-  status
+function clamp(
+  value,
+  min,
+  max
 ) {
 
-  if (!status) {
-    return;
-  }
-
-
-  status.classList.remove(
-    "status-online"
+  return Math.min(
+    Math.max(
+      value,
+      min
+    ),
+    max
   );
 
-
-  status.classList.add(
-    "status-typing"
-  );
+}
 
 
-  // QUICK STANDBY
+function randomBetween(
+  min,
+  max
+) {
 
-  await typeStatus(
-    status,
-    "STANDBY",
-    10,
-    20
-  );
-
-
-  await wait(
-    90
-  );
-
-
-  status.textContent =
-    "";
-
-
-  await wait(
-    40
-  );
-
-
-  // INITIALIZING — still slower than standby
-
-  await typeStatus(
-    status,
-    "INITIALIZING",
-    30,
-    48
-  );
-
-
-  await wait(
-    120
-  );
-
-
-  // SNAP ONLINE
-
-  status.classList.remove(
-    "status-typing"
-  );
-
-
-  status.classList.add(
-    "status-online"
-  );
-
-
-  status.textContent =
-    "ONLINE";
+  return Math.floor(
+    Math.random() *
+    (
+      max -
+      min +
+      1
+    )
+  ) + min;
 
 }
 
 
 // =========================================================
-// LIVE TELEMETRY
+// STARTUP TELEMETRY
 // =========================================================
 
-function updateTelemetry() {
+function updateStartupTelemetry() {
 
   if (telemetryCPU) {
 
     telemetryCPU.textContent =
-      `${randomNumber(10, 28)}%`;
+      `${randomBetween(
+        14,
+        31
+      )}%`;
 
   }
-
 
   if (telemetryMemory) {
 
     telemetryMemory.textContent =
-      `${randomNumber(34, 49)}%`;
+      `${randomBetween(
+        38,
+        52
+      )}%`;
 
   }
 
 }
 
 
-updateTelemetry();
+updateStartupTelemetry();
 
 
-setInterval(() => {
+setInterval(
+  () => {
 
-  if (
-    startupScreen &&
-    !startupScreen.classList.contains(
-      "hidden"
-    )
-  ) {
+    if (
+      startupScreen &&
+      !startupScreen.classList.contains(
+        "hidden"
+      )
+    ) {
 
-    updateTelemetry();
-
-  }
-
-}, 2400);
-
-
-// =========================================================
-// INITIALIZATION SEQUENCE
-// =========================================================
-
-async function runInitialization() {
-
-  if (!initializeBtn) return;
-
-
-  initializeBtn.disabled = true;
-
-
-  const buttonText =
-    initializeBtn.querySelector(
-      ".button-text"
-    );
-
-  const buttonArrow =
-    initializeBtn.querySelector(
-      ".button-arrow"
-    );
-
-
-  if (buttonText) {
-
-    buttonText.textContent =
-      "INITIALIZING";
-
-  }
-
-
-  if (buttonArrow) {
-
-    buttonArrow.textContent =
-      "•••";
-
-  }
-
-
-  await wait(300);
-
-
-  if (startupScreen) {
-
-    startupScreen.classList.add(
-      "startup-exit"
-    );
-
-  }
-
-
-  await wait(350);
-
-
-  if (startupScreen) {
-
-    startupScreen.classList.add(
-      "hidden"
-    );
-
-  }
-
-
-  if (initializationScreen) {
-
-    initializationScreen.classList.remove(
-      "hidden"
-    );
-
-  }
-
-
-  await wait(250);
-
-
-  // Reset every status first
-
-  initRows.forEach(row => {
-
-    row.classList.remove(
-      "init-active",
-      "init-complete"
-    );
-
-
-    const status =
-      row.querySelector("strong");
-
-
-    if (status) {
-
-      status.classList.remove(
-        "status-online",
-        "status-typing"
-      );
-
-      status.textContent = "";
+      updateStartupTelemetry();
 
     }
 
-  });
+  },
+  1500
+);
 
 
-  // Bring services online
+// =========================================================
+// BUILD SERVICE OBJECTS
+// =========================================================
 
-  for (const row of initRows) {
+function getInitializationServices() {
 
-    const status =
-      row.querySelector("strong");
+  if (!initializationScreen) {
 
-
-    row.classList.add(
-      "init-active"
-    );
-
-
-    await runStatusCycle(
-      status
-    );
-
-
-    row.classList.remove(
-      "init-active"
-    );
-
-
-    row.classList.add(
-      "init-complete"
-    );
-
-
-    await wait(90);
+    return [];
 
   }
 
 
-  // Hold all ONLINE statuses
-  await wait(350);
+  const rows =
+    Array.from(
+      initializationScreen.querySelectorAll(
+        ".initialization-status .init-row"
+      )
+    );
 
 
-  if (initializationScreen) {
+  const keys = [
+    "endpoint",
+    "identity",
+    "infrastructure",
+    "automation",
+    "security",
+    "build-index"
+  ];
 
-    initializationScreen.classList.add(
-      "initialization-complete"
+
+  return rows.map(
+    (
+      row,
+      index
+    ) => {
+
+      return {
+
+        key:
+          keys[index] ||
+          `service-${index}`,
+
+        row,
+
+        bar:
+          row.querySelector(
+            ".init-progress-bar"
+          ),
+
+        status:
+          row.querySelector(
+            ":scope > strong"
+          ),
+
+        progress:
+          0,
+
+        speed:
+          0,
+
+        targetSpeed:
+          0,
+
+        active:
+          false,
+
+        complete:
+          false,
+
+        phase:
+          "STANDBY"
+
+      };
+
+    }
+  );
+
+}
+
+
+// =========================================================
+// RESET
+// =========================================================
+
+function resetInitialization(
+  services
+) {
+
+  services.forEach(
+    service => {
+
+      service.progress =
+        0;
+
+      service.speed =
+        0;
+
+      service.targetSpeed =
+        0;
+
+      service.active =
+        false;
+
+      service.complete =
+        false;
+
+      service.phase =
+        "STANDBY";
+
+
+      service.row.classList.remove(
+        "init-active",
+        "init-verifying",
+        "init-complete"
+      );
+
+
+      if (service.bar) {
+
+        service.bar.style.width =
+          "0%";
+
+      }
+
+
+      if (service.status) {
+
+        service.status.textContent =
+          "0% STANDBY";
+
+      }
+
+    }
+  );
+
+
+  const overallPercent =
+    document.getElementById(
+      "init-overall-percent"
+    );
+
+  const overallBar =
+    document.getElementById(
+      "init-overall-bar"
+    );
+
+  const eta =
+    document.getElementById(
+      "init-eta"
+    );
+
+  const message =
+    document.getElementById(
+      "init-transfer-message"
+    );
+
+
+  if (overallPercent) {
+
+    overallPercent.textContent =
+      "0%";
+
+  }
+
+
+  if (overallBar) {
+
+    overallBar.style.width =
+      "0%";
+
+  }
+
+
+  if (eta) {
+
+    eta.textContent =
+      "00:06";
+
+  }
+
+
+  if (message) {
+
+    message.textContent =
+      "Preparing parallel transfer queue...";
+
+  }
+
+
+  initializationScreen.classList.remove(
+    "initialization-complete"
+  );
+
+}
+
+
+// =========================================================
+// SERVICE PHASE
+// =========================================================
+
+function getServicePhase(
+  progress
+) {
+
+  if (progress <= 0) {
+
+    return {
+      name: "STANDBY",
+      className: ""
+    };
+
+  }
+
+
+  if (progress < 10) {
+
+    return {
+      name: "QUEUED",
+      className: "init-active"
+    };
+
+  }
+
+
+  if (progress < 55) {
+
+    return {
+      name: "TRANSFERRING",
+      className: "init-active"
+    };
+
+  }
+
+
+  if (progress < 78) {
+
+    return {
+      name: "MOUNTING",
+      className: "init-active"
+    };
+
+  }
+
+
+  if (progress < 95) {
+
+    return {
+      name: "VALIDATING",
+      className: "init-verifying"
+    };
+
+  }
+
+
+  if (progress < 100) {
+
+    return {
+      name: "VERIFYING",
+      className: "init-verifying"
+    };
+
+  }
+
+
+  return {
+    name: "ONLINE",
+    className: "init-complete"
+  };
+
+}
+
+
+// =========================================================
+// ACTIVATE INITIAL SERVICES
+//
+// Starts multiple services almost immediately.
+// =========================================================
+
+function activateInitialServices(
+  services
+) {
+
+  services.forEach(
+    (
+      service,
+      index
+    ) => {
+
+      if (index < 3) {
+
+        service.active =
+          true;
+
+        service.targetSpeed =
+          randomBetween(
+            11,
+            20
+          );
+
+      }
+
+    }
+  );
+
+}
+
+
+// =========================================================
+// DYNAMIC PRIORITY SHUFFLE
+//
+// This is the important part.
+//
+// Every cycle:
+//
+// - active services receive different target speeds
+// - fastest service changes
+// - slower service can suddenly become priority
+// - standby services join as capacity opens
+// =========================================================
+
+function reshuffleServicePriorities(
+  services
+) {
+
+  const unfinished =
+    services.filter(
+      service =>
+        !service.complete
+    );
+
+
+  if (!unfinished.length) {
+
+    return;
+
+  }
+
+
+  const active =
+    unfinished.filter(
+      service =>
+        service.active
+    );
+
+
+  const standby =
+    unfinished.filter(
+      service =>
+        !service.active
+    );
+
+
+  // Keep roughly 3-4 transfers alive simultaneously.
+
+  const desiredActive =
+    Math.min(
+      unfinished.length,
+      randomBetween(
+        3,
+        4
+      )
+    );
+
+
+  while (
+    active.length <
+      desiredActive &&
+    standby.length
+  ) {
+
+    const next =
+      standby.shift();
+
+
+    next.active =
+      true;
+
+
+    active.push(
+      next
     );
 
   }
 
 
-  await wait(400);
+  // Pick one active transfer to be the temporary leader.
+
+  const leader =
+    active[
+      randomBetween(
+        0,
+        active.length - 1
+      )
+    ];
 
 
-  if (initializationScreen) {
+  active.forEach(
+    service => {
 
-    initializationScreen.classList.add(
-      "initialization-exit"
+      if (
+        service === leader
+      ) {
+
+        service.targetSpeed =
+          randomBetween(
+            24,
+            34
+          );
+
+      }
+
+      else {
+
+        service.targetSpeed =
+          randomBetween(
+            8,
+            23
+          );
+
+      }
+
+    }
+  );
+
+
+  // Occasionally throttle one service heavily,
+  // making the visual priority visibly switch.
+
+  if (
+    active.length >= 3 &&
+    Math.random() < 0.55
+  ) {
+
+    const throttled =
+      active[
+        randomBetween(
+          0,
+          active.length - 1
+        )
+      ];
+
+
+    if (
+      throttled !== leader
+    ) {
+
+      throttled.targetSpeed =
+        randomBetween(
+          3,
+          8
+        );
+
+    }
+
+  }
+
+}
+
+
+// =========================================================
+// UPDATE SERVICE UI
+// =========================================================
+
+function updateServiceUI(
+  service
+) {
+
+  const phase =
+    getServicePhase(
+      service.progress
+    );
+
+
+  service.phase =
+    phase.name;
+
+
+  service.row.classList.remove(
+    "init-active",
+    "init-verifying",
+    "init-complete"
+  );
+
+
+  if (phase.className) {
+
+    service.row.classList.add(
+      phase.className
     );
 
   }
 
 
-  await wait(300);
+  if (service.bar) {
 
-
-  if (initializationScreen) {
-
-    initializationScreen.classList.add(
-      "hidden"
-    );
+    service.bar.style.width =
+      `${service.progress}%`;
 
   }
 
 
-  if (mainOS) {
+  if (service.status) {
 
-    mainOS.classList.remove(
-      "hidden"
-    );
-
-    mainOS.classList.add(
-      "os-enter"
-    );
+    service.status.textContent =
+      service.progress >= 100
+        ? "100% ONLINE"
+        : `${Math.floor(
+            service.progress
+          )}% ${phase.name}`;
 
   }
+
+}
+
+
+// =========================================================
+// SMOOTH SIDE SIGNALS
+//
+// Instead of snapping wildly,
+// heights smoothly transition toward new targets.
+// =========================================================
+
+function startSmoothSideSignals() {
+
+  const bars =
+    Array.from(
+      document.querySelectorAll(
+        ".init-side-signal span"
+      )
+    );
+
+
+  if (!bars.length) {
+
+    return;
+
+  }
+
+
+  bars.forEach(
+    bar => {
+
+      bar.dataset.signalHeight =
+        randomBetween(
+          25,
+          75
+        );
+
+      bar.style.transition =
+        "height 0.55s ease, opacity 0.55s ease";
+
+    }
+  );
+
+
+  signalActivityTimer =
+    setInterval(
+      () => {
+
+        bars.forEach(
+          bar => {
+
+            const current =
+              Number(
+                bar.dataset.signalHeight ||
+                50
+              );
+
+
+            const change =
+              randomBetween(
+                -22,
+                22
+              );
+
+
+            const next =
+              clamp(
+                current +
+                change,
+                18,
+                90
+              );
+
+
+            bar.dataset.signalHeight =
+              next;
+
+
+            bar.style.height =
+              `${next}%`;
+
+
+            bar.style.opacity =
+              (
+                0.45 +
+                next / 200
+              );
+
+          }
+        );
+
+      },
+      650
+    );
+
+}
+
+
+// =========================================================
+// HEADER ACTIVITY
+// =========================================================
+
+function startHeaderActivity() {
+
+  const state =
+    document.querySelector(
+      ".init-header-center strong"
+    );
+
+
+  const label =
+    document.querySelector(
+      ".init-header-center span:not(.init-header-pulse)"
+    );
+
+
+  if (!state) {
+
+    return;
+
+  }
+
+
+  const states = [
+    [
+      "DEPLOYMENT ENGINE",
+      "LIVE TRANSFER"
+    ],
+    [
+      "SYSTEM BUS",
+      "THREAD SYNC"
+    ],
+    [
+      "TRANSFER ENGINE",
+      "PARALLEL I/O"
+    ],
+    [
+      "SERVICE CONTROL",
+      "MOUNT SEQUENCE"
+    ],
+    [
+      "VALIDATION CORE",
+      "DEPLOYMENT ACTIVE"
+    ]
+  ];
+
+
+  let index =
+    0;
+
+
+  headerActivityTimer =
+    setInterval(
+      () => {
+
+        index =
+          (
+            index +
+            1
+          ) %
+          states.length;
+
+
+        if (label) {
+
+          label.textContent =
+            states[index][0];
+
+        }
+
+
+        state.textContent =
+          states[index][1];
+
+      },
+      850
+    );
+
+}
+
+
+// =========================================================
+// DEPLOYMENT SIDE PANEL
+// =========================================================
+
+function updateDeploymentSidePanel(
+  services
+) {
+
+  const rows =
+    Array.from(
+      document.querySelectorAll(
+        ".init-side-right .init-side-row"
+      )
+    );
+
+
+  const map = [
+    services[0],
+    services[1],
+    services[4],
+    services[3]
+  ];
+
+
+  rows.forEach(
+    (
+      row,
+      index
+    ) => {
+
+      const service =
+        map[index];
+
+
+      const strong =
+        row.querySelector(
+          "strong"
+        );
+
+
+      if (
+        !service ||
+        !strong
+      ) {
+
+        return;
+
+      }
+
+
+      if (
+        service.progress <= 0
+      ) {
+
+        strong.textContent =
+          "STANDBY";
+
+      }
+
+      else if (
+        service.progress < 55
+      ) {
+
+        strong.textContent =
+          "TRANSFER";
+
+      }
+
+      else if (
+        service.progress < 78
+      ) {
+
+        strong.textContent =
+          "MOUNT";
+
+      }
+
+      else if (
+        service.progress < 100
+      ) {
+
+        strong.textContent =
+          "VERIFY";
+
+      }
+
+      else {
+
+        strong.textContent =
+          "ONLINE";
+
+      }
+
+    }
+  );
+
+}
+
+
+// =========================================================
+// UPDATE SUMMARY
+// =========================================================
+
+function updateSummary(
+  services,
+  elapsed,
+  expectedDuration
+) {
+
+  const overallPercent =
+    document.getElementById(
+      "init-overall-percent"
+    );
+
+  const overallBar =
+    document.getElementById(
+      "init-overall-bar"
+    );
+
+  const eta =
+    document.getElementById(
+      "init-eta"
+    );
+
+  const message =
+    document.getElementById(
+      "init-transfer-message"
+    );
+
+
+  const total =
+    services.reduce(
+      (
+        sum,
+        service
+      ) =>
+        sum +
+        service.progress,
+      0
+    );
+
+
+  const overall =
+    Math.round(
+      total /
+      services.length
+    );
+
+
+  const active =
+    services.filter(
+      service =>
+        service.active &&
+        !service.complete
+    ).length;
+
+
+  const online =
+    services.filter(
+      service =>
+        service.complete
+    ).length;
+
+
+  if (overallPercent) {
+
+    overallPercent.textContent =
+      `${overall}%`;
+
+  }
+
+
+  if (overallBar) {
+
+    overallBar.style.width =
+      `${overall}%`;
+
+  }
+
+
+  const remaining =
+    Math.max(
+      0,
+      Math.ceil(
+        (
+          expectedDuration -
+          elapsed
+        ) /
+        1000
+      )
+    );
+
+
+  if (eta) {
+
+    eta.textContent =
+      `00:${String(
+        remaining
+      ).padStart(
+        2,
+        "0"
+      )}`;
+
+  }
+
+
+  if (message) {
+
+    if (
+      online ===
+      services.length
+    ) {
+
+      message.textContent =
+        "ALL SERVICES VERIFIED // ENVIRONMENT ONLINE";
+
+    }
+
+    else {
+
+      const leader =
+        services
+          .filter(
+            service =>
+              service.active &&
+              !service.complete
+          )
+          .sort(
+            (
+              a,
+              b
+            ) =>
+              b.speed -
+              a.speed
+          )[0];
+
+
+      if (leader) {
+
+        message.textContent =
+          `${active} PARALLEL THREADS // PRIORITY ${leader.key.toUpperCase()}`;
+
+      }
+
+    }
+
+  }
+
+
+  updateDeploymentSidePanel(
+    services
+  );
+
+}
+
+
+// =========================================================
+// DYNAMIC PARALLEL ENGINE
+//
+// ALL SIX SERVICES PARTICIPATE EARLY.
+// SPEED PRIORITY ROTATES DURING THE TRANSFER.
+// =========================================================
+
+function runDynamicInitialization(
+  services
+) {
+
+  return new Promise(
+    resolve => {
+
+      if (!services.length) {
+
+        resolve();
+
+        return;
+
+      }
+
+
+      const startTime =
+        performance.now();
+
+
+      let lastFrame =
+        startTime;
+
+
+      let lastPriorityChange =
+        startTime;
+
+
+      let priorityInterval =
+        700;
+
+
+      // ---------------------------------------------------
+      // START EVERY SERVICE.
+      //
+      // They begin at different speeds instead of waiting
+      // for earlier services to finish.
+      // ---------------------------------------------------
+
+      services.forEach(
+        (
+          service,
+          index
+        ) => {
+
+          service.active =
+            true;
+
+
+          service.complete =
+            false;
+
+
+          // Slight initial staggering in progress,
+          // but every service is active immediately.
+
+          service.progress =
+            Math.max(
+              0,
+              4 -
+              index * 0.65
+            );
+
+
+          service.speed =
+            0;
+
+
+          service.targetSpeed =
+            randomBetween(
+              5,
+              15
+            );
+
+
+          updateServiceUI(
+            service
+          );
+
+        }
+      );
+
+
+      // Give the first few services an initial advantage,
+      // without putting Security / Build Index to sleep.
+
+      if (services[0]) {
+        services[0].targetSpeed = 22;
+      }
+
+      if (services[1]) {
+        services[1].targetSpeed = 18;
+      }
+
+      if (services[2]) {
+        services[2].targetSpeed = 14;
+      }
+
+      if (services[3]) {
+        services[3].targetSpeed = 11;
+      }
+
+      if (services[4]) {
+        services[4].targetSpeed = 8;
+      }
+
+      if (services[5]) {
+        services[5].targetSpeed = 6;
+      }
+
+
+      function changePriorities() {
+
+        const unfinished =
+          services.filter(
+            service =>
+              !service.complete
+          );
+
+
+        if (!unfinished.length) {
+
+          return;
+
+        }
+
+
+        // -----------------------------------------------
+        // EVERY SERVICE REMAINS MOVING.
+        // -----------------------------------------------
+
+        unfinished.forEach(
+          service => {
+
+            service.active =
+              true;
+
+
+            service.targetSpeed =
+              randomBetween(
+                7,
+                17
+              );
+
+          }
+        );
+
+
+        // -----------------------------------------------
+        // PICK A NEW FASTEST TRANSFER.
+        // -----------------------------------------------
+
+        const leader =
+          unfinished[
+            randomBetween(
+              0,
+              unfinished.length - 1
+            )
+          ];
+
+
+        leader.targetSpeed =
+          randomBetween(
+            24,
+            34
+          );
+
+
+        // -----------------------------------------------
+        // PICK A SECOND HIGH-PRIORITY SERVICE.
+        // -----------------------------------------------
+
+        if (
+          unfinished.length >
+          1
+        ) {
+
+          let secondary =
+            leader;
+
+
+          while (
+            secondary === leader
+          ) {
+
+            secondary =
+              unfinished[
+                randomBetween(
+                  0,
+                  unfinished.length - 1
+                )
+              ];
+
+          }
+
+
+          secondary.targetSpeed =
+            randomBetween(
+              18,
+              25
+            );
+
+        }
+
+
+        // -----------------------------------------------
+        // ONE SERVICE MAY TEMPORARILY SLOW,
+        // BUT NEVER STOPS.
+        // -----------------------------------------------
+
+        if (
+          unfinished.length >
+          2
+        ) {
+
+          const slowed =
+            unfinished[
+              randomBetween(
+                0,
+                unfinished.length - 1
+              )
+            ];
+
+
+          if (
+            slowed !== leader
+          ) {
+
+            slowed.targetSpeed =
+              randomBetween(
+                4,
+                9
+              );
+
+          }
+
+        }
+
+
+        priorityInterval =
+          randomBetween(
+            620,
+            900
+          );
+
+      }
+
+
+      function frame(now) {
+
+        const delta =
+          Math.min(
+            (
+              now -
+              lastFrame
+            ) /
+            1000,
+            0.05
+          );
+
+
+        lastFrame =
+          now;
+
+
+        // -----------------------------------------------
+        // PERIODIC SPEED / PRIORITY ROTATION
+        // -----------------------------------------------
+
+        if (
+          now -
+          lastPriorityChange >=
+          priorityInterval
+        ) {
+
+          changePriorities();
+
+
+          lastPriorityChange =
+            now;
+
+        }
+
+
+        // -----------------------------------------------
+        // UPDATE ALL SIX TRANSFERS
+        // -----------------------------------------------
+
+        services.forEach(
+          service => {
+
+            if (
+              service.complete
+            ) {
+
+              return;
+
+            }
+
+
+            // Smooth acceleration/deceleration.
+            // Prevents bars from jerking between speeds.
+
+            const smoothing =
+              1 -
+              Math.exp(
+                -3.5 *
+                delta
+              );
+
+
+            service.speed +=
+              (
+                service.targetSpeed -
+                service.speed
+              ) *
+              smoothing;
+
+
+            let actualSpeed =
+              service.speed;
+
+
+            // -------------------------------------------
+            // VALIDATION SLOWDOWN
+            // -------------------------------------------
+
+            if (
+              service.progress >= 88
+            ) {
+
+              actualSpeed *=
+                0.58;
+
+            }
+
+
+            if (
+              service.progress >= 96
+            ) {
+
+              actualSpeed =
+                Math.min(
+                  actualSpeed,
+                  5
+                );
+
+            }
+
+
+            service.progress +=
+              actualSpeed *
+              delta;
+
+
+            // -------------------------------------------
+            // COMPLETE
+            // -------------------------------------------
+
+            if (
+              service.progress >= 100
+            ) {
+
+              service.progress =
+                100;
+
+
+              service.complete =
+                true;
+
+
+              service.active =
+                false;
+
+
+              service.speed =
+                0;
+
+
+              service.targetSpeed =
+                0;
+
+            }
+
+
+            updateServiceUI(
+              service
+            );
+
+          }
+        );
+
+
+        // -----------------------------------------------
+        // SUMMARY / ETA
+        // -----------------------------------------------
+
+        const elapsed =
+          now -
+          startTime;
+
+
+        const totalProgress =
+          services.reduce(
+            (
+              total,
+              service
+            ) =>
+              total +
+              service.progress,
+            0
+          );
+
+
+        const overall =
+          totalProgress /
+          services.length;
+
+
+        // Dynamic ETA based on remaining progress instead
+        // of the old fixed sequence timing.
+
+        const unfinished =
+          services.filter(
+            service =>
+              !service.complete
+          );
+
+
+        const remainingProgress =
+          unfinished.reduce(
+            (
+              total,
+              service
+            ) =>
+              total +
+              (
+                100 -
+                service.progress
+              ),
+            0
+          );
+
+
+        const currentRate =
+          unfinished.reduce(
+            (
+              total,
+              service
+            ) =>
+              total +
+              Math.max(
+                service.speed,
+                1
+              ),
+            0
+          );
+
+
+        const estimatedSeconds =
+          currentRate > 0
+            ? Math.ceil(
+                remainingProgress /
+                currentRate
+              )
+            : 0;
+
+
+        const overallPercent =
+          document.getElementById(
+            "init-overall-percent"
+          );
+
+
+        const overallBar =
+          document.getElementById(
+            "init-overall-bar"
+          );
+
+
+        const eta =
+          document.getElementById(
+            "init-eta"
+          );
+
+
+        const message =
+          document.getElementById(
+            "init-transfer-message"
+          );
+
+
+        if (overallPercent) {
+
+          overallPercent.textContent =
+            `${Math.round(
+              overall
+            )}%`;
+
+        }
+
+
+        if (overallBar) {
+
+          overallBar.style.width =
+            `${overall}%`;
+
+        }
+
+
+        if (eta) {
+
+          eta.textContent =
+            `00:${
+              String(
+                Math.min(
+                  estimatedSeconds,
+                  99
+                )
+              ).padStart(
+                2,
+                "0"
+              )
+            }`;
+
+        }
+
+
+        updateDeploymentSidePanel(
+          services
+        );
+
+
+        if (message) {
+
+          const moving =
+            unfinished
+              .slice()
+              .sort(
+                (
+                  a,
+                  b
+                ) =>
+                  b.speed -
+                  a.speed
+              );
+
+
+          const leader =
+            moving[0];
+
+
+          const secondary =
+            moving[1];
+
+
+          if (
+            unfinished.length ===
+            0
+          ) {
+
+            message.textContent =
+              "ALL SERVICES VERIFIED // ENVIRONMENT ONLINE";
+
+          }
+
+
+          else if (
+            leader &&
+            secondary
+          ) {
+
+            message.textContent =
+              `${
+                unfinished.length
+              } ACTIVE THREADS // PRIORITY ${
+                leader.key.toUpperCase()
+              } + ${
+                secondary.key.toUpperCase()
+              }`;
+
+          }
+
+        }
+
+
+        // -----------------------------------------------
+        // FINISHED?
+        // -----------------------------------------------
+
+        if (
+          services.every(
+            service =>
+              service.complete
+          )
+        ) {
+
+          if (overallPercent) {
+
+            overallPercent.textContent =
+              "100%";
+
+          }
+
+
+          if (overallBar) {
+
+            overallBar.style.width =
+              "100%";
+
+          }
+
+
+          if (eta) {
+
+            eta.textContent =
+              "00:00";
+
+          }
+
+
+          resolve();
+
+          return;
+
+        }
+
+
+        requestAnimationFrame(
+          frame
+        );
+
+      }
+
+
+      requestAnimationFrame(
+        frame
+      );
+
+    }
+  );
+
+}
+
+
+// =========================================================
+// STOP ACTIVITY
+// =========================================================
+
+function stopInitializationActivity() {
+
+  if (headerActivityTimer) {
+
+    clearInterval(
+      headerActivityTimer
+    );
+
+    headerActivityTimer =
+      null;
+
+  }
+
+
+  if (signalActivityTimer) {
+
+    clearInterval(
+      signalActivityTimer
+    );
+
+    signalActivityTimer =
+      null;
+
+  }
+
+}
+
+
+// =========================================================
+// INITIALIZE ENVIRONMENT
+// =========================================================
+
+async function initializeEnvironment() {
+
+  if (
+    initializationRunning ||
+    initializationComplete
+  ) {
+
+    return;
+
+  }
+
+
+  if (
+    !startupScreen ||
+    !initializationScreen ||
+    !mainOS
+  ) {
+
+    return;
+
+  }
+
+
+  initializationRunning =
+    true;
+
+
+  if (initializeButton) {
+
+    initializeButton.disabled =
+      true;
+
+
+    const text =
+      initializeButton.querySelector(
+        ".button-text"
+      );
+
+
+    const arrow =
+      initializeButton.querySelector(
+        ".button-arrow"
+      );
+
+
+    if (text) {
+
+      text.textContent =
+        "INITIALIZING";
+
+    }
+
+
+    if (arrow) {
+
+      arrow.textContent =
+        "•••";
+
+    }
+
+  }
+
+
+  await wait(
+    80
+  );
+
+
+  startupScreen.classList.add(
+    "startup-exit"
+  );
+
+
+  await wait(
+    330
+  );
+
+
+  startupScreen.classList.add(
+    "hidden"
+  );
+
+
+  initializationScreen.classList.remove(
+    "hidden",
+    "initialization-exit"
+  );
+
+
+  initializationScreen.classList.add(
+    "initialization-enter"
+  );
+
+
+  const services =
+    getInitializationServices();
+
+
+  resetInitialization(
+    services
+  );
+
+
+  startHeaderActivity();
+
+  startSmoothSideSignals();
+
+
+  await wait(
+    180
+  );
+
+
+  await runDynamicInitialization(
+    services
+  );
+
+
+  stopInitializationActivity();
+
+
+  initializationScreen.classList.add(
+    "initialization-complete"
+  );
+
+
+  const state =
+    document.querySelector(
+      ".init-header-center strong"
+    );
+
+
+  const label =
+    document.querySelector(
+      ".init-header-center span:not(.init-header-pulse)"
+    );
+
+
+  if (state) {
+
+    state.textContent =
+      "SYSTEM ONLINE";
+
+  }
+
+
+  if (label) {
+
+    label.textContent =
+      "DEPLOYMENT COMPLETE";
+
+  }
+
+
+  const eta =
+    document.getElementById(
+      "init-eta"
+    );
+
+
+  if (eta) {
+
+    eta.textContent =
+      "00:00";
+
+  }
+
+
+  await wait(
+    450
+  );
+
+
+  initializationScreen.classList.add(
+    "initialization-exit"
+  );
+
+
+  await wait(
+    330
+  );
+
+
+  initializationScreen.classList.add(
+    "hidden"
+  );
+
+
+  initializationScreen.classList.remove(
+    "initialization-enter",
+    "initialization-exit"
+  );
+
+
+  mainOS.classList.remove(
+    "hidden"
+  );
+
+
+  mainOS.classList.add(
+    "os-enter"
+  );
+
+
+  document.documentElement.style.overflow =
+    "";
+
+
+  document.body.style.overflow =
+    "";
+
+
+  initializationRunning =
+    false;
+
+
+  initializationComplete =
+    true;
 
 
   showNotification(
@@ -567,2764 +2025,162 @@ async function runInitialization() {
 }
 
 
-if (initializeBtn) {
+// =========================================================
+// INITIALIZE BUTTON
+// =========================================================
 
-  initializeBtn.addEventListener(
+if (initializeButton) {
+
+  initializeButton.addEventListener(
     "click",
-    runInitialization
+    initializeEnvironment
   );
 
 }
 
 
 // =========================================================
-// CORE MODULE DATA
+// CARD LIGHT TRACKING
 // =========================================================
 
-const modules = {
-
-  endpoints: {
-
-    label:
-      "CORE MODULE // 01",
-
-    title:
-      "Endpoint Systems",
-
-    notification:
-      "ENDPOINT MODULE MOUNTED",
-
-    content: `
-      <div class="workspace-grid">
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            DEVICE MANAGEMENT
-          </span>
-
-          <h3>
-            Microsoft Intune
-          </h3>
-
-          <p>
-            Centralized endpoint configuration,
-            policy delivery, compliance,
-            application deployment,
-            and Windows device administration.
-          </p>
-
-        </div>
-
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            PROVISIONING
-          </span>
-
-          <h3>
-            Windows Autopilot
-          </h3>
-
-          <p>
-            Cloud-driven enrollment,
-            deployment profiles,
-            pre-provisioning,
-            standardized Windows builds,
-            and endpoint readiness.
-          </p>
-
-        </div>
-
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            SECURITY
-          </span>
-
-          <h3>
-            Compliance + Configuration
-          </h3>
-
-          <p>
-            Device health requirements,
-            configuration standards,
-            security policy enforcement,
-            and endpoint remediation.
-          </p>
-
-        </div>
-
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            LIFECYCLE
-          </span>
-
-          <h3>
-            Endpoint Operations
-          </h3>
-
-          <p>
-            Provisioning,
-            reprovisioning,
-            deployment,
-            troubleshooting,
-            recovery,
-            inventory,
-            and lifecycle management.
-          </p>
-
-        </div>
-
-      </div>
-    `
-  },
-
-
-  identity: {
-
-    label:
-      "CORE MODULE // 02",
-
-    title:
-      "Identity + Access",
-
-    notification:
-      "IDENTITY LAYER MOUNTED",
-
-    content: `
-      <div class="workspace-grid">
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            IDENTITY
-          </span>
-
-          <h3>
-            Microsoft Entra ID
-          </h3>
-
-          <p>
-            User identity,
-            device identity,
-            groups,
-            cloud authentication,
-            and access administration.
-          </p>
-
-        </div>
-
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            ACCESS CONTROL
-          </span>
-
-          <h3>
-            Conditional Access
-          </h3>
-
-          <p>
-            Identity-based controls designed
-            to strengthen access to managed
-            applications and cloud resources.
-          </p>
-
-        </div>
-
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            AUTHENTICATION
-          </span>
-
-          <h3>
-            MFA
-          </h3>
-
-          <p>
-            Multi-factor authentication,
-            secure account recovery,
-            registration support,
-            and authentication troubleshooting.
-          </p>
-
-        </div>
-
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            ADMINISTRATION
-          </span>
-
-          <h3>
-            Identity Lifecycle
-          </h3>
-
-          <p>
-            User provisioning,
-            access changes,
-            group membership,
-            licensing,
-            account management,
-            and offboarding workflows.
-          </p>
-
-        </div>
-
-      </div>
-    `
-  },
-
-
-  infrastructure: {
-
-    label:
-      "CORE MODULE // 03",
-
-    title:
-      "Infrastructure",
-
-    notification:
-      "INFRASTRUCTURE CONNECTED",
-
-    content: `
-      <div class="workspace-grid">
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            NETWORKING
-          </span>
-
-          <h3>
-            Multi-Site Connectivity
-          </h3>
-
-          <p>
-            Supporting distributed connectivity,
-            network appliances,
-            site communication,
-            troubleshooting,
-            and operational uptime.
-          </p>
-
-        </div>
-
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            COMPUTE
-          </span>
-
-          <h3>
-            Server Infrastructure
-          </h3>
-
-          <p>
-            Physical server support,
-            system management,
-            resiliency planning,
-            backup strategy,
-            and infrastructure standards.
-          </p>
-
-        </div>
-
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            BUSINESS SYSTEMS
-          </span>
-
-          <h3>
-            POS + Kiosk Systems
-          </h3>
-
-          <p>
-            Supporting business-critical
-            POS platforms,
-            kiosks,
-            tablets,
-            and specialized endpoint environments.
-          </p>
-
-        </div>
-
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            OPERATIONS
-          </span>
-
-          <h3>
-            Site Technology
-          </h3>
-
-          <p>
-            Cameras,
-            voice systems,
-            peripherals,
-            remote support tools,
-            network devices,
-            and operational technology.
-          </p>
-
-        </div>
-
-      </div>
-    `
-  },
-
-
-  automation: {
-
-    label:
-      "CORE MODULE // 04",
-
-    title:
-      "Automation",
-
-    notification:
-      "AUTOMATION ENGINE READY",
-
-    content: `
-      <div class="workspace-grid">
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            SCRIPTING
-          </span>
-
-          <h3>
-            PowerShell
-          </h3>
-
-          <p>
-            Administrative automation
-            supporting endpoint discovery,
-            validation,
-            provisioning,
-            updates,
-            and repeatable operations.
-          </p>
-
-        </div>
-
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            PROVISIONING
-          </span>
-
-          <h3>
-            Deployment Automation
-          </h3>
-
-          <p>
-            Reducing repetitive setup steps
-            and creating predictable
-            endpoint deployment workflows.
-          </p>
-
-        </div>
-
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            VALIDATION
-          </span>
-
-          <h3>
-            Health + Discovery
-          </h3>
-
-          <p>
-            Read-only assessment,
-            configuration discovery,
-            health validation,
-            and troubleshooting support.
-          </p>
-
-        </div>
-
-
-        <div class="workspace-block">
-
-          <span class="workspace-tag">
-            STANDARDIZATION
-          </span>
-
-          <h3>
-            Repeatable Operations
-          </h3>
-
-          <p>
-            Converting manual technical processes
-            into documented,
-            consistent,
-            and reusable workflows.
-          </p>
-
-        </div>
-
-      </div>
-    `
-  }
-
-};
-
-
-// =========================================================
-// SYSTEM BUILD DATA
-// =========================================================
-
-const systemBuilds = {
-
-  autopilot: {
-
-    label:
-      "SYSTEM BUILD // 01",
-
-    title:
-      "Windows Autopilot Provisioning System",
-
-    notification:
-      "BUILD 01 MOUNTED",
-
-    status:
-      "ACTIVE DEVELOPMENT",
-
-    objective:
-      "Develop a repeatable Windows provisioning workflow that improves device consistency, reduces manual configuration, and supports scalable endpoint deployment.",
-
-    technologies: [
-      "Microsoft Intune",
-      "Windows Autopilot",
-      "Microsoft Entra ID",
-      "PowerShell",
-      "Windows 11"
-    ],
-
-    architecture: [
-      "Device Registration",
-      "Autopilot",
-      "Intune Enrollment",
-      "Identity",
-      "Configuration",
-      "Applications",
-      "Validation"
-    ],
-
-    contribution: [
-      "Designed the standardized provisioning workflow",
-      "Built repeatable device registration processes",
-      "Implemented deployment and pre-provisioning concepts",
-      "Structured policy and application delivery",
-      "Developed validation and troubleshooting procedures",
-      "Documented the process for repeatable technical use"
-    ],
-
-    evidence: [
-      "Provisioning architecture diagram",
-      "Sanitized enrollment workflow",
-      "Deployment profile overview",
-      "Provisioning process documentation"
-    ]
-
-  },
-
-
-  "endpoint-architecture": {
-
-    label:
-      "SYSTEM BUILD // 02",
-
-    title:
-      "Endpoint Management Architecture",
-
-    notification:
-      "BUILD 02 MOUNTED",
-
-    status:
-      "ACTIVE DEVELOPMENT",
-
-    objective:
-      "Establish centralized standards for Windows endpoint configuration, compliance, security, application delivery, and device lifecycle management.",
-
-    technologies: [
-      "Microsoft Intune",
-      "Microsoft Entra ID",
-      "Windows 11",
-      "Endpoint Security",
-      "Configuration Profiles"
-    ],
-
-    architecture: [
-      "Enrollment",
-      "Device Groups",
-      "Configuration",
-      "Compliance",
-      "Security",
-      "Applications",
-      "Reporting"
-    ],
-
-    contribution: [
-      "Evaluated existing endpoint management requirements",
-      "Defined standardized device management approaches",
-      "Structured configuration and compliance policies",
-      "Developed application assignment strategy",
-      "Designed endpoint security standards",
-      "Created repeatable administrative documentation"
-    ],
-
-    evidence: [
-      "Endpoint architecture diagram",
-      "Sanitized policy structure",
-      "Configuration workflow",
-      "Device management model"
-    ]
-
-  },
-
-
-  "automation-toolkit": {
-
-    label:
-      "SYSTEM BUILD // 03",
-
-    title:
-      "Endpoint Automation Toolkit",
-
-    notification:
-      "BUILD 03 MOUNTED",
-
-    status:
-      "ACTIVE DEVELOPMENT",
-
-    objective:
-      "Reduce repetitive endpoint administration by creating reusable automation workflows for discovery, validation, updates, provisioning, and technical operations.",
-
-    technologies: [
-      "PowerShell",
-      "Windows",
-      "Microsoft Intune",
-      "Automation",
-      "Endpoint Management"
-    ],
-
-    architecture: [
-      "Discovery",
-      "Assessment",
-      "Validation",
-      "Updates",
-      "Provisioning",
-      "Reporting"
-    ],
-
-    contribution: [
-      "Automated endpoint discovery and validation processes",
-      "Developed system health assessment workflows",
-      "Created automated update processes",
-      "Reduced repetitive provisioning steps",
-      "Designed reusable technical utilities",
-      "Documented workflow usage and troubleshooting"
-    ],
-
-    evidence: [
-      "Automation workflow diagram",
-      "Sanitized example output",
-      "Process architecture",
-      "System health report example"
-    ]
-
-  },
-
-
-  "identity-security": {
-
-    label:
-      "SYSTEM BUILD // 04",
-
-    title:
-      "Identity Security Architecture",
-
-    notification:
-      "BUILD 04 MOUNTED",
-
-    status:
-      "DESIGN + IMPLEMENTATION",
-
-    objective:
-      "Develop a modern cloud identity framework centered on authentication, access controls, user lifecycle management, and secure application access.",
-
-    technologies: [
-      "Microsoft Entra ID",
-      "Conditional Access",
-      "MFA",
-      "Microsoft 365",
-      "SSO"
-    ],
-
-    architecture: [
-      "Identity",
-      "Authentication",
-      "MFA",
-      "Conditional Access",
-      "Applications",
-      "Cloud Resources"
-    ],
-
-    contribution: [
-      "Developed identity administration standards",
-      "Evaluated authentication and access requirements",
-      "Designed Conditional Access approaches",
-      "Evaluated application SSO opportunities",
-      "Structured user and group administration workflows",
-      "Documented identity security processes"
-    ],
-
-    evidence: [
-      "Identity architecture diagram",
-      "Authentication flow",
-      "Sanitized access policy model",
-      "SSO integration concept"
-    ]
-
-  },
-
-
-  "infrastructure-standardization": {
-
-    label:
-      "SYSTEM BUILD // 05",
-
-    title:
-      "Multi-Site Infrastructure Standardization",
-
-    notification:
-      "BUILD 05 MOUNTED",
-
-    status:
-      "ACTIVE DEVELOPMENT",
-
-    objective:
-      "Improve consistency, supportability, visibility, and resiliency across distributed business technology and site infrastructure.",
-
-    technologies: [
-      "Networking",
-      "SonicWall",
-      "Windows Servers",
-      "POS Systems",
-      "Kiosks",
-      "VoIP",
-      "Remote Support"
-    ],
-
-    architecture: [
-      "Network",
-      "Firewall",
-      "Servers",
-      "Endpoints",
-      "POS",
-      "Kiosks",
-      "Cameras",
-      "Voice"
-    ],
-
-    contribution: [
-      "Evaluated existing multi-site technology",
-      "Identified infrastructure inconsistencies",
-      "Developed support and management standards",
-      "Improved technical documentation",
-      "Troubleshot site infrastructure dependencies",
-      "Identified backup, recovery, and resiliency opportunities"
-    ],
-
-    evidence: [
-      "Generalized site architecture",
-      "Infrastructure support workflow",
-      "Standardization model",
-      "Sanitized environment diagram"
-    ]
-
-  },
-
-
-  "application-deployment": {
-
-    label:
-      "SYSTEM BUILD // 06",
-
-    title:
-      "Managed Application Deployment",
-
-    notification:
-      "BUILD 06 MOUNTED",
-
-    status:
-      "ACTIVE DEVELOPMENT",
-
-    objective:
-      "Transform manually installed applications into predictable and manageable deployment workflows across centrally managed Windows endpoints.",
-
-    technologies: [
-      "Microsoft Intune",
-      "Win32 Applications",
-      "Windows",
-      "Application Packaging",
-      "Deployment Testing"
-    ],
-
-    architecture: [
-      "Installer Analysis",
-      "Packaging",
-      "Detection",
-      "Assignment",
-      "Deployment",
-      "Validation"
-    ],
-
-    contribution: [
-      "Evaluated application installer behavior",
-      "Defined deployment and detection requirements",
-      "Built and tested managed application packages",
-      "Troubleshot deployment failures",
-      "Structured assignment approaches",
-      "Documented repeatable application deployment workflows"
-    ],
-
-    evidence: [
-      "Application deployment workflow",
-      "Sanitized deployment status",
-      "Packaging lifecycle diagram",
-      "Testing methodology"
-    ]
-
-  }
-
-};
-
-
-// =========================================================
-// RENDER BUILD
-// =========================================================
-
-function renderBuild(build) {
-
-  const architectureHTML =
-    build.architecture
-      .map((item, index) => {
-
-        const arrow =
-          index <
-          build.architecture.length - 1
-            ? `
-              <span class="flow-arrow">
-                
-              </span>
-            `
-            : "";
-
-
-        return `
-
-          <span class="flow-item">
-            ${item}
-          </span>
-
-          ${arrow}
-
-        `;
-
-      })
-      .join("");
-
-
-  const technologyHTML =
-    build.technologies
-      .map(item => `
-
-        <span class="technology-tag">
-          ${item}
-        </span>
-
-      `)
-      .join("");
-
-
-  const contributionHTML =
-    build.contribution
-      .map(item => `
-
-        <li>
-          ${item}
-        </li>
-
-      `)
-      .join("");
-
-
-  const evidenceHTML =
-    build.evidence
-      .map((item, index) => `
-
-        <div class="evidence-card">
-
-          <div class="evidence-number">
-            0${index + 1}
-          </div>
-
-          <span>
-            PROJECT EVIDENCE
-          </span>
-
-          <strong>
-            ${item}
-          </strong>
-
-          <small>
-            Sanitized artifact placeholder
-          </small>
-
-        </div>
-
-      `)
-      .join("");
-
-
-  return `
-
-    <div class="build-detail">
-
-
-      <div class="build-summary-grid">
-
-
-        <div class="build-objective">
-
-          <span class="workspace-tag">
-            OBJECTIVE
-          </span>
-
-          <p>
-            ${build.objective}
-          </p>
-
-        </div>
-
-
-        <div class="build-state-panel">
-
-          <span class="workspace-tag">
-            BUILD STATE
-          </span>
-
-          <strong>
-            ${build.status}
-          </strong>
-
-
-          <div class="build-state-line">
-
-            <span class="status-dot"></span>
-
-            SYSTEM INDEXED
-
-          </div>
-
-        </div>
-
-
-      </div>
-
-
-
-      <div class="detail-section">
-
-        <span class="workspace-tag">
-          SYSTEM FLOW
-        </span>
-
-
-        <div class="architecture-flow">
-          ${architectureHTML}
-        </div>
-
-      </div>
-
-
-
-      <div class="detail-section">
-
-        <span class="workspace-tag">
-          TECHNOLOGY STACK
-        </span>
-
-
-        <div class="technology-list">
-          ${technologyHTML}
-        </div>
-
-      </div>
-
-
-
-      <div class="detail-section">
-
-        <span class="workspace-tag">
-          MY CONTRIBUTION
-        </span>
-
-
-        <ul class="contribution-list">
-          ${contributionHTML}
-        </ul>
-
-      </div>
-
-
-
-      <div class="detail-section">
-
-        <span class="workspace-tag">
-          PROJECT EVIDENCE
-        </span>
-
-
-        <p class="privacy-note">
-
-          Technical evidence is limited to
-          sanitized diagrams, screenshots,
-          workflow models, and
-          non-confidential output.
-
-          Internal source code,
-          credentials,
-          tenant identifiers,
-          internal addresses,
-          and proprietary configurations
-          are excluded.
-
-        </p>
-
-
-        <div class="evidence-grid">
-          ${evidenceHTML}
-        </div>
-
-      </div>
-
-
-    </div>
-
-  `;
-
-}
-
-
-// =========================================================
-// UNIVERSAL PROJECTOR REFERENCES
-// =========================================================
-
-const projectionBackground =
-  document.getElementById("projection-background");
-
-const projectionLayer =
-  document.getElementById("projection-layer");
-
-const projectionBeam =
-  document.getElementById("projection-beam");
-
-const projectionLabel =
-  document.getElementById("projection-label");
-
-const projectionTitle =
-  document.getElementById("projection-title");
-
-const projectionStateText =
-  document.getElementById("projection-state-text");
-
-const projectionBody =
-  document.getElementById("projection-body");
-
-const closeProjection =
-  document.getElementById("close-projection");
-
-
-let activeProjectionCard =
-  null;
-
-let floatingProjectionCard =
-  null;
-
-let projectionClosing =
-  false;
-
-
-// =========================================================
-// MOVE PROJECTOR TO BODY
-// =========================================================
-
-if (projectionBackground) {
-  document.body.appendChild(
-    projectionBackground
-  );
-}
-
-if (projectionLayer) {
-  document.body.appendChild(
-    projectionLayer
-  );
-}
-
-
-// =========================================================
-// ENDPOINT MODULE PROJECTION
-// =========================================================
-
-function renderEndpointProjection() {
-
-  projectionBody.innerHTML = `
-
-    <div class="endpoint-projection-layout">
-
-
-      <article
-        class="projected-block projection-piece"
-      >
-
-        <span class="projected-tag">
-          DEVICE MANAGEMENT
-        </span>
-
-        <h3>
-          Microsoft Intune
-        </h3>
-
-        <p>
-          Configuration profiles, policy targeting,
-          managed applications, compliance,
-          and centralized endpoint administration.
-        </p>
-
-      </article>
-
-
-
-      <section
-        class="endpoint-projection-center projection-piece"
-      >
-
-        <div class="endpoint-projection-flow">
-
-
-          <div class="projection-flow-node">
-            DEVICE REGISTRATION
-          </div>
-
-          <div class="projection-flow-arrow"></div>
-
-
-          <div class="projection-flow-node">
-            WINDOWS AUTOPILOT
-          </div>
-
-          <div class="projection-flow-arrow"></div>
-
-
-          <div class="projection-flow-node">
-            INTUNE ENROLLMENT
-          </div>
-
-          <div class="projection-flow-arrow"></div>
-
-
-          <div class="projection-flow-node">
-            CONFIGURATION + APPS
-          </div>
-
-          <div class="projection-flow-arrow"></div>
-
-
-          <div class="projection-flow-node">
-            COMPLIANT / USER READY
-          </div>
-
-
-        </div>
-
-      </section>
-
-
-
-      <article
-        class="projected-block projection-piece"
-      >
-
-        <span class="projected-tag">
-          SECURITY
-        </span>
-
-        <h3>
-          Compliance + Device Health
-        </h3>
-
-        <p>
-          Security posture, compliance requirements,
-          health validation, remediation visibility,
-          and managed endpoint standards.
-        </p>
-
-      </article>
-
-
-
-      <article
-        class="projected-block projection-piece"
-      >
-
-        <span class="projected-tag">
-          APPLICATION DELIVERY
-        </span>
-
-        <h3>
-          Managed Software
-        </h3>
-
-        <p>
-          Win32 packaging, detection logic,
-          assignments, testing, and standardized
-          application deployment.
-        </p>
-
-      </article>
-
-
-
-      <article
-        class="projected-block projection-piece"
-      >
-
-        <span class="projected-tag">
-          OPERATIONS
-        </span>
-
-        <h3>
-          Endpoint Lifecycle
-        </h3>
-
-        <p>
-          Provisioning, validation, troubleshooting,
-          recovery, refresh, and reprovisioning.
-        </p>
-
-      </article>
-
-
-
-      <div
-        class="endpoint-lifecycle-bar projection-piece"
-      >
-
-        <div class="endpoint-lifecycle-step">
-          PROVISION
-        </div>
-
-        <div class="endpoint-lifecycle-step">
-          MANAGE
-        </div>
-
-        <div class="endpoint-lifecycle-step">
-          VALIDATE
-        </div>
-
-        <div class="endpoint-lifecycle-step">
-          RECOVER
-        </div>
-
-      </div>
-
-
-    </div>
-
-  `;
-
-}
-
-
-// =========================================================
-// IDENTITY PROJECTION
-// =========================================================
-
-function renderIdentityProjection() {
-
-  projectionBody.innerHTML = `
-
-    <div class="identity-projection-layout">
-
-
-      <article
-        class="projected-block projection-piece"
-      >
-
-        <span class="projected-tag">
-          ADMINISTRATION
-        </span>
-
-        <h3>
-          Identity Lifecycle
-        </h3>
-
-        <p>
-          User provisioning, groups, licensing,
-          access changes, onboarding,
-          administration, and offboarding.
-        </p>
-
-      </article>
-
-
-
-      <section
-        class="identity-projection-core projection-piece"
-      >
-
-        <div class="identity-projection-node">
-          USER / DEVICE IDENTITY
-        </div>
-
-
-        <div class="identity-projection-branch"></div>
-
-
-        <div class="identity-projection-node">
-          MICROSOFT ENTRA ID
-        </div>
-
-
-        <div class="identity-projection-branch"></div>
-
-
-        <div class="identity-projection-spokes">
-
-          <div class="identity-projection-spoke">
-            MFA
-          </div>
-
-          <div class="identity-projection-spoke">
-            CONDITIONAL ACCESS
-          </div>
-
-          <div class="identity-projection-spoke">
-            SSO
-          </div>
-
-        </div>
-
-
-        <div class="identity-projection-branch"></div>
-
-
-        <div class="identity-projection-node">
-          BUSINESS APPLICATIONS
-        </div>
-
-      </section>
-
-
-
-      <article
-        class="projected-block projection-piece"
-      >
-
-        <span class="projected-tag">
-          AUTHENTICATION
-        </span>
-
-        <h3>
-          Multi-Factor Authentication
-        </h3>
-
-        <p>
-          Secure authentication, registration,
-          recovery, troubleshooting,
-          and account protection.
-        </p>
-
-      </article>
-
-
-
-      <article
-        class="projected-block projection-piece"
-      >
-
-        <span class="projected-tag">
-          ACCESS CONTROL
-        </span>
-
-        <h3>
-          Conditional Access
-        </h3>
-
-        <p>
-          Access decisions based on identity,
-          authentication context, device state,
-          applications, and cloud resources.
-        </p>
-
-      </article>
-
-
-
-      <article
-        class="projected-block projection-piece"
-      >
-
-        <span class="projected-tag">
-          APPLICATION ACCESS
-        </span>
-
-        <h3>
-          Single Sign-On
-        </h3>
-
-        <p>
-          Centralized authentication
-          across Microsoft 365
-          and business applications.
-        </p>
-
-      </article>
-
-
-    </div>
-
-  `;
-
-}
-
-
-// =========================================================
-// INFRASTRUCTURE PROJECTION
-// =========================================================
-
-function renderInfrastructureProjection() {
-
-  projectionBody.innerHTML = `
-
-    <div class="infrastructure-projection-layout">
-
-
-      <article
-        class="projected-block projection-piece"
-      >
-
-        <span class="projected-tag">
-          COMPUTE
-        </span>
-
-        <h3>
-          Server Infrastructure
-        </h3>
-
-        <p>
-          Physical server support,
-          resiliency planning, backup,
-          recovery, and lifecycle standards.
-        </p>
-
-      </article>
-
-
-
-      <section
-        class="infrastructure-network-map projection-piece"
-      >
-
-        <div class="infrastructure-network-node">
-          INTERNET / WAN
-        </div>
-
-
-        <div class="infrastructure-network-line"></div>
-
-
-        <div class="infrastructure-network-node">
-          SONICWALL
-        </div>
-
-
-        <div class="infrastructure-network-line"></div>
-
-
-        <div class="infrastructure-network-branches">
-
-          <div class="infrastructure-network-branch">
-            SERVER
-          </div>
-
-          <div class="infrastructure-network-branch">
-            POS / XPT
-          </div>
-
-          <div class="infrastructure-network-branch">
-            KIOSKS
-          </div>
-
-        </div>
-
-
-        <div class="infrastructure-network-line"></div>
-
-
-        <div class="infrastructure-network-branches">
-
-          <div class="infrastructure-network-branch">
-            CAMERAS
-          </div>
-
-          <div class="infrastructure-network-branch">
-            VOICE
-          </div>
-
-          <div class="infrastructure-network-branch">
-            REMOTE SUPPORT
-          </div>
-
-        </div>
-
-      </section>
-
-
-
-      <article
-        class="projected-block projection-piece"
-      >
-
-        <span class="projected-tag">
-          NETWORKING
-        </span>
-
-        <h3>
-          Multi-Site Connectivity
-        </h3>
-
-        <p>
-          Distributed connectivity,
-          firewall dependencies,
-          site troubleshooting,
-          and operational uptime.
-        </p>
-
-      </article>
-
-
-
-      <article
-        class="projected-block projection-piece"
-      >
-
-        <span class="projected-tag">
-          BUSINESS SYSTEMS
-        </span>
-
-        <h3>
-          POS + XPT
-        </h3>
-
-        <p>
-          Business-critical site systems,
-          workstation profiles,
-          connectivity, and readiness.
-        </p>
-
-      </article>
-
-
-
-      <article
-        class="projected-block projection-piece"
-      >
-
-        <span class="projected-tag">
-          SITE TECHNOLOGY
-        </span>
-
-        <h3>
-          Kiosks + Cameras + Voice
-        </h3>
-
-        <p>
-          Specialized endpoints,
-          camera systems, VoIP,
-          tablets, and remote support.
-        </p>
-
-      </article>
-
-
-    </div>
-
-  `;
-
-}
-
-
-// =========================================================
-// AUTOMATION PROJECTION
-// =========================================================
-
-function renderAutomationProjection() {
-
-  projectionBody.innerHTML = `
-
-    <div class="automation-projection-layout">
-
-
-      <section
-        class="automation-projection-pipeline projection-piece"
-      >
-
-
-        <div class="automation-pipeline-step">
-
-          <span>
-            01 // DISCOVER
-          </span>
-
-          <span>
-            SYSTEM STATE
-          </span>
-
-        </div>
-
-
-        <div class="automation-pipeline-step">
-
-          <span>
-            02 // VALIDATE
-          </span>
-
-          <span>
-            READINESS
-          </span>
-
-        </div>
-
-
-        <div class="automation-pipeline-step">
-
-          <span>
-            03 // DECIDE
-          </span>
-
-          <span>
-            CONDITIONS
-          </span>
-
-        </div>
-
-
-        <div class="automation-pipeline-step">
-
-          <span>
-            04 // EXECUTE
-          </span>
-
-          <span>
-            WORKFLOW
-          </span>
-
-        </div>
-
-
-        <div class="automation-pipeline-step">
-
-          <span>
-            05 // VERIFY
-          </span>
-
-          <span>
-            OUTCOME
-          </span>
-
-        </div>
-
-
-        <div class="automation-pipeline-step">
-
-          <span>
-            06 // REPORT
-          </span>
-
-          <span>
-            RESULTS
-          </span>
-
-        </div>
-
-
-      </section>
-
-
-
-      <section class="automation-projection-side">
-
-
-        <article
-          class="projected-block projection-piece"
-        >
-
-          <span class="projected-tag">
-            SCRIPTING
-          </span>
-
-          <h3>
-            PowerShell
-          </h3>
-
-          <p>
-            Administrative tooling for discovery,
-            validation, provisioning,
-            updates, and endpoint operations.
-          </p>
-
-        </article>
-
-
-
-        <article
-          class="projected-block projection-piece"
-        >
-
-          <span class="projected-tag">
-            PROVISIONING
-          </span>
-
-          <h3>
-            Deployment Workflows
-          </h3>
-
-          <p>
-            Device preparation,
-            registration, drivers,
-            enrollment, and deployment validation.
-          </p>
-
-        </article>
-
-
-
-        <article
-          class="projected-block projection-piece"
-        >
-
-          <span class="projected-tag">
-            STANDARDIZATION
-          </span>
-
-          <h3>
-            Repeatable Operations
-          </h3>
-
-          <p>
-            Turning manual processes
-            into reusable tools,
-            SOPs, checks, and workflows.
-          </p>
-
-        </article>
-
-
-      </section>
-
-
-    </div>
-
-  `;
-
-}
-
-
-// =========================================================
-// MODULE ROUTER
-// =========================================================
-
-function renderModuleProjection(
-  name
-) {
-
-  const module =
-    modules[name];
-
-
-  if (!module) {
-    return;
-  }
-
-
-  projectionLabel.textContent =
-    "CORE MODULE // ARCHITECTURE VIEW";
-
-
-  projectionTitle.textContent =
-    module.title;
-
-
-  projectionStateText.textContent =
-    "MODULE ONLINE";
-
-
-  if (
-    name === "endpoints"
-  ) {
-
-    renderEndpointProjection();
-
-  }
-
-
-  if (
-    name === "identity"
-  ) {
-
-    renderIdentityProjection();
-
-  }
-
-
-  if (
-    name === "infrastructure"
-  ) {
-
-    renderInfrastructureProjection();
-
-  }
-
-
-  if (
-    name === "automation"
-  ) {
-
-    renderAutomationProjection();
-
-  }
-
-}
-
-
-// =========================================================
-// BUILD PROJECTION
-// =========================================================
-
-function renderBuildProjection(
-  name
-) {
-
-  const build =
-    systemBuilds[name];
-
-
-  if (!build) {
-    return;
-  }
-
-
-  projectionLabel.textContent =
-    build.label;
-
-
-  projectionTitle.textContent =
-    build.title;
-
-
-  projectionStateText.textContent =
-    "BUILD ONLINE";
-
-
-  const architectureHTML =
-    build.architecture
-      .map(
-        (item, index) => `
-
-          <div class="build-architecture-node">
-
-            <span>
-              ${String(index + 1).padStart(2, "0")}
-            </span>
-
-            <strong>
-              ${item}
-            </strong>
-
-          </div>
-
-        `
-      )
-      .join("");
-
-
-  const technologyHTML =
-    build.technologies
-      .map(
-        item => `
-
-          <span class="build-tech-pill">
-            ${item}
-          </span>
-
-        `
-      )
-      .join("");
-
-
-  const contributionHTML =
-    build.contribution
-      .map(
-        item => `
-
-          <li>
-            ${item}
-          </li>
-
-        `
-      )
-      .join("");
-
-
-  projectionBody.innerHTML = `
-
-    <div class="build-projection-layout">
-
-
-      <section
-        class="build-projection-objective projection-piece"
-      >
-
-        <div>
-
-          <span class="projected-tag">
-            PROJECT OBJECTIVE
-          </span>
-
-          <p>
-            ${build.objective}
-          </p>
-
-        </div>
-
-
-        <div class="build-projection-status">
-
-          <span>
-            STATUS
-          </span>
-
-          <strong>
-            ${build.status}
-          </strong>
-
-        </div>
-
-      </section>
-
-
-
-      <section
-        class="build-projection-architecture projection-piece"
-      >
-
-        <span class="projected-tag">
-          SYSTEM ARCHITECTURE
-        </span>
-
-        ${architectureHTML}
-
-      </section>
-
-
-
-      <section class="build-projection-side">
-
-
-        <div
-          class="build-projection-stack projection-piece"
-        >
-
-          <span class="projected-tag">
-            TECHNOLOGY STACK
-          </span>
-
-
-          <div class="build-tech-stack">
-
-            ${technologyHTML}
-
-          </div>
-
-        </div>
-
-
-
-        <div
-          class="build-projection-contribution projection-piece"
-        >
-
-          <span class="projected-tag">
-            MY CONTRIBUTION
-          </span>
-
-
-          <ul class="build-contribution-list">
-
-            ${contributionHTML}
-
-          </ul>
-
-        </div>
-
-
-      </section>
-
-
-    </div>
-
-  `;
-
-}
-
-
-// =========================================================
-// POSITION BEAM
-// =========================================================
-
-function positionProjectionBeam() {
-
-  if (!projectionBeam) {
-    return;
-  }
-
-
-  const projectorHeight =
-    128;
-
-
-  const projectorTop =
-    window.innerHeight -
-    projectorHeight -
-    2;
-
-
-  projectionBeam.style.bottom =
-    `${
-      window.innerHeight -
-      projectorTop -
-      6
-    }px`;
-
-}
-
-
-// =========================================================
-// CREATE FLOATING PROJECTOR CARD
-// =========================================================
-
-function createProjectionCard(
-  card,
-  title
-) {
-
-  const rect =
-    card.getBoundingClientRect();
-
-
-  floatingProjectionCard =
-    card.cloneNode(true);
-
-
-  floatingProjectionCard.classList.remove(
-    "module-card",
-    "build-card",
-    "module-active",
-    "build-active",
-    "projection-source",
-    "projection-returning",
-    "projection-return-visible"
-  );
-
-
-  floatingProjectionCard.classList.add(
-    "floating-projection-card",
-    "projection-travelling"
-  );
-
-
-  floatingProjectionCard.style.left =
-    `${rect.left}px`;
-
-
-  floatingProjectionCard.style.top =
-    `${rect.top}px`;
-
-
-  floatingProjectionCard.style.width =
-    `${rect.width}px`;
-
-
-  floatingProjectionCard.style.height =
-    `${rect.height}px`;
-
-
-  floatingProjectionCard.innerHTML += `
-
-    <div class="projector-hardware">
-
-      <div class="projector-ring"></div>
-
-      <div class="projector-core"></div>
-
-    </div>
-
-
-    <div class="projector-card-label">
-      PROJECTING // ${title}
-    </div>
-
-  `;
-
-
-  document.body.appendChild(
-    floatingProjectionCard
-  );
-
-
-  /*
-    Original disappears only after
-    identical clone exists above it.
-  */
-
-  card.classList.add(
-    "projection-source"
-  );
-
-
-  void floatingProjectionCard.offsetWidth;
-
-
-  const destinationWidth =
-    Math.min(
-      440,
-      window.innerWidth * 0.76
-    );
-
-
-  const destinationHeight =
-    128;
-
-
-  const destinationLeft =
-    window.innerWidth / 2 -
-    destinationWidth / 2;
-
-
-  const destinationTop =
-    window.innerHeight -
-    destinationHeight -
-    2;
-
-
-  floatingProjectionCard.style.left =
-    `${destinationLeft}px`;
-
-
-  floatingProjectionCard.style.top =
-    `${destinationTop}px`;
-
-
-  floatingProjectionCard.style.width =
-    `${destinationWidth}px`;
-
-
-  floatingProjectionCard.style.height =
-    `${destinationHeight}px`;
-
-
-  /*
-    Card physically reaches dock.
-  */
-
-  setTimeout(
-    () => {
-
-      if (!floatingProjectionCard) {
-        return;
-      }
-
-
-      floatingProjectionCard.classList.remove(
-        "projection-travelling"
+document
+  .querySelectorAll(
+    ".module-card, .build-card"
+  )
+  .forEach(
+    card => {
+
+      card.addEventListener(
+        "pointermove",
+        event => {
+
+          const rect =
+            card.getBoundingClientRect();
+
+
+          card.style.setProperty(
+            "--mouse-x",
+            `${
+              event.clientX -
+              rect.left
+            }px`
+          );
+
+
+          card.style.setProperty(
+            "--mouse-y",
+            `${
+              event.clientY -
+              rect.top
+            }px`
+          );
+
+        }
       );
 
 
-      floatingProjectionCard.classList.add(
-        "projection-docked"
+      card.addEventListener(
+        "pointerleave",
+        () => {
+
+          card.style.setProperty(
+            "--mouse-x",
+            "50%"
+          );
+
+
+          card.style.setProperty(
+            "--mouse-y",
+            "50%"
+          );
+
+        }
       );
 
-    },
-    900
-  );
-
-
-  /*
-    Card turns into projector.
-  */
-
-  setTimeout(
-    () => {
-
-      if (!floatingProjectionCard) {
-        return;
-      }
-
-
-      floatingProjectionCard.classList.add(
-        "projection-projecting"
-      );
-
-    },
-    1150
-  );
-
-}
-
-
-// =========================================================
-// OPEN UNIVERSAL PROJECTION
-// =========================================================
-
-function openProjection(
-  card
-) {
-
-  if (
-    activeProjectionCard ||
-    projectionClosing
-  ) {
-
-    return;
-
-  }
-
-
-  const type =
-    card.dataset.projection;
-
-
-  let title =
-    "";
-
-
-  if (
-    type === "module"
-  ) {
-
-    const name =
-      card.dataset.module;
-
-
-    const module =
-      modules[name];
-
-
-    if (!module) {
-      return;
     }
-
-
-    title =
-      module.title;
-
-
-    renderModuleProjection(
-      name
-    );
-
-  }
-
-
-  if (
-    type === "build"
-  ) {
-
-    const name =
-      card.dataset.build;
-
-
-    const build =
-      systemBuilds[name];
-
-
-    if (!build) {
-      return;
-    }
-
-
-    title =
-      build.title;
-
-
-    renderBuildProjection(
-      name
-    );
-
-  }
-
-
-  if (!title) {
-    return;
-  }
-
-
-  activeProjectionCard =
-    card;
-
-
-  lockPageScroll();
-
-
-  document.body.classList.add(
-    "projection-open"
   );
-
-
-  createProjectionCard(
-    card,
-    title
-  );
-
-
-  positionProjectionBeam();
-
-
-  /*
-    Let selected card visibly dock first.
-  */
-
-  setTimeout(
-    () => {
-
-      if (
-        !projectionLayer ||
-        !activeProjectionCard
-      ) {
-
-        return;
-
-      }
-
-
-      projectionLayer.classList.add(
-        "projection-active"
-      );
-
-
-      projectionLayer.setAttribute(
-        "aria-hidden",
-        "false"
-      );
-
-    },
-    1450
-  );
-
-
-  /*
-    Once projection is established,
-    physical projector almost disappears.
-  */
-
-  setTimeout(
-    () => {
-
-      if (
-        floatingProjectionCard
-      ) {
-
-        floatingProjectionCard.classList.add(
-          "projector-faded"
-        );
-
-      }
-
-    },
-    3200
-  );
-
-
-  showNotification(
-    type === "module"
-      ? "MODULE PROJECTED"
-      : "SYSTEM BUILD PROJECTED",
-
-    title
-  );
-
-}
 
 
 // =========================================================
-// CLOSE UNIVERSAL PROJECTION
+// SECTION REVEAL
 // =========================================================
 
-function closeUniversalProjection() {
-
-  if (
-    !activeProjectionCard ||
-    !floatingProjectionCard ||
-    projectionClosing
-  ) {
-
-    return;
-
-  }
-
-
-  projectionClosing =
-    true;
-
-
-  projectionLayer.classList.remove(
-    "projection-active"
-  );
-
-
-  projectionLayer.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
-
-  /*
-    Keep returning projector ghosted.
-  */
-
-  floatingProjectionCard.classList.remove(
-    "projector-faded"
-  );
-
-
-  floatingProjectionCard.classList.add(
-    "return-dissolve"
-  );
-
-
-  /*
-    Real card prepares underneath.
-  */
-
-  activeProjectionCard.classList.remove(
-    "projection-source"
-  );
-
-
-  activeProjectionCard.classList.add(
-    "projection-returning"
-  );
-
-
-  /*
-    Ghost clone moves home.
-  */
-
-  setTimeout(
-    () => {
-
-      if (
-        !floatingProjectionCard ||
-        !activeProjectionCard
-      ) {
-
-        return;
-
-      }
-
-
-      const rect =
-        activeProjectionCard
-          .getBoundingClientRect();
-
-
-      floatingProjectionCard.style.left =
-        `${rect.left}px`;
-
-
-      floatingProjectionCard.style.top =
-        `${rect.top}px`;
-
-
-      floatingProjectionCard.style.width =
-        `${rect.width}px`;
-
-
-      floatingProjectionCard.style.height =
-        `${rect.height}px`;
-
-    },
-    120
-  );
-
-
-  /*
-    Real card fades back in.
-  */
-
-  setTimeout(
-    () => {
-
-      if (
-        activeProjectionCard
-      ) {
-
-        activeProjectionCard.classList.add(
-          "projection-return-visible"
-        );
-
-      }
-
-    },
-    420
-  );
-
-
-  /*
-    Restore page.
-  */
-
-  setTimeout(
-    () => {
-
-      document.body.classList.remove(
-        "projection-open"
-      );
-
-
-      unlockPageScroll();
-
-    },
-    650
-  );
-
-
-  /*
-    Cleanup.
-  */
-
-  setTimeout(
-    () => {
-
-      if (
-        floatingProjectionCard
-      ) {
-
-        floatingProjectionCard.remove();
-
-
-        floatingProjectionCard =
-          null;
-
-      }
-
-
-      if (
-        activeProjectionCard
-      ) {
-
-        activeProjectionCard.classList.remove(
-          "projection-returning",
-          "projection-return-visible"
-        );
-
-      }
-
-
-      activeProjectionCard =
-        null;
-
-
-      projectionClosing =
-        false;
-
-    },
-    1050
-  );
-
-}
-
-
-// =========================================================
-// ALL PROJECTABLE CARDS
-// =========================================================
-
-const projectionCards =
+const revealElements =
   document.querySelectorAll(
-    '[data-projection="module"], [data-projection="build"]'
+    [
+      ".hero",
+      ".system-metrics",
+      ".modules-section",
+      ".builds-section",
+      ".experience-section",
+      ".creative-section",
+      ".contact-section",
+      ".system-footer"
+    ].join(",")
   );
 
 
-projectionCards.forEach(
-  card => {
-
-    card.addEventListener(
-      "click",
-      () => {
-
-        openProjection(
-          card
-        );
-
-      }
-    );
-
-  }
+revealElements.forEach(
+  element =>
+    element.classList.add(
+      "section-reveal"
+    )
 );
 
-
-// =========================================================
-// CLOSE BUTTON
-// =========================================================
 
 if (
-  closeProjection
+  "IntersectionObserver" in window
 ) {
 
-  closeProjection.addEventListener(
-    "click",
-    () => {
+  const observer =
+    new IntersectionObserver(
+      entries => {
 
-      closeUniversalProjection();
+        entries.forEach(
+          entry => {
 
+            if (
+              !entry.isIntersecting
+            ) {
 
-      showNotification(
-        "SYSTEM UNMOUNTED",
-        "Projection closed"
-      );
+              return;
 
-    }
-  );
+            }
 
-}
 
+            entry.target.classList.add(
+              "section-visible"
+            );
 
-// =========================================================
-// RESIZE
-// =========================================================
 
-window.addEventListener(
-  "resize",
-  () => {
+            observer.unobserve(
+              entry.target
+            );
 
-    if (
-      !floatingProjectionCard ||
-      !activeProjectionCard ||
-      projectionClosing
-    ) {
-
-      return;
-
-    }
-
-
-    const destinationWidth =
-      Math.min(
-        440,
-        window.innerWidth * 0.76
-      );
-
-
-    const destinationHeight =
-      128;
-
-
-    floatingProjectionCard.style.left =
-      `${
-        window.innerWidth / 2 -
-        destinationWidth / 2
-      }px`;
-
-
-    floatingProjectionCard.style.top =
-      `${
-        window.innerHeight -
-        destinationHeight -
-        2
-      }px`;
-
-
-    floatingProjectionCard.style.width =
-      `${destinationWidth}px`;
-
-
-    floatingProjectionCard.style.height =
-      `${destinationHeight}px`;
-
-
-    positionProjectionBeam();
-
-  }
-);
-
-
-// =========================================================
-// WINDOW ANIMATION
-// =========================================================
-
-function restartWindowAnimation(
-  element
-) {
-
-  if (!element) return;
-
-
-  element.classList.remove(
-    "workspace-enter"
-  );
-
-
-  void element.offsetWidth;
-
-
-  element.classList.add(
-    "workspace-enter"
-  );
-
-}
-
-
-// =========================================================
-// ESCAPE TO CLOSE
-// =========================================================
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    if (
-      event.key === "Escape" &&
-      modalOpen
-    ) {
-
-      closeAllWorkspaces();
-
-
-      showNotification(
-        "WINDOW CLOSED",
-        "System workspace unmounted"
-      );
-
-
-      return;
-
-    }
-
-
-    const commandKey =
-      event.ctrlKey ||
-      event.metaKey;
-
-
-    if (
-      commandKey &&
-      event.key.toLowerCase() === "k"
-    ) {
-
-      event.preventDefault();
-
-
-      showNotification(
-        "COMMAND INTERFACE",
-        "Command palette reserved for future build"
-      );
-
-    }
-
-  }
-);
-
-
-// =========================================================
-// CURSOR LIGHTING
-// =========================================================
-
-function addCursorLighting(
-  cards
-) {
-
-  cards.forEach(card => {
-
-    card.addEventListener(
-      "mousemove",
-      event => {
-
-        const rect =
-          card.getBoundingClientRect();
-
-
-        const x =
-          event.clientX -
-          rect.left;
-
-        const y =
-          event.clientY -
-          rect.top;
-
-
-        card.style.setProperty(
-          "--mouse-x",
-          `${x}px`
+          }
         );
 
-
-        card.style.setProperty(
-          "--mouse-y",
-          `${y}px`
-        );
-
+      },
+      {
+        threshold: 0.08,
+        rootMargin:
+          "0px 0px -35px 0px"
       }
     );
 
-  });
+
+  revealElements.forEach(
+    element =>
+      observer.observe(
+        element
+      )
+  );
 
 }
 
 
-addCursorLighting(
-  moduleCards
-);
-
-addCursorLighting(
-  buildCards
-);
-
-
 // =========================================================
-// NOTIFICATIONS
+// NOTIFICATION
 // =========================================================
 
 function showNotification(
@@ -3332,19 +2188,23 @@ function showNotification(
   message
 ) {
 
-  const existing =
+  const old =
     document.querySelector(
       ".system-notification"
     );
 
 
-  if (existing) {
-    existing.remove();
+  if (old) {
+
+    old.remove();
+
   }
 
 
   const notification =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
 
   notification.className =
@@ -3353,8 +2213,7 @@ function showNotification(
 
   notification.innerHTML = `
 
-    <div class="notification-dot"></div>
-
+    <span class="notification-dot"></span>
 
     <div class="notification-copy">
 
@@ -3376,51 +2235,149 @@ function showNotification(
   );
 
 
-  requestAnimationFrame(() => {
-
-    notification.classList.add(
-      "notification-visible"
-    );
-
-  });
-
-
-  setTimeout(() => {
-
-    notification.classList.remove(
-      "notification-visible"
-    );
+  requestAnimationFrame(
+    () =>
+      notification.classList.add(
+        "notification-visible"
+      )
+  );
 
 
-    setTimeout(() => {
+  setTimeout(
+    () => {
 
-      if (
-        document.body.contains(
-          notification
-        )
-      ) {
+      notification.classList.remove(
+        "notification-visible"
+      );
 
-        notification.remove();
 
-      }
+      setTimeout(
+        () =>
+          notification.remove(),
+        300
+      );
 
-    }, 350);
-
-  }, 2200);
+    },
+    2100
+  );
 
 }
 
 
+window.showNotification =
+  showNotification;
+
+
 // =========================================================
-// SYSTEM CONSOLE
+// NOTIFICATION STYLES
 // =========================================================
 
-console.log(
-  "%c TRANQUILINO OS v2.0 ",
-  "background:#050505;color:#d7a83d;font-size:16px;padding:8px;"
-);
+const notificationStyles =
+  document.createElement(
+    "style"
+  );
 
 
-console.log(
-  "Main system controller loaded."
+notificationStyles.textContent = `
+
+  .system-notification {
+
+    position: fixed;
+
+    right: 24px;
+    bottom: 24px;
+
+    z-index: 12000;
+
+    min-width: 260px;
+
+    padding: 15px 17px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    border:
+      1px solid
+      rgba(215,168,61,.42);
+
+    background:
+      rgba(5,5,5,.94);
+
+    opacity: 0;
+
+    transform:
+      translateY(14px);
+
+    transition:
+      .3s ease;
+
+  }
+
+
+  .system-notification.notification-visible {
+
+    opacity: 1;
+
+    transform:
+      translateY(0);
+
+  }
+
+
+  .notification-dot {
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background:
+      #d7a83d;
+
+    box-shadow:
+      0 0 12px
+      rgba(215,168,61,.75);
+
+  }
+
+
+  .notification-copy {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+  }
+
+
+  .notification-copy strong {
+
+    color:
+      #ffe8a3;
+
+    font-size:
+      .56rem;
+
+  }
+
+
+  .notification-copy span {
+
+    color:
+      #8f8b82;
+
+    font-size:
+      .5rem;
+
+  }
+
+`;
+
+
+document.head.appendChild(
+  notificationStyles
 );
