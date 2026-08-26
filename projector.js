@@ -1,33 +1,93 @@
 // =========================================================
 // TRANQUILINO OS v2.0
-// UNIVERSAL PROJECTOR
+// UNIVERSAL HOLOGRAPHIC PROJECTOR
+// FULL REPLACEMENT
 // =========================================================
 
+
+// =========================================================
+// DOM REFERENCES
+// =========================================================
+
+const projectionBackground =
+  document.getElementById(
+    "projection-background"
+  );
+
 const projectionLayer =
-  document.getElementById("projection-layer");
+  document.getElementById(
+    "projection-layer"
+  );
 
 const projectionBeam =
-  document.getElementById("projection-beam");
+  document.getElementById(
+    "projection-beam"
+  );
 
 const projectionLabel =
-  document.getElementById("projection-label");
+  document.getElementById(
+    "projection-label"
+  );
 
 const projectionTitle =
-  document.getElementById("projection-title");
+  document.getElementById(
+    "projection-title"
+  );
 
 const projectionStateText =
-  document.getElementById("projection-state-text");
+  document.getElementById(
+    "projection-state-text"
+  );
 
 const projectionBody =
-  document.getElementById("projection-body");
+  document.getElementById(
+    "projection-body"
+  );
 
 const closeProjectionButton =
-  document.getElementById("close-projection");
+  document.getElementById(
+    "close-projection"
+  );
 
 
-let activeProjectionCard = null;
-let floatingProjectionCard = null;
-let projectionClosing = false;
+// =========================================================
+// MOVE PROJECTOR DIRECTLY UNDER BODY
+//
+// Keeps fixed hologram outside transformed main-os.
+// =========================================================
+
+if (projectionBackground) {
+
+  document.body.appendChild(
+    projectionBackground
+  );
+
+}
+
+if (projectionLayer) {
+
+  document.body.appendChild(
+    projectionLayer
+  );
+
+}
+
+
+// =========================================================
+// PROJECTOR STATE
+// =========================================================
+
+let activeProjectionCard =
+  null;
+
+let floatingProjectionCard =
+  null;
+
+let projectionOpening =
+  false;
+
+let projectionClosing =
+  false;
 
 
 // =========================================================
@@ -37,19 +97,46 @@ let projectionClosing = false;
 const projectorModules = {
 
   endpoints: {
-    title: "Endpoint Systems"
+
+    title:
+      "Endpoint Systems",
+
+    state:
+      "ENDPOINT ONLINE"
+
   },
+
 
   identity: {
-    title: "Identity + Access"
+
+    title:
+      "Identity + Access",
+
+    state:
+      "IDENTITY ONLINE"
+
   },
+
 
   infrastructure: {
-    title: "Infrastructure"
+
+    title:
+      "Infrastructure",
+
+    state:
+      "INFRASTRUCTURE ONLINE"
+
   },
 
+
   automation: {
-    title: "Automation"
+
+    title:
+      "Automation",
+
+    state:
+      "AUTOMATION READY"
+
   }
 
 };
@@ -62,171 +149,325 @@ const projectorModules = {
 const projectorBuilds = {
 
   autopilot: {
-    title: "Windows Autopilot Provisioning System",
-    status: "ACTIVE DEVELOPMENT",
+
+    title:
+      "Windows Autopilot Provisioning System",
+
+    status:
+      "ACTIVE DEVELOPMENT",
 
     objective:
-      "Standardized cloud-driven Windows provisioning designed to reduce manual configuration and create repeatable endpoint deployments.",
+      "Develop a repeatable Windows provisioning workflow that improves device consistency, reduces manual configuration, and supports scalable endpoint deployment.",
 
     architecture: [
-      "DEVICE REGISTRATION",
-      "WINDOWS AUTOPILOT",
-      "INTUNE ENROLLMENT",
-      "ENTRA ID",
-      "CONFIGURATION + APPS",
-      "VALIDATION"
+      "Device Registration",
+      "Windows Autopilot",
+      "Intune Enrollment",
+      "Identity",
+      "Configuration",
+      "Applications",
+      "Validation"
     ],
 
     stack: [
-      "INTUNE",
-      "AUTOPILOT",
-      "ENTRA ID",
-      "POWERSHELL",
-      "WINDOWS 11"
+      "Microsoft Intune",
+      "Windows Autopilot",
+      "Microsoft Entra ID",
+      "PowerShell",
+      "Windows 11"
+    ],
+
+    contribution: [
+      "Cloud-driven Windows provisioning workflow",
+      "Device registration and enrollment standardization",
+      "Configuration and application deployment integration",
+      "Repeatable technician deployment process"
     ]
+
   },
 
 
   "endpoint-architecture": {
-    title: "Endpoint Management Architecture",
-    status: "ACTIVE DEVELOPMENT",
+
+    title:
+      "Endpoint Management Architecture",
+
+    status:
+      "ACTIVE DEVELOPMENT",
 
     objective:
-      "Centralized Windows endpoint standards covering configuration, compliance, security, application delivery, and lifecycle management.",
+      "Establish centralized endpoint standards for Windows configuration, compliance, security, application delivery, and lifecycle management.",
 
     architecture: [
-      "ENROLLMENT",
-      "DEVICE GROUPS",
-      "CONFIGURATION",
-      "COMPLIANCE",
-      "SECURITY",
-      "APPLICATIONS"
+      "Enrollment",
+      "Device Groups",
+      "Configuration",
+      "Compliance",
+      "Security",
+      "Application Delivery",
+      "Lifecycle"
     ],
 
     stack: [
-      "INTUNE",
-      "WINDOWS",
-      "COMPLIANCE",
-      "ENDPOINT SECURITY"
+      "Microsoft Intune",
+      "Windows",
+      "Compliance",
+      "Endpoint Security",
+      "Company Portal"
+    ],
+
+    contribution: [
+      "Centralized endpoint administration",
+      "Configuration profile standards",
+      "Compliance architecture",
+      "Application management workflows"
     ]
+
   },
 
 
   "automation-toolkit": {
-    title: "Endpoint Automation Toolkit",
-    status: "ACTIVE DEVELOPMENT",
+
+    title:
+      "Endpoint Automation Toolkit",
+
+    status:
+      "ACTIVE DEVELOPMENT",
 
     objective:
-      "Reusable administrative workflows for discovery, validation, provisioning, updates, and endpoint readiness.",
+      "Create reusable administrative tooling for discovery, provisioning, updates, validation, and endpoint readiness.",
 
     architecture: [
-      "DISCOVER",
-      "VALIDATE",
-      "DECIDE",
-      "EXECUTE",
-      "VERIFY",
-      "REPORT"
+      "Discovery",
+      "Inventory",
+      "Validation",
+      "Provisioning",
+      "Drivers",
+      "Updates",
+      "Reporting"
     ],
 
     stack: [
-      "POWERSHELL",
-      "WINDOWS",
-      "AUTOMATION",
-      "INTUNE"
+      "PowerShell",
+      "Windows",
+      "Automation",
+      "Intune",
+      "System Discovery"
+    ],
+
+    contribution: [
+      "Reusable PowerShell administration tools",
+      "Device health and readiness validation",
+      "Driver and update automation",
+      "Technician-friendly deployment workflows"
     ]
+
   },
 
 
   "identity-security": {
-    title: "Identity Security Architecture",
-    status: "DESIGN",
+
+    title:
+      "Identity Security Architecture",
+
+    status:
+      "ACTIVE DEVELOPMENT",
 
     objective:
-      "Cloud identity controls centered around authentication, MFA, Conditional Access, application access, and SSO.",
+      "Strengthen identity security using modern authentication, MFA, Conditional Access, device state, and application access controls.",
 
     architecture: [
-      "IDENTITY",
-      "AUTHENTICATION",
+      "Identity",
+      "Authentication",
       "MFA",
-      "CONDITIONAL ACCESS",
-      "APPLICATIONS",
-      "ACCESS VALIDATION"
+      "Device State",
+      "Conditional Access",
+      "SSO",
+      "Validation"
     ],
 
     stack: [
-      "ENTRA ID",
+      "Microsoft Entra ID",
       "MFA",
-      "CONDITIONAL ACCESS",
+      "Conditional Access",
       "SSO",
-      "MICROSOFT 365"
+      "Microsoft 365"
+    ],
+
+    contribution: [
+      "Modern authentication planning",
+      "MFA architecture",
+      "Conditional Access design",
+      "Application authentication standardization"
     ]
+
   },
 
 
   "infrastructure-standardization": {
-    title: "Multi-Site Infrastructure Standardization",
-    status: "ACTIVE DEVELOPMENT",
+
+    title:
+      "Multi-Site Infrastructure Standardization",
+
+    status:
+      "ACTIVE DEVELOPMENT",
 
     objective:
-      "Improving consistency, supportability, resiliency, and operational visibility across distributed site technology.",
+      "Improve consistency, supportability, visibility, and resiliency across distributed business technology and site infrastructure.",
 
     architecture: [
-      "WAN",
-      "SONICWALL",
-      "SERVERS",
-      "POS / XPT",
-      "KIOSKS",
-      "SITE SYSTEMS"
+      "Network",
+      "Firewall",
+      "Servers",
+      "Endpoints",
+      "POS",
+      "Kiosks",
+      "Cameras",
+      "Voice"
     ],
 
     stack: [
-      "SONICWALL",
-      "WINDOWS",
-      "SERVERS",
-      "NETWORKING",
-      "POS"
+      "Networking",
+      "SonicWall",
+      "Windows Servers",
+      "POS Systems",
+      "Kiosks",
+      "Voice",
+      "Cameras"
+    ],
+
+    contribution: [
+      "Multi-site technology assessment",
+      "Firewall and network troubleshooting",
+      "Server and endpoint standardization",
+      "Business-critical site system support"
     ]
+
   },
 
 
   "application-deployment": {
-    title: "Managed Application Deployment",
-    status: "ACTIVE DEVELOPMENT",
+
+    title:
+      "Managed Application Deployment",
+
+    status:
+      "ACTIVE DEVELOPMENT",
 
     objective:
-      "Predictable managed application delivery through packaging, detection, assignment, testing, deployment, and validation.",
+      "Develop repeatable application packaging, deployment, detection, assignment, and validation workflows for managed Windows endpoints.",
 
     architecture: [
-      "SOURCE",
-      "PACKAGE",
-      "DETECTION",
-      "ASSIGNMENT",
-      "DEPLOYMENT",
-      "VALIDATION"
+      "Source",
+      "Package",
+      "Install Command",
+      "Detection",
+      "Assignment",
+      "Deployment",
+      "Validation"
     ],
 
     stack: [
-      "INTUNE",
-      "WIN32",
-      "POWERSHELL",
-      "WINDOWS"
+      "Microsoft Intune",
+      "Win32",
+      "MSI",
+      "EXE Packaging",
+      "PowerShell"
+    ],
+
+    contribution: [
+      "Win32 application packaging",
+      "Detection rule design",
+      "Deployment troubleshooting",
+      "Managed application delivery standards"
     ]
+
   }
 
 };
 
 
 // =========================================================
-// ENDPOINT PROJECTION
+// HEADER
+// =========================================================
+
+function setProjectionHeader(
+  label,
+  title,
+  state
+) {
+
+  if (projectionLabel) {
+    projectionLabel.textContent =
+      label;
+  }
+
+  if (projectionTitle) {
+    projectionTitle.textContent =
+      title;
+  }
+
+  if (projectionStateText) {
+    projectionStateText.textContent =
+      state;
+  }
+
+}
+
+
+// =========================================================
+// INDEX PROJECTED ELEMENTS
+// =========================================================
+
+function indexProjectionPieces() {
+
+  if (!projectionBody) {
+    return;
+  }
+
+  const pieces =
+    projectionBody.querySelectorAll(
+      ".projection-piece"
+    );
+
+  pieces.forEach(
+    (
+      piece,
+      index
+    ) => {
+
+      piece.style.setProperty(
+        "--projection-index",
+        index
+      );
+
+    }
+  );
+
+}
+
+
+// =========================================================
+// ENDPOINT SYSTEMS
 // =========================================================
 
 function renderEndpointProjection() {
+
+  setProjectionHeader(
+    "CORE MODULE // ARCHITECTURE VIEW",
+    "Endpoint Systems",
+    "ENDPOINT ONLINE"
+  );
+
 
   projectionBody.innerHTML = `
 
     <div class="endpoint-projection-layout">
 
-      <article class="projected-block projection-piece">
+
+      <article
+        class="projected-block projection-piece"
+      >
 
         <span class="projected-tag">
           DEVICE MANAGEMENT
@@ -237,16 +478,22 @@ function renderEndpointProjection() {
         </h3>
 
         <p>
-          Configuration profiles, policy targeting,
-          compliance, managed applications,
-          and centralized endpoint administration.
+          Centralized endpoint enrollment,
+          configuration profiles,
+          compliance,
+          policy targeting,
+          managed applications,
+          and device administration.
         </p>
 
       </article>
 
 
       <section
-        class="endpoint-projection-center projection-piece"
+        class="
+          endpoint-projection-center
+          projection-piece
+        "
       >
 
         <div class="endpoint-projection-flow">
@@ -276,7 +523,7 @@ function renderEndpointProjection() {
           <div class="projection-flow-arrow"></div>
 
           <div class="projection-flow-node">
-            COMPLIANT / USER READY
+            USER READY
           </div>
 
         </div>
@@ -284,7 +531,9 @@ function renderEndpointProjection() {
       </section>
 
 
-      <article class="projected-block projection-piece">
+      <article
+        class="projected-block projection-piece"
+      >
 
         <span class="projected-tag">
           SECURITY
@@ -295,15 +544,18 @@ function renderEndpointProjection() {
         </h3>
 
         <p>
-          Security posture, compliance requirements,
-          device-health validation,
+          Device posture,
+          compliance requirements,
+          health validation,
           and remediation visibility.
         </p>
 
       </article>
 
 
-      <article class="projected-block projection-piece">
+      <article
+        class="projected-block projection-piece"
+      >
 
         <span class="projected-tag">
           APPLICATIONS
@@ -314,15 +566,19 @@ function renderEndpointProjection() {
         </h3>
 
         <p>
-          Win32 packaging, detection logic,
-          assignments, testing,
+          Win32 packaging,
+          detection logic,
+          assignments,
+          testing,
           and managed software delivery.
         </p>
 
       </article>
 
 
-      <article class="projected-block projection-piece">
+      <article
+        class="projected-block projection-piece"
+      >
 
         <span class="projected-tag">
           OPERATIONS
@@ -333,15 +589,22 @@ function renderEndpointProjection() {
         </h3>
 
         <p>
-          Provisioning, troubleshooting,
-          recovery, refresh,
+          Provisioning,
+          troubleshooting,
+          recovery,
+          refresh,
           and reprovisioning.
         </p>
 
       </article>
 
 
-      <div class="endpoint-lifecycle-bar projection-piece">
+      <div
+        class="
+          endpoint-lifecycle-bar
+          projection-piece
+        "
+      >
 
         <div class="endpoint-lifecycle-step">
           PROVISION
@@ -361,24 +624,38 @@ function renderEndpointProjection() {
 
       </div>
 
+
     </div>
 
   `;
+
+
+  indexProjectionPieces();
 
 }
 
 
 // =========================================================
-// IDENTITY PROJECTION
+// IDENTITY + ACCESS
 // =========================================================
 
 function renderIdentityProjection() {
+
+  setProjectionHeader(
+    "CORE MODULE // ARCHITECTURE VIEW",
+    "Identity + Access",
+    "IDENTITY ONLINE"
+  );
+
 
   projectionBody.innerHTML = `
 
     <div class="identity-projection-layout">
 
-      <article class="projected-block projection-piece">
+
+      <article
+        class="projected-block projection-piece"
+      >
 
         <span class="projected-tag">
           ADMINISTRATION
@@ -389,8 +666,12 @@ function renderIdentityProjection() {
         </h3>
 
         <p>
-          Users, groups, licensing,
-          onboarding, access changes,
+          Users,
+          groups,
+          licensing,
+          onboarding,
+          access changes,
+          administration,
           and offboarding.
         </p>
 
@@ -398,7 +679,10 @@ function renderIdentityProjection() {
 
 
       <section
-        class="identity-projection-core projection-piece"
+        class="
+          identity-projection-core
+          projection-piece
+        "
       >
 
         <div class="identity-projection-node">
@@ -412,7 +696,6 @@ function renderIdentityProjection() {
         </div>
 
         <div class="identity-projection-branch"></div>
-
 
         <div class="identity-projection-spokes">
 
@@ -430,9 +713,7 @@ function renderIdentityProjection() {
 
         </div>
 
-
         <div class="identity-projection-branch"></div>
-
 
         <div class="identity-projection-node">
           BUSINESS APPLICATIONS
@@ -441,7 +722,9 @@ function renderIdentityProjection() {
       </section>
 
 
-      <article class="projected-block projection-piece">
+      <article
+        class="projected-block projection-piece"
+      >
 
         <span class="projected-tag">
           AUTHENTICATION
@@ -453,14 +736,18 @@ function renderIdentityProjection() {
 
         <p>
           Authentication security,
-          registration, recovery,
+          registration,
+          recovery,
+          troubleshooting,
           and account protection.
         </p>
 
       </article>
 
 
-      <article class="projected-block projection-piece">
+      <article
+        class="projected-block projection-piece"
+      >
 
         <span class="projected-tag">
           ACCESS CONTROL
@@ -471,14 +758,16 @@ function renderIdentityProjection() {
         </h3>
 
         <p>
-          Identity and device-aware
-          access controls for cloud resources.
+          Identity and device-aware access
+          decisions across cloud resources.
         </p>
 
       </article>
 
 
-      <article class="projected-block projection-piece">
+      <article
+        class="projected-block projection-piece"
+      >
 
         <span class="projected-tag">
           APPLICATION ACCESS
@@ -490,29 +779,44 @@ function renderIdentityProjection() {
 
         <p>
           Centralized authentication across
-          Microsoft 365 and business systems.
+          supported business applications
+          and Microsoft 365.
         </p>
 
       </article>
+
 
     </div>
 
   `;
 
+
+  indexProjectionPieces();
+
 }
 
 
 // =========================================================
-// INFRASTRUCTURE PROJECTION
+// INFRASTRUCTURE
 // =========================================================
 
 function renderInfrastructureProjection() {
+
+  setProjectionHeader(
+    "CORE MODULE // ARCHITECTURE VIEW",
+    "Infrastructure",
+    "INFRASTRUCTURE ONLINE"
+  );
+
 
   projectionBody.innerHTML = `
 
     <div class="infrastructure-projection-layout">
 
-      <article class="projected-block projection-piece">
+
+      <article
+        class="projected-block projection-piece"
+      >
 
         <span class="projected-tag">
           COMPUTE
@@ -524,15 +828,21 @@ function renderInfrastructureProjection() {
 
         <p>
           Physical infrastructure,
-          resiliency, backup,
-          recovery, and lifecycle.
+          lifecycle,
+          resiliency,
+          backup,
+          recovery,
+          and operational support.
         </p>
 
       </article>
 
 
       <section
-        class="infrastructure-network-map projection-piece"
+        class="
+          infrastructure-network-map
+          projection-piece
+        "
       >
 
         <div class="infrastructure-network-node">
@@ -551,7 +861,7 @@ function renderInfrastructureProjection() {
         <div class="infrastructure-network-branches">
 
           <div class="infrastructure-network-branch">
-            SERVER
+            SERVERS
           </div>
 
           <div class="infrastructure-network-branch">
@@ -579,7 +889,7 @@ function renderInfrastructureProjection() {
           </div>
 
           <div class="infrastructure-network-branch">
-            REMOTE
+            REMOTE SUPPORT
           </div>
 
         </div>
@@ -587,7 +897,9 @@ function renderInfrastructureProjection() {
       </section>
 
 
-      <article class="projected-block projection-piece">
+      <article
+        class="projected-block projection-piece"
+      >
 
         <span class="projected-tag">
           NETWORKING
@@ -600,13 +912,16 @@ function renderInfrastructureProjection() {
         <p>
           Site connectivity,
           firewall dependencies,
-          troubleshooting, and uptime.
+          device communication,
+          and network troubleshooting.
         </p>
 
       </article>
 
 
-      <article class="projected-block projection-piece">
+      <article
+        class="projected-block projection-piece"
+      >
 
         <span class="projected-tag">
           BUSINESS SYSTEMS
@@ -618,14 +933,17 @@ function renderInfrastructureProjection() {
 
         <p>
           Business-critical systems,
-          workstation profiles,
+          specialized workstation profiles,
+          connectivity,
           and operational readiness.
         </p>
 
       </article>
 
 
-      <article class="projected-block projection-piece">
+      <article
+        class="projected-block projection-piece"
+      >
 
         <span class="projected-tag">
           SITE TECHNOLOGY
@@ -637,61 +955,125 @@ function renderInfrastructureProjection() {
 
         <p>
           Specialized endpoints,
-          cameras, tablets,
-          voice, and remote support.
+          tablets,
+          camera systems,
+          voice systems,
+          and remote administration.
         </p>
 
       </article>
+
 
     </div>
 
   `;
 
+
+  indexProjectionPieces();
+
 }
 
 
 // =========================================================
-// AUTOMATION PROJECTION
+// AUTOMATION
 // =========================================================
 
 function renderAutomationProjection() {
+
+  setProjectionHeader(
+    "CORE MODULE // ARCHITECTURE VIEW",
+    "Automation",
+    "AUTOMATION READY"
+  );
+
 
   projectionBody.innerHTML = `
 
     <div class="automation-projection-layout">
 
+
       <section
-        class="automation-projection-pipeline projection-piece"
+        class="
+          automation-projection-pipeline
+          projection-piece
+        "
       >
 
         <div class="automation-pipeline-step">
-          <span>01 // DISCOVER</span>
-          <span>SYSTEM STATE</span>
+
+          <span>
+            01 // DISCOVER
+          </span>
+
+          <span>
+            SYSTEM STATE
+          </span>
+
         </div>
 
-        <div class="automation-pipeline-step">
-          <span>02 // VALIDATE</span>
-          <span>READINESS</span>
-        </div>
 
         <div class="automation-pipeline-step">
-          <span>03 // DECIDE</span>
-          <span>CONDITIONS</span>
+
+          <span>
+            02 // VALIDATE
+          </span>
+
+          <span>
+            READINESS
+          </span>
+
         </div>
 
-        <div class="automation-pipeline-step">
-          <span>04 // EXECUTE</span>
-          <span>WORKFLOW</span>
-        </div>
 
         <div class="automation-pipeline-step">
-          <span>05 // VERIFY</span>
-          <span>OUTCOME</span>
+
+          <span>
+            03 // DECIDE
+          </span>
+
+          <span>
+            CONDITIONS
+          </span>
+
         </div>
 
+
         <div class="automation-pipeline-step">
-          <span>06 // REPORT</span>
-          <span>RESULTS</span>
+
+          <span>
+            04 // EXECUTE
+          </span>
+
+          <span>
+            WORKFLOW
+          </span>
+
+        </div>
+
+
+        <div class="automation-pipeline-step">
+
+          <span>
+            05 // VERIFY
+          </span>
+
+          <span>
+            OUTCOME
+          </span>
+
+        </div>
+
+
+        <div class="automation-pipeline-step">
+
+          <span>
+            06 // REPORT
+          </span>
+
+          <span>
+            RESULTS
+          </span>
+
         </div>
 
       </section>
@@ -699,7 +1081,10 @@ function renderAutomationProjection() {
 
       <section class="automation-projection-side">
 
-        <article class="projected-block projection-piece">
+
+        <article
+          class="projected-block projection-piece"
+        >
 
           <span class="projected-tag">
             SCRIPTING
@@ -711,14 +1096,17 @@ function renderAutomationProjection() {
 
           <p>
             Administrative automation,
-            discovery, validation,
+            discovery,
+            validation,
             and endpoint tooling.
           </p>
 
         </article>
 
 
-        <article class="projected-block projection-piece">
+        <article
+          class="projected-block projection-piece"
+        >
 
           <span class="projected-tag">
             PROVISIONING
@@ -730,14 +1118,18 @@ function renderAutomationProjection() {
 
           <p>
             Device preparation,
-            enrollment, drivers,
-            and validation.
+            enrollment,
+            drivers,
+            configuration,
+            and readiness validation.
           </p>
 
         </article>
 
 
-        <article class="projected-block projection-piece">
+        <article
+          class="projected-block projection-piece"
+        >
 
           <span class="projected-tag">
             STANDARDIZATION
@@ -748,18 +1140,24 @@ function renderAutomationProjection() {
           </h3>
 
           <p>
-            Turning manual tasks into
-            reusable tools,
-            workflows, and SOPs.
+            Converting manual administrative work
+            into reusable tools,
+            processes,
+            and standardized workflows.
           </p>
 
         </article>
 
+
       </section>
+
 
     </div>
 
   `;
+
+
+  indexProjectionPieces();
 
 }
 
@@ -768,38 +1166,49 @@ function renderAutomationProjection() {
 // BUILD PROJECTION
 // =========================================================
 
-function renderBuildProjection(name) {
+function renderBuildProjection(
+  buildName
+) {
 
   const build =
-    projectorBuilds[name];
+    projectorBuilds[
+      buildName
+    ];
 
 
   if (!build) {
-    return;
+
+    return false;
+
   }
 
 
-  projectionLabel.textContent =
-    "SYSTEM BUILD // PROJECT ARCHITECTURE";
+  setProjectionHeader(
+    "SYSTEM BUILD // PROJECT ARCHITECTURE",
+    build.title,
+    "BUILD ONLINE"
+  );
 
 
-  projectionTitle.textContent =
-    build.title;
-
-
-  projectionStateText.textContent =
-    "BUILD ONLINE";
-
-
-  const architecture =
+  const architectureHTML =
     build.architecture
       .map(
-        (item, index) => `
+        (
+          item,
+          index
+        ) => `
 
           <div class="build-architecture-node">
 
             <span>
-              ${String(index + 1).padStart(2, "0")}
+              ${
+                String(
+                  index + 1
+                ).padStart(
+                  2,
+                  "0"
+                )
+              }
             </span>
 
             <strong>
@@ -813,7 +1222,7 @@ function renderBuildProjection(name) {
       .join("");
 
 
-  const stack =
+  const stackHTML =
     build.stack
       .map(
         item => `
@@ -827,13 +1236,30 @@ function renderBuildProjection(name) {
       .join("");
 
 
+  const contributionHTML =
+    build.contribution
+      .map(
+        item => `
+
+          <li>
+            ${item}
+          </li>
+
+        `
+      )
+      .join("");
+
+
   projectionBody.innerHTML = `
 
     <div class="build-projection-layout">
 
 
       <section
-        class="build-projection-objective projection-piece"
+        class="
+          build-projection-objective
+          projection-piece
+        "
       >
 
         <div>
@@ -865,14 +1291,17 @@ function renderBuildProjection(name) {
 
 
       <section
-        class="build-projection-architecture projection-piece"
+        class="
+          build-projection-architecture
+          projection-piece
+        "
       >
 
         <span class="projected-tag">
           SYSTEM ARCHITECTURE
         </span>
 
-        ${architecture}
+        ${architectureHTML}
 
       </section>
 
@@ -881,47 +1310,39 @@ function renderBuildProjection(name) {
 
 
         <div
-          class="build-projection-stack projection-piece"
+          class="
+            build-projection-stack
+            projection-piece
+          "
         >
 
           <span class="projected-tag">
             TECHNOLOGY STACK
           </span>
 
-
           <div class="build-tech-stack">
-            ${stack}
+
+            ${stackHTML}
+
           </div>
 
         </div>
 
 
         <div
-          class="build-projection-contribution projection-piece"
+          class="
+            build-projection-contribution
+            projection-piece
+          "
         >
 
           <span class="projected-tag">
-            SYSTEM PURPOSE
+            ENGINEERING CONTRIBUTION
           </span>
-
 
           <ul class="build-contribution-list">
 
-            <li>
-              Standardize repeatable administration.
-            </li>
-
-            <li>
-              Reduce manual configuration.
-            </li>
-
-            <li>
-              Improve operational consistency.
-            </li>
-
-            <li>
-              Create portfolio-safe architecture evidence.
-            </li>
+            ${contributionHTML}
 
           </ul>
 
@@ -935,55 +1356,8 @@ function renderBuildProjection(name) {
 
   `;
 
-}
 
-
-// =========================================================
-// MODULE ROUTER
-// =========================================================
-
-function renderModuleProjection(name) {
-
-  const module =
-    projectorModules[name];
-
-
-  if (!module) {
-    return false;
-  }
-
-
-  projectionLabel.textContent =
-    "CORE MODULE // ARCHITECTURE VIEW";
-
-
-  projectionTitle.textContent =
-    module.title;
-
-
-  projectionStateText.textContent =
-    "MODULE ONLINE";
-
-
-  if (name === "endpoints") {
-    renderEndpointProjection();
-  }
-
-
-  if (name === "identity") {
-    renderIdentityProjection();
-  }
-
-
-  if (name === "infrastructure") {
-    renderInfrastructureProjection();
-  }
-
-
-  if (name === "automation") {
-    renderAutomationProjection();
-  }
-
+  indexProjectionPieces();
 
   return true;
 
@@ -991,25 +1365,122 @@ function renderModuleProjection(name) {
 
 
 // =========================================================
-// CREATE FLOATING CARD
+// MODULE ROUTER
 // =========================================================
 
-function createFloatingProjectionCard(
-  card,
+function renderModuleProjection(
+  moduleName
+) {
+
+  switch (moduleName) {
+
+    case "endpoints":
+
+      renderEndpointProjection();
+
+      return true;
+
+
+    case "identity":
+
+      renderIdentityProjection();
+
+      return true;
+
+
+    case "infrastructure":
+
+      renderInfrastructureProjection();
+
+      return true;
+
+
+    case "automation":
+
+      renderAutomationProjection();
+
+      return true;
+
+
+    default:
+
+      return false;
+
+  }
+
+}
+
+
+// =========================================================
+// POSITION PROJECTOR BEAM
+// =========================================================
+
+function positionProjectionBeam() {
+
+  if (!projectionBeam) {
+
+    return;
+
+  }
+
+
+  const mobile =
+    window.innerWidth <= 700;
+
+
+  projectionBeam.style.bottom =
+    mobile
+      ? "102px"
+      : "118px";
+
+}
+
+
+// =========================================================
+// CREATE PHYSICAL PROJECTOR
+// =========================================================
+
+function createFloatingProjector(
+  sourceCard,
   title
 ) {
 
   const rect =
-    card.getBoundingClientRect();
+    sourceCard.getBoundingClientRect();
 
 
   floatingProjectionCard =
-    card.cloneNode(true);
+    sourceCard.cloneNode(
+      true
+    );
+
+
+  floatingProjectionCard.removeAttribute(
+    "id"
+  );
+
+
+  // Strip original card styling.
+  floatingProjectionCard.classList.remove(
+    "module-card",
+    "build-card",
+    "module-active",
+    "build-active",
+    "projection-source",
+    "projection-returning",
+    "projection-return-visible"
+  );
 
 
   floatingProjectionCard.classList.add(
     "floating-projection-card",
     "projection-travelling"
+  );
+
+
+  floatingProjectionCard.setAttribute(
+    "aria-hidden",
+    "true"
   );
 
 
@@ -1029,7 +1500,7 @@ function createFloatingProjectionCard(
     `${rect.height}px`;
 
 
-  floatingProjectionCard.innerHTML += `
+  floatingProjectionCard.innerHTML = `
 
     <div class="projector-hardware">
 
@@ -1041,7 +1512,9 @@ function createFloatingProjectionCard(
 
 
     <div class="projector-card-label">
+
       PROJECTING // ${title}
+
     </div>
 
   `;
@@ -1052,38 +1525,75 @@ function createFloatingProjectionCard(
   );
 
 
-  card.classList.add(
+  sourceCard.classList.add(
     "projection-source"
   );
 
 
+  // Force initial card position to paint.
   void floatingProjectionCard.offsetWidth;
 
 
+  moveProjectorToDock();
+
+}
+
+
+// =========================================================
+// MOVE PROJECTOR TO BOTTOM CENTER
+// =========================================================
+
+function moveProjectorToDock() {
+
+  if (!floatingProjectionCard) {
+
+    return;
+
+  }
+
+
+  const mobile =
+    window.innerWidth <= 700;
+
+
   const width =
-    Math.min(
-      440,
-      window.innerWidth * 0.76
-    );
+    mobile
+      ? Math.min(
+          335,
+          window.innerWidth * 0.84
+        )
+      : Math.min(
+          410,
+          window.innerWidth * 0.72
+        );
 
 
   const height =
-    128;
+    mobile
+      ? 104
+      : 118;
+
+
+  const left =
+    (
+      window.innerWidth -
+      width
+    ) /
+    2;
+
+
+  const top =
+    window.innerHeight -
+    height -
+    4;
 
 
   floatingProjectionCard.style.left =
-    `${
-      window.innerWidth / 2 -
-      width / 2
-    }px`;
+    `${left}px`;
 
 
   floatingProjectionCard.style.top =
-    `${
-      window.innerHeight -
-      height -
-      2
-    }px`;
+    `${top}px`;
 
 
   floatingProjectionCard.style.width =
@@ -1094,37 +1604,7 @@ function createFloatingProjectionCard(
     `${height}px`;
 
 
-  setTimeout(() => {
-
-    if (!floatingProjectionCard) {
-      return;
-    }
-
-
-    floatingProjectionCard.classList.remove(
-      "projection-travelling"
-    );
-
-
-    floatingProjectionCard.classList.add(
-      "projection-docked"
-    );
-
-  }, 900);
-
-
-  setTimeout(() => {
-
-    if (!floatingProjectionCard) {
-      return;
-    }
-
-
-    floatingProjectionCard.classList.add(
-      "projection-projecting"
-    );
-
-  }, 1150);
+  positionProjectionBeam();
 
 }
 
@@ -1133,10 +1613,13 @@ function createFloatingProjectionCard(
 // OPEN PROJECTION
 // =========================================================
 
-function openUniversalProjection(card) {
+function openProjection(
+  card
+) {
 
   if (
     activeProjectionCard ||
+    projectionOpening ||
     projectionClosing
   ) {
 
@@ -1145,58 +1628,122 @@ function openUniversalProjection(card) {
   }
 
 
-  let title = "";
-
-
-  const moduleName =
-    card.dataset.module;
-
-
-  const buildName =
-    card.dataset.build;
-
-
   if (
-    moduleName &&
-    projectorModules[moduleName]
+    !projectionLayer ||
+    !projectionBody
   ) {
 
-    renderModuleProjection(
-      moduleName
+    console.error(
+      "Projection DOM missing."
     );
-
-
-    title =
-      projectorModules[moduleName].title;
-
-  }
-
-
-  else if (
-    buildName &&
-    projectorBuilds[buildName]
-  ) {
-
-    renderBuildProjection(
-      buildName
-    );
-
-
-    title =
-      projectorBuilds[buildName].title;
-
-  }
-
-
-  else {
 
     return;
 
   }
 
 
+  let rendered =
+    false;
+
+  let projectedTitle =
+    "SYSTEM";
+
+
+  const type =
+    card.dataset.projection;
+
+
+  // =======================================================
+  // MODULE
+  // =======================================================
+
+  if (
+    type === "module"
+  ) {
+
+    const moduleName =
+      card.dataset.module;
+
+
+    const module =
+      projectorModules[
+        moduleName
+      ];
+
+
+    if (!module) {
+
+      return;
+
+    }
+
+
+    projectedTitle =
+      module.title;
+
+
+    rendered =
+      renderModuleProjection(
+        moduleName
+      );
+
+  }
+
+
+  // =======================================================
+  // BUILD
+  // =======================================================
+
+  else if (
+    type === "build"
+  ) {
+
+    const buildName =
+      card.dataset.build;
+
+
+    const build =
+      projectorBuilds[
+        buildName
+      ];
+
+
+    if (!build) {
+
+      return;
+
+    }
+
+
+    projectedTitle =
+      build.title;
+
+
+    rendered =
+      renderBuildProjection(
+        buildName
+      );
+
+  }
+
+
+  if (!rendered) {
+
+    return;
+
+  }
+
+
+  projectionOpening =
+    true;
+
+
   activeProjectionCard =
     card;
+
+
+  projectionBody.scrollTop =
+    0;
 
 
   document.documentElement.style.overflow =
@@ -1212,47 +1759,114 @@ function openUniversalProjection(card) {
   );
 
 
-  createFloatingProjectionCard(
+  createFloatingProjector(
     card,
-    title
+    projectedTitle
   );
 
 
-  projectionBeam.style.bottom =
-    "122px";
+  // =======================================================
+  // PHASE 1
+  // CARD ARRIVES AT PROJECTOR
+  // =======================================================
+
+  setTimeout(
+    () => {
+
+      if (!floatingProjectionCard) {
+
+        return;
+
+      }
 
 
-  setTimeout(() => {
-
-    if (!projectionLayer) {
-      return;
-    }
-
-
-    projectionLayer.classList.add(
-      "projection-active"
-    );
-
-
-    projectionLayer.setAttribute(
-      "aria-hidden",
-      "false"
-    );
-
-  }, 1450);
-
-
-  setTimeout(() => {
-
-    if (floatingProjectionCard) {
-
-      floatingProjectionCard.classList.add(
-        "projector-faded"
+      floatingProjectionCard.classList.remove(
+        "projection-travelling"
       );
 
-    }
 
-  }, 3200);
+      floatingProjectionCard.classList.add(
+        "projection-docked"
+      );
+
+    },
+    850
+  );
+
+
+  // =======================================================
+  // PHASE 2
+  // PROJECTOR POWERS ON
+  // =======================================================
+
+  setTimeout(
+    () => {
+
+      if (!floatingProjectionCard) {
+
+        return;
+
+      }
+
+
+      floatingProjectionCard.classList.add(
+        "projection-projecting"
+      );
+
+    },
+    1050
+  );
+
+
+  // =======================================================
+  // PHASE 3
+  // HOLOGRAM OPENS
+  // =======================================================
+
+  setTimeout(
+    () => {
+
+      projectionLayer.classList.add(
+        "projection-active"
+      );
+
+
+      projectionLayer.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+
+      projectionOpening =
+        false;
+
+    },
+    1280
+  );
+
+
+  // =======================================================
+  // PHASE 4
+  // HARDWARE FADES AWAY
+  // =======================================================
+
+  setTimeout(
+    () => {
+
+      if (
+        floatingProjectionCard &&
+        activeProjectionCard
+      ) {
+
+        floatingProjectionCard.classList.add(
+          "projector-faded"
+        );
+
+      }
+
+    },
+    2450
+  );
 
 }
 
@@ -1261,11 +1875,10 @@ function openUniversalProjection(card) {
 // CLOSE PROJECTION
 // =========================================================
 
-function closeUniversalProjection() {
+function closeProjection() {
 
   if (
     !activeProjectionCard ||
-    !floatingProjectionCard ||
     projectionClosing
   ) {
 
@@ -1278,26 +1891,51 @@ function closeUniversalProjection() {
     true;
 
 
-  projectionLayer.classList.remove(
-    "projection-active"
-  );
+  projectionOpening =
+    false;
 
 
-  projectionLayer.setAttribute(
-    "aria-hidden",
-    "true"
-  );
+  // =======================================================
+  // COLLAPSE HOLOGRAM
+  // =======================================================
+
+  if (projectionLayer) {
+
+    projectionLayer.classList.remove(
+      "projection-active"
+    );
 
 
-  floatingProjectionCard.classList.remove(
-    "projector-faded"
-  );
+    projectionLayer.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+  }
 
 
-  floatingProjectionCard.classList.add(
-    "return-dissolve"
-  );
+  // =======================================================
+  // RESTORE PROJECTOR HARDWARE
+  // =======================================================
 
+  if (floatingProjectionCard) {
+
+    floatingProjectionCard.classList.remove(
+      "projector-faded",
+      "projection-projecting"
+    );
+
+
+    floatingProjectionCard.classList.add(
+      "return-dissolve"
+    );
+
+  }
+
+
+  // =======================================================
+  // PREP ORIGINAL CARD
+  // =======================================================
 
   activeProjectionCard.classList.remove(
     "projection-source"
@@ -1309,86 +1947,150 @@ function closeUniversalProjection() {
   );
 
 
-  setTimeout(() => {
+  // =======================================================
+  // SEND PROJECTOR BACK
+  // =======================================================
 
-    const rect =
-      activeProjectionCard
-        .getBoundingClientRect();
+  setTimeout(
+    () => {
 
+      if (
+        !floatingProjectionCard ||
+        !activeProjectionCard
+      ) {
 
-    floatingProjectionCard.style.left =
-      `${rect.left}px`;
+        return;
 
-
-    floatingProjectionCard.style.top =
-      `${rect.top}px`;
-
-
-    floatingProjectionCard.style.width =
-      `${rect.width}px`;
+      }
 
 
-    floatingProjectionCard.style.height =
-      `${rect.height}px`;
-
-  }, 120);
-
-
-  setTimeout(() => {
-
-    activeProjectionCard.classList.add(
-      "projection-return-visible"
-    );
-
-  }, 420);
+      const rect =
+        activeProjectionCard
+          .getBoundingClientRect();
 
 
-  setTimeout(() => {
-
-    document.body.classList.remove(
-      "projection-open"
-    );
+      floatingProjectionCard.style.left =
+        `${rect.left}px`;
 
 
-    document.documentElement.style.overflow =
-      "";
+      floatingProjectionCard.style.top =
+        `${rect.top}px`;
 
 
-    document.body.style.overflow =
-      "";
-
-  }, 650);
+      floatingProjectionCard.style.width =
+        `${rect.width}px`;
 
 
-  setTimeout(() => {
+      floatingProjectionCard.style.height =
+        `${rect.height}px`;
 
-    floatingProjectionCard.remove();
-
-
-    floatingProjectionCard =
-      null;
-
-
-    activeProjectionCard.classList.remove(
-      "projection-returning",
-      "projection-return-visible"
-    );
+    },
+    120
+  );
 
 
-    activeProjectionCard =
-      null;
+  // =======================================================
+  // ORIGINAL CARD RETURNS
+  // =======================================================
+
+  setTimeout(
+    () => {
+
+      if (!activeProjectionCard) {
+
+        return;
+
+      }
 
 
-    projectionClosing =
-      false;
+      activeProjectionCard.classList.add(
+        "projection-return-visible"
+      );
 
-  }, 1050);
+    },
+    410
+  );
+
+
+  // =======================================================
+  // UNLOCK PAGE
+  // =======================================================
+
+  setTimeout(
+    () => {
+
+      document.body.classList.remove(
+        "projection-open"
+      );
+
+
+      document.documentElement.style.overflow =
+        "";
+
+
+      document.body.style.overflow =
+        "";
+
+    },
+    650
+  );
+
+
+  // =======================================================
+  // CLEANUP
+  // =======================================================
+
+  setTimeout(
+    () => {
+
+      if (floatingProjectionCard) {
+
+        floatingProjectionCard.remove();
+
+      }
+
+
+      floatingProjectionCard =
+        null;
+
+
+      if (activeProjectionCard) {
+
+        activeProjectionCard.classList.remove(
+          "projection-returning",
+          "projection-return-visible"
+        );
+
+      }
+
+
+      activeProjectionCard =
+        null;
+
+
+      projectionClosing =
+        false;
+
+
+      if (projectionBody) {
+
+        projectionBody.scrollTop =
+          0;
+
+      }
+
+    },
+    1000
+  );
 
 }
 
 
 // =========================================================
-// INTERCEPT MODULE + BUILD CLICKS
+// PROJECT CARD CLICKS
+//
+// Capture mode prevents other card click handlers
+// from interfering with projector behavior.
 // =========================================================
 
 document.addEventListener(
@@ -1397,19 +2099,16 @@ document.addEventListener(
 
     const card =
       event.target.closest(
-        ".module-card, .build-card"
+        '[data-projection="module"], [data-projection="build"]'
       );
 
 
     if (!card) {
+
       return;
+
     }
 
-
-    /*
-      Capture the click before the old
-      script.js workspace handler gets it.
-    */
 
     event.preventDefault();
 
@@ -1418,7 +2117,7 @@ document.addEventListener(
     event.stopImmediatePropagation();
 
 
-    openUniversalProjection(
+    openProjection(
       card
     );
 
@@ -1441,17 +2140,20 @@ if (closeProjectionButton) {
 
       event.stopPropagation();
 
+      event.stopImmediatePropagation();
 
-      closeUniversalProjection();
 
-    }
+      closeProjection();
+
+    },
+    true
   );
 
 }
 
 
 // =========================================================
-// ESCAPE
+// ESCAPE KEY
 // =========================================================
 
 document.addEventListener(
@@ -1470,7 +2172,7 @@ document.addEventListener(
       event.stopImmediatePropagation();
 
 
-      closeUniversalProjection();
+      closeProjection();
 
     }
 
@@ -1480,9 +2182,112 @@ document.addEventListener(
 
 
 // =========================================================
-// PROJECTOR STATUS
+// PROJECTED BODY INTERACTION
+// =========================================================
+
+if (projectionBody) {
+
+  projectionBody.addEventListener(
+    "click",
+    event => {
+
+      event.stopPropagation();
+
+    }
+  );
+
+
+  projectionBody.addEventListener(
+    "wheel",
+    event => {
+
+      event.stopPropagation();
+
+    },
+    {
+      passive: true
+    }
+  );
+
+
+  projectionBody.addEventListener(
+    "touchstart",
+    event => {
+
+      event.stopPropagation();
+
+    },
+    {
+      passive: true
+    }
+  );
+
+
+  projectionBody.addEventListener(
+    "touchmove",
+    event => {
+
+      event.stopPropagation();
+
+    },
+    {
+      passive: true
+    }
+  );
+
+}
+
+
+// =========================================================
+// RESIZE
+// =========================================================
+
+window.addEventListener(
+  "resize",
+  () => {
+
+    if (
+      !floatingProjectionCard ||
+      !activeProjectionCard ||
+      projectionClosing
+    ) {
+
+      return;
+
+    }
+
+
+    moveProjectorToDock();
+
+  }
+);
+
+
+// =========================================================
+// READY
 // =========================================================
 
 console.log(
-  "TranquilinoOS universal projector online."
+  "%c HOLOGRAPHIC PROJECTOR ONLINE ",
+  [
+    "background:#050505",
+    "color:#ffe8a3",
+    "padding:8px 12px",
+    "border:1px solid rgba(215,168,61,.45)"
+  ].join(";")
+);
+
+
+console.log(
+  "Module projection ready."
+);
+
+
+console.log(
+  "Build projection ready."
+);
+
+
+console.log(
+  "Physical projector dock ready."
 );
