@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -22,6 +23,7 @@
     rel="stylesheet"
     href="style.css"
   >
+
 </head>
 
 
@@ -38,8 +40,8 @@
   class="startup-screen"
 >
 
-  <!-- Environmental layers -->
   <div class="startup-background"></div>
+
   <div class="system-scanline"></div>
 
 
@@ -81,7 +83,6 @@
   </header>
 
 
-
   <!-- ==================================================
        LEFT TELEMETRY
   =================================================== -->
@@ -100,7 +101,7 @@
       </span>
 
       <strong id="telemetry-cpu">
-        18%
+        25%
       </strong>
 
     </div>
@@ -113,7 +114,7 @@
       </span>
 
       <strong id="telemetry-memory">
-        42%
+        44%
       </strong>
 
     </div>
@@ -145,7 +146,6 @@
     </div>
 
   </aside>
-
 
 
   <!-- ==================================================
@@ -221,15 +221,12 @@
   </aside>
 
 
-
   <!-- ==================================================
-       CENTER STARTUP INTERFACE
+       CENTER SYSTEM CORE
   =================================================== -->
 
   <main class="startup-content">
 
-
-    <!-- CT SYSTEM CORE -->
 
     <div class="startup-logo">
 
@@ -239,9 +236,8 @@
 
         <div class="core-ring core-ring-two"></div>
 
-
         <img
-          src="./ct-logo.png"
+          src="ct-logo.png"
           alt="CT Logo"
           class="ct-logo"
         >
@@ -250,9 +246,6 @@
 
     </div>
 
-
-
-    <!-- SYSTEM IDENTITY -->
 
     <div class="startup-heading">
 
@@ -278,10 +271,8 @@
     </div>
 
 
-
-    <!-- SYSTEM STATE -->
-
     <div class="startup-status">
+
 
       <div class="status-item">
 
@@ -304,11 +295,9 @@
 
       </div>
 
+
     </div>
 
-
-
-    <!-- BUILD INFORMATION -->
 
     <div class="startup-buildline">
 
@@ -322,9 +311,6 @@
 
     </div>
 
-
-
-    <!-- INITIALIZE -->
 
     <button
       id="initialize-btn"
@@ -343,29 +329,30 @@
     </button>
 
 
-
-    <!-- SYSTEM DISCIPLINES -->
-
-    <p class="startup-footer">
+    <div class="startup-footer">
 
       SYSTEMS
 
-      <span>•</span>
+      <span>
+        •
+      </span>
 
       INFRASTRUCTURE
 
-      <span>•</span>
+      <span>
+        •
+      </span>
 
       AUTOMATION
 
-    </p>
+    </div>
+
 
   </main>
 
 
-
   <!-- ==================================================
-       BOTTOM SYSTEM INFORMATION
+       BOTTOM STARTUP BAR
   =================================================== -->
 
   <footer class="startup-bottom">
@@ -379,6 +366,7 @@
     </span>
 
   </footer>
+
 
 </section>
 
@@ -396,100 +384,159 @@
   <div class="initialization-shell">
 
 
+    <!-- ==================================================
+         INITIALIZATION COMMAND HEADER
+    =================================================== -->
+
     <header class="init-system-header">
 
-      <div>
-        <span class="init-kicker">
-          TRANQUILINO OS // BOOT MANAGER
-        </span>
+      <div class="init-header-copy">
+
+        <p class="init-kicker">
+          SYSTEM INITIALIZATION // PARALLEL DEPLOYMENT
+        </p>
 
         <h2>
-          Mounting System Architecture
+          Initializing Environment
         </h2>
+
+        <p>
+          Mounting system architecture and validating services
+        </p>
+
       </div>
 
 
-      <div class="init-session-state">
+      <div class="init-header-center">
 
-        <span class="status-dot"></span>
+        <span class="init-header-pulse"></span>
 
-        SECURE BOOT
+        <div>
+
+          <span>
+            DEPLOYMENT ENGINE
+          </span>
+
+          <strong>
+            LIVE TRANSFER
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="init-header-state">
+
+        <span class="online-dot"></span>
+
+        <span>
+          SECURE SESSION
+        </span>
 
       </div>
 
     </header>
 
 
+    <!-- ==================================================
+         COMMAND CONSOLE
+    =================================================== -->
 
-    <div class="init-dashboard">
-
-
-      <!-- LEFT SYSTEM CORE -->
-
-      <aside class="init-core-panel">
-
-        <div class="init-logo-frame">
-
-          <img
-            src="./ct-logo.png"
-            alt="TranquilinoOS Core"
-            class="init-logo"
-          >
-
-        </div>
+    <div class="init-command-layout">
 
 
-        <div class="init-core-copy">
+      <!-- ================================================
+           LEFT SYSTEM STATE
+      ================================================= -->
+
+      <aside class="init-side-panel">
+
+        <span class="init-panel-label">
+          SYSTEM STATE
+        </span>
+
+
+        <div class="init-side-row">
 
           <span>
-            CORE INSTANCE
+            MODE
           </span>
 
           <strong>
-            TRANQUILINO OS
+            AUTOMATED
           </strong>
-
-          <small>
-            BUILD 2.0.26
-          </small>
 
         </div>
 
 
-        <div class="init-core-metrics">
+        <div class="init-side-row">
 
-          <div>
-            <span>MODE</span>
-            <strong>AUTOMATED</strong>
-          </div>
+          <span>
+            THREADS
+          </span>
 
-          <div>
-            <span>SESSION</span>
-            <strong>SECURE</strong>
-          </div>
+          <strong id="init-thread-count">
+            06
+          </strong>
 
-          <div>
-            <span>THREADS</span>
-            <strong>06 ACTIVE</strong>
-          </div>
+        </div>
+
+
+        <div class="init-side-row">
+
+          <span>
+            SESSION
+          </span>
+
+          <strong>
+            SECURE
+          </strong>
+
+        </div>
+
+
+        <div class="init-side-row">
+
+          <span>
+            ENGINE
+          </span>
+
+          <strong>
+            ONLINE
+          </strong>
+
+        </div>
+
+
+        <div class="init-side-signal">
+
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
 
         </div>
 
       </aside>
 
 
-
-      <!-- RIGHT TRANSFER ENGINE -->
+      <!-- ================================================
+           CENTER SYSTEM TRANSFER
+      ================================================= -->
 
       <main class="init-transfer-panel">
 
 
-        <div class="transfer-summary">
+        <div class="init-overall">
+
 
           <div>
 
-            <span class="transfer-label">
-              SYSTEM DEPLOYMENT
+            <span>
+              SYSTEM TRANSFER
             </span>
 
             <strong id="init-overall-percent">
@@ -499,39 +546,53 @@
           </div>
 
 
-          <div class="transfer-time">
+          <div class="init-transfer-mode">
+
+            <span>
+              DEPLOYMENT MODE
+            </span>
+
+            <strong>
+              PARALLEL
+            </strong>
+
+          </div>
+
+
+          <div>
 
             <span>
               EST. REMAINING
             </span>
 
             <strong id="init-eta">
-              00:05
+              00:07
             </strong>
 
           </div>
 
+
         </div>
 
 
-
-        <div class="overall-progress-track">
+        <div class="init-overall-track">
 
           <div
             id="init-overall-bar"
-            class="overall-progress-bar"
+            class="init-overall-bar"
           ></div>
 
         </div>
 
 
-
         <div class="initialization-status">
 
 
+          <!-- 01 -->
+
           <div class="init-row">
 
-            <div class="init-service-copy">
+            <div class="init-service">
 
               <span>
                 ENDPOINT MANAGEMENT CORE
@@ -543,23 +604,26 @@
 
             </div>
 
+
             <div class="init-progress-track">
 
               <div class="init-progress-bar"></div>
 
             </div>
 
+
             <strong>
-              STANDBY
+              0% STANDBY
             </strong>
 
           </div>
 
 
+          <!-- 02 -->
 
           <div class="init-row">
 
-            <div class="init-service-copy">
+            <div class="init-service">
 
               <span>
                 IDENTITY SERVICES
@@ -571,23 +635,26 @@
 
             </div>
 
+
             <div class="init-progress-track">
 
               <div class="init-progress-bar"></div>
 
             </div>
 
+
             <strong>
-              STANDBY
+              0% STANDBY
             </strong>
 
           </div>
 
 
+          <!-- 03 -->
 
           <div class="init-row">
 
-            <div class="init-service-copy">
+            <div class="init-service">
 
               <span>
                 INFRASTRUCTURE INTERFACE
@@ -599,23 +666,26 @@
 
             </div>
 
+
             <div class="init-progress-track">
 
               <div class="init-progress-bar"></div>
 
             </div>
 
+
             <strong>
-              STANDBY
+              0% STANDBY
             </strong>
 
           </div>
 
 
+          <!-- 04 -->
 
           <div class="init-row">
 
-            <div class="init-service-copy">
+            <div class="init-service">
 
               <span>
                 AUTOMATION ENGINE
@@ -627,23 +697,26 @@
 
             </div>
 
+
             <div class="init-progress-track">
 
               <div class="init-progress-bar"></div>
 
             </div>
 
+
             <strong>
-              STANDBY
+              0% STANDBY
             </strong>
 
           </div>
 
 
+          <!-- 05 -->
 
           <div class="init-row">
 
-            <div class="init-service-copy">
+            <div class="init-service">
 
               <span>
                 SECURITY LAYER
@@ -655,23 +728,26 @@
 
             </div>
 
+
             <div class="init-progress-track">
 
               <div class="init-progress-bar"></div>
 
             </div>
 
+
             <strong>
-              STANDBY
+              0% STANDBY
             </strong>
 
           </div>
 
 
+          <!-- 06 -->
 
           <div class="init-row">
 
-            <div class="init-service-copy">
+            <div class="init-service">
 
               <span>
                 SYSTEM BUILD INDEX
@@ -683,14 +759,16 @@
 
             </div>
 
+
             <div class="init-progress-track">
 
               <div class="init-progress-bar"></div>
 
             </div>
 
+
             <strong>
-              STANDBY
+              0% STANDBY
             </strong>
 
           </div>
@@ -705,20 +783,117 @@
             Preparing transfer queue...
           </span>
 
-          <div class="initialization-final">
+
+          <span class="initialization-final">
 
             <span class="status-dot"></span>
 
             SYSTEM READY
 
-          </div>
+          </span>
 
         </footer>
 
 
       </main>
 
+
+      <!-- ================================================
+           RIGHT DEPLOYMENT STATE
+      ================================================= -->
+
+      <aside class="init-side-panel init-side-right">
+
+        <span class="init-panel-label">
+          DEPLOYMENT
+        </span>
+
+
+        <div class="init-side-row">
+
+          <span>
+            ENDPOINT
+          </span>
+
+          <strong>
+            CORE
+          </strong>
+
+        </div>
+
+
+        <div class="init-side-row">
+
+          <span>
+            IDENTITY
+          </span>
+
+          <strong>
+            SERVICES
+          </strong>
+
+        </div>
+
+
+        <div class="init-side-row">
+
+          <span>
+            SECURITY
+          </span>
+
+          <strong>
+            LAYER
+          </strong>
+
+        </div>
+
+
+        <div class="init-side-row">
+
+          <span>
+            AUTOMATION
+          </span>
+
+          <strong>
+            ENGINE
+          </strong>
+
+        </div>
+
+
+        <div class="init-side-signal init-side-signal-right">
+
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+
+        </div>
+
+      </aside>
+
+
     </div>
+
+
+    <footer class="init-bottom-strip">
+
+      <span>
+        SYS://TRANQUILINO/BOOT
+      </span>
+
+      <span>
+        PARALLEL SERVICE DEPLOYMENT
+      </span>
+
+      <span>
+        ENVIRONMENT SECURE
+      </span>
+
+    </footer>
+
 
   </div>
 
@@ -730,7 +905,7 @@
      MAIN TRANQUILINO OS
 ======================================================= -->
 
-<div
+<main
   id="main-os"
   class="main-os hidden"
 >
@@ -746,8 +921,8 @@
     <div class="system-brand">
 
       <img
-        src="./ct-logo.png"
-        alt="CT"
+        src="ct-logo.png"
+        alt="CT Logo"
         class="header-logo"
       >
 
@@ -767,7 +942,6 @@
     </div>
 
 
-
     <div class="system-state">
 
       <span class="online-dot"></span>
@@ -782,6 +956,7 @@
 
     </div>
 
+
   </header>
 
 
@@ -795,15 +970,14 @@
 
     <div class="hero-copy">
 
-      <div class="hero-label">
+      <p class="hero-label">
         SYSTEM OVERVIEW
-      </div>
+      </p>
 
 
       <h1>
 
         Systems.
-
         <br>
 
         <span>
@@ -818,13 +992,12 @@
 
 
       <p class="hero-description">
-        IT Systems Administrator building, standardizing,
-        supporting, and improving modern endpoint, identity,
-        infrastructure, security, and automation environments.
+        IT Systems Administrator focused on endpoint systems,
+        identity, infrastructure, automation, technical
+        standardization, and multi-site IT operations.
       </p>
 
     </div>
-
 
 
     <div class="hero-system-info">
@@ -894,7 +1067,9 @@
 
       </div>
 
+
     </div>
+
 
   </section>
 
@@ -914,7 +1089,7 @@
       </strong>
 
       <span>
-        CORE SYSTEM DOMAINS
+        CORE MODULES
       </span>
 
     </div>
@@ -958,699 +1133,707 @@
 
     </div>
 
+
   </section>
 
 
 
   <!-- ==================================================
-     CORE MODULES
-=================================================== -->
+       CORE MODULES
+  =================================================== -->
 
-<section class="modules-section">
-
-
-  <div class="section-heading">
-
-    <span class="section-number">
-      01
-    </span>
+  <section class="modules-section">
 
 
-    <div>
+    <div class="section-heading">
 
-      <p class="section-label">
-        SYSTEM ARCHITECTURE
-      </p>
-
-      <h2>
-        Core Modules
-      </h2>
-
-    </div>
-
-  </div>
-
-
-
-  <p class="section-intro">
-    Primary technical domains representing the systems,
-    platforms, and operational environments I work across.
-  </p>
-
-
-
-  <div class="module-grid">
-
-
-    <!-- ENDPOINT -->
-
-    <button
-      class="module-card"
-      data-projection="module"
-      data-module="endpoints"
-      type="button"
-    >
-
-      <span class="module-number">
+      <span class="section-number">
         01
       </span>
 
 
-      <div class="module-content">
+      <div>
 
-        <h3>
-          Endpoint Systems
-        </h3>
-
-        <p>
-          Intune / Autopilot / Compliance / Deployment
+        <p class="section-label">
+          SYSTEM ARCHITECTURE
         </p>
 
-      </div>
-
-
-      <span class="module-arrow">
-  OPEN
-</span>
-
-    </button>
-
-
-
-    <!-- IDENTITY -->
-
-    <button
-      class="module-card"
-      data-projection="module"
-      data-module="identity"
-      type="button"
-    >
-
-      <span class="module-number">
-        02
-      </span>
-
-
-      <div class="module-content">
-
-        <h3>
-          Identity + Access
-        </h3>
-
-        <p>
-          Entra ID / Access / MFA / Conditional Access
-        </p>
+        <h2>
+          Core Modules
+        </h2>
 
       </div>
-
-
-      <span class="module-arrow">
-        
-      </span>
-
-    </button>
-
-
-
-    <!-- INFRASTRUCTURE -->
-
-    <button
-      class="module-card"
-      data-projection="module"
-      data-module="infrastructure"
-      type="button"
-    >
-
-      <span class="module-number">
-        03
-      </span>
-
-
-      <div class="module-content">
-
-        <h3>
-          Infrastructure
-        </h3>
-
-        <p>
-          Servers / Networking / POS / Kiosks
-        </p>
-
-      </div>
-
-
-      <span class="module-arrow">
-        
-      </span>
-
-    </button>
-
-
-
-    <!-- AUTOMATION -->
-
-    <button
-      class="module-card"
-      data-projection="module"
-      data-module="automation"
-      type="button"
-    >
-
-      <span class="module-number">
-        04
-      </span>
-
-
-      <div class="module-content">
-
-        <h3>
-          Automation
-        </h3>
-
-        <p>
-          PowerShell / Provisioning / Standardization
-        </p>
-
-      </div>
-
-
-      <span class="module-arrow">
-        
-      </span>
-
-    </button>
-
-
-  </div>
-
-</section>
-
-
-
-  <!-- ==================================================
-     SYSTEM BUILDS / PROJECTS
-=================================================== -->
-
-<section class="builds-section">
-
-
-  <div class="section-heading">
-
-    <span class="section-number">
-      02
-    </span>
-
-
-    <div>
-
-      <p class="section-label">
-        DEPLOYMENT ARCHIVE
-      </p>
-
-      <h2>
-        System Builds
-      </h2>
 
     </div>
 
-  </div>
+
+    <p class="section-intro">
+      Primary technical domains representing the systems,
+      platforms, and operational environments I work across.
+    </p>
 
 
-
-  <p class="section-intro">
-    Selected technical projects focused on endpoint management,
-    identity, infrastructure, automation, deployment, and
-    operational standardization.
-  </p>
+    <div class="module-grid">
 
 
+      <button
+        class="module-card"
+        data-projection="module"
+        data-module="endpoints"
+        type="button"
+      >
 
-  <div class="build-grid">
-
-
-    <!-- BUILD 01 -->
-
-    <button
-      class="build-card"
-      data-projection="build"
-      data-build="autopilot"
-      type="button"
-    >
-
-      <div class="build-topline">
-
-        <span>
-          BUILD // 01
+        <span class="module-number">
+          01
         </span>
 
-        <span class="build-status">
-          ACTIVE
-        </span>
 
-      </div>
+        <div class="module-content">
 
+          <h3>
+            Endpoint Systems
+          </h3>
 
-      <h3>
-        Windows Autopilot Provisioning System
-      </h3>
-
-
-      <p>
-        Standardized cloud-driven Windows provisioning
-        and deployment workflow.
-      </p>
-
-
-      <div class="build-tags">
-
-        <span>INTUNE</span>
-        <span>AUTOPILOT</span>
-        <span>ENTRA ID</span>
-        <span>POWERSHELL</span>
-
-      </div>
-
-
-      <span class="build-open">
-  PROJECT BUILD
-</span>
-
-    </button>
-
-
-
-    <!-- BUILD 02 -->
-
-    <button
-      class="build-card"
-      data-projection="build"
-      data-build="endpoint-architecture"
-      type="button"
-    >
-
-      <div class="build-topline">
-
-        <span>
-          BUILD // 02
-        </span>
-
-        <span class="build-status">
-          ACTIVE
-        </span>
-
-      </div>
-
-
-      <h3>
-        Endpoint Management Architecture
-      </h3>
-
-
-      <p>
-        Centralized standards for configuration,
-        compliance, security, and application delivery.
-      </p>
-
-
-      <div class="build-tags">
-
-        <span>INTUNE</span>
-        <span>COMPLIANCE</span>
-        <span>SECURITY</span>
-        <span>WINDOWS</span>
-
-      </div>
-
-
-      <span class="build-open">
-        PROJECT BUILD 
-      </span>
-
-    </button>
-
-
-
-    <!-- BUILD 03 -->
-
-    <button
-      class="build-card"
-      data-projection="build"
-      data-build="automation-toolkit"
-      type="button"
-    >
-
-      <div class="build-topline">
-
-        <span>
-          BUILD // 03
-        </span>
-
-        <span class="build-status">
-          ACTIVE
-        </span>
-
-      </div>
-
-
-      <h3>
-        Endpoint Automation Toolkit
-      </h3>
-
-
-      <p>
-        Administrative tooling designed to automate
-        discovery, provisioning, updates, and validation.
-      </p>
-
-
-      <div class="build-tags">
-
-        <span>POWERSHELL</span>
-        <span>AUTOMATION</span>
-        <span>WINDOWS</span>
-
-      </div>
-
-
-      <span class="build-open">
-        PROJECT BUILD 
-      </span>
-
-    </button>
-
-
-
-    <!-- BUILD 04 -->
-
-    <button
-      class="build-card"
-      data-projection="build"
-      data-build="identity-security"
-      type="button"
-    >
-
-      <div class="build-topline">
-
-        <span>
-          BUILD // 04
-        </span>
-
-        <span class="build-status">
-          DESIGN
-        </span>
-
-      </div>
-
-
-      <h3>
-        Identity Security Architecture
-      </h3>
-
-
-      <p>
-        Modern identity controls centered around
-        authentication, access, and cloud resources.
-      </p>
-
-
-      <div class="build-tags">
-
-        <span>ENTRA ID</span>
-        <span>MFA</span>
-        <span>CONDITIONAL ACCESS</span>
-        <span>SSO</span>
-
-      </div>
-
-
-      <span class="build-open">
-        PROJECT BUILD 
-      </span>
-
-    </button>
-
-
-
-    <!-- BUILD 05 -->
-
-    <button
-      class="build-card"
-      data-projection="build"
-      data-build="infrastructure-standardization"
-      type="button"
-    >
-
-      <div class="build-topline">
-
-        <span>
-          BUILD // 05
-        </span>
-
-        <span class="build-status">
-          ACTIVE
-        </span>
-
-      </div>
-
-
-      <h3>
-        Multi-Site Infrastructure Standardization
-      </h3>
-
-
-      <p>
-        Structured approach to improving consistency
-        across distributed business technology.
-      </p>
-
-
-      <div class="build-tags">
-
-        <span>NETWORKING</span>
-        <span>SERVERS</span>
-        <span>POS</span>
-        <span>KIOSKS</span>
-
-      </div>
-
-
-      <span class="build-open">
-        PROJECT BUILD 
-      </span>
-
-    </button>
-
-
-
-    <!-- BUILD 06 -->
-
-    <button
-      class="build-card"
-      data-projection="build"
-      data-build="application-deployment"
-      type="button"
-    >
-
-      <div class="build-topline">
-
-        <span>
-          BUILD // 06
-        </span>
-
-        <span class="build-status">
-          ACTIVE
-        </span>
-
-      </div>
-
-
-      <h3>
-        Managed Application Deployment
-      </h3>
-
-
-      <p>
-        Packaging and deployment workflows for
-        applications across managed Windows endpoints.
-      </p>
-
-
-      <div class="build-tags">
-
-        <span>INTUNE</span>
-        <span>WIN32</span>
-        <span>DEPLOYMENT</span>
-
-      </div>
-
-
-      <span class="build-open">
-        PROJECT BUILD 
-      </span>
-
-    </button>
-
-
-  </div>
-
-</section>
-
-
-
-<!-- ==================================================
-     UNIVERSAL HOLOGRAPHIC PROJECTION SYSTEM
-=================================================== -->
-
-<div
-  id="projection-background"
-  class="projection-background"
-  aria-hidden="true"
-></div>
-
-
-<section
-  id="projection-layer"
-  class="projection-layer"
-  aria-hidden="true"
->
-
-
-  <!-- ==================================================
-       LIGHT EMITTED FROM SELECTED CARD
-  =================================================== -->
-
-  <div
-    id="projection-beam"
-    class="projection-beam"
-  ></div>
-
-
-
-  <!-- ==================================================
-       PROJECTED INTERFACE
-  =================================================== -->
-
-  <div class="projection-frame">
-
-
-    <!-- FRAME CONSTRUCTION -->
-
-    <div
-      class="
-        projection-frame-line
-        projection-frame-horizontal
-        projection-frame-top
-      "
-    ></div>
-
-
-    <div
-      class="
-        projection-frame-line
-        projection-frame-horizontal
-        projection-frame-bottom
-      "
-    ></div>
-
-
-    <div
-      class="
-        projection-frame-line
-        projection-frame-vertical
-        projection-frame-left
-      "
-    ></div>
-
-
-    <div
-      class="
-        projection-frame-line
-        projection-frame-vertical
-        projection-frame-right
-      "
-    ></div>
-
-
-
-    <!-- ==================================================
-         PROJECTED CONTENT
-    =================================================== -->
-
-    <div class="projection-content">
-
-
-      <header class="projection-header">
-
-
-        <div>
-
-          <p
-            id="projection-label"
-            class="projection-label"
-          >
-            SYSTEM PROJECTION
+          <p>
+            Intune / Autopilot / Compliance / Deployment
           </p>
-
-
-          <h2 id="projection-title">
-            System
-          </h2>
 
         </div>
 
 
+        <span class="module-arrow">
+          PROJECT
+        </span>
 
-        <div class="projection-state">
+      </button>
 
-          <span class="online-dot"></span>
 
-          <span id="projection-state-text">
-            SYSTEM ONLINE
+      <button
+        class="module-card"
+        data-projection="module"
+        data-module="identity"
+        type="button"
+      >
+
+        <span class="module-number">
+          02
+        </span>
+
+
+        <div class="module-content">
+
+          <h3>
+            Identity + Access
+          </h3>
+
+          <p>
+            Entra ID / Access / MFA / Conditional Access
+          </p>
+
+        </div>
+
+
+        <span class="module-arrow">
+          PROJECT
+        </span>
+
+      </button>
+
+
+      <button
+        class="module-card"
+        data-projection="module"
+        data-module="infrastructure"
+        type="button"
+      >
+
+        <span class="module-number">
+          03
+        </span>
+
+
+        <div class="module-content">
+
+          <h3>
+            Infrastructure
+          </h3>
+
+          <p>
+            Servers / Networking / POS / Kiosks
+          </p>
+
+        </div>
+
+
+        <span class="module-arrow">
+          PROJECT
+        </span>
+
+      </button>
+
+
+      <button
+        class="module-card"
+        data-projection="module"
+        data-module="automation"
+        type="button"
+      >
+
+        <span class="module-number">
+          04
+        </span>
+
+
+        <div class="module-content">
+
+          <h3>
+            Automation
+          </h3>
+
+          <p>
+            PowerShell / Provisioning / Standardization
+          </p>
+
+        </div>
+
+
+        <span class="module-arrow">
+          PROJECT
+        </span>
+
+      </button>
+
+
+    </div>
+
+
+  </section>
+
+
+
+  <!-- ==================================================
+       SYSTEM BUILDS
+  =================================================== -->
+
+  <section class="builds-section">
+
+
+    <div class="section-heading">
+
+      <span class="section-number">
+        02
+      </span>
+
+
+      <div>
+
+        <p class="section-label">
+          ACTIVE PROJECT ARCHIVE
+        </p>
+
+        <h2>
+          System Builds
+        </h2>
+
+      </div>
+
+    </div>
+
+
+    <p class="section-intro">
+      Systems, workflows, and technical environments
+      currently being built, standardized, or engineered.
+    </p>
+
+
+    <div class="build-grid">
+
+
+      <!-- BUILD 01 -->
+
+      <button
+        class="build-card"
+        data-projection="build"
+        data-build="autopilot"
+        type="button"
+      >
+
+        <div class="build-topline">
+
+          <span>
+            BUILD // 01
+          </span>
+
+          <span class="build-status">
+            ACTIVE
           </span>
 
         </div>
 
 
-      </header>
+        <h3>
+          Windows Autopilot Provisioning System
+        </h3>
 
 
+        <p>
+          Standardized cloud-driven Windows provisioning
+          and deployment workflow.
+        </p>
 
-      <!--
-        JavaScript injects either:
 
-        MODULE ARCHITECTURE
-        or
-        SYSTEM BUILD DETAIL
+        <div class="build-tags">
 
-        into this same projector.
-      -->
+          <span>
+            INTUNE
+          </span>
 
-      <div
-        id="projection-body"
-        class="projection-body"
-      ></div>
+          <span>
+            AUTOPILOT
+          </span>
+
+          <span>
+            ENTRA ID
+          </span>
+
+          <span>
+            POWERSHELL
+          </span>
+
+        </div>
+
+
+        <span class="build-open">
+          PROJECT BUILD
+        </span>
+
+      </button>
+
+
+      <!-- BUILD 02 -->
+
+      <button
+        class="build-card"
+        data-projection="build"
+        data-build="endpoint-architecture"
+        type="button"
+      >
+
+        <div class="build-topline">
+
+          <span>
+            BUILD // 02
+          </span>
+
+          <span class="build-status">
+            ACTIVE
+          </span>
+
+        </div>
+
+
+        <h3>
+          Endpoint Management Architecture
+        </h3>
+
+
+        <p>
+          Centralized standards for configuration,
+          compliance, security, and application delivery.
+        </p>
+
+
+        <div class="build-tags">
+
+          <span>
+            INTUNE
+          </span>
+
+          <span>
+            COMPLIANCE
+          </span>
+
+          <span>
+            SECURITY
+          </span>
+
+          <span>
+            WINDOWS
+          </span>
+
+        </div>
+
+
+        <span class="build-open">
+          PROJECT BUILD
+        </span>
+
+      </button>
+
+
+      <!-- BUILD 03 -->
+
+      <button
+        class="build-card"
+        data-projection="build"
+        data-build="automation-toolkit"
+        type="button"
+      >
+
+        <div class="build-topline">
+
+          <span>
+            BUILD // 03
+          </span>
+
+          <span class="build-status">
+            ACTIVE
+          </span>
+
+        </div>
+
+
+        <h3>
+          Endpoint Automation Toolkit
+        </h3>
+
+
+        <p>
+          Administrative tooling designed to automate
+          discovery, provisioning, updates, and validation.
+        </p>
+
+
+        <div class="build-tags">
+
+          <span>
+            POWERSHELL
+          </span>
+
+          <span>
+            AUTOMATION
+          </span>
+
+          <span>
+            WINDOWS
+          </span>
+
+        </div>
+
+
+        <span class="build-open">
+          PROJECT BUILD
+        </span>
+
+      </button>
+
+
+      <!-- BUILD 04 -->
+
+      <button
+        class="build-card"
+        data-projection="build"
+        data-build="identity-security"
+        type="button"
+      >
+
+        <div class="build-topline">
+
+          <span>
+            BUILD // 04
+          </span>
+
+          <span class="build-status">
+            ACTIVE
+          </span>
+
+        </div>
+
+
+        <h3>
+          Identity Security Architecture
+        </h3>
+
+
+        <p>
+          Authentication, MFA, Conditional Access,
+          application access, and cloud identity controls.
+        </p>
+
+
+        <div class="build-tags">
+
+          <span>
+            ENTRA ID
+          </span>
+
+          <span>
+            MFA
+          </span>
+
+          <span>
+            CONDITIONAL ACCESS
+          </span>
+
+          <span>
+            SSO
+          </span>
+
+        </div>
+
+
+        <span class="build-open">
+          PROJECT BUILD
+        </span>
+
+      </button>
+
+
+      <!-- BUILD 05 -->
+
+      <button
+        class="build-card"
+        data-projection="build"
+        data-build="infrastructure-standardization"
+        type="button"
+      >
+
+        <div class="build-topline">
+
+          <span>
+            BUILD // 05
+          </span>
+
+          <span class="build-status">
+            ACTIVE
+          </span>
+
+        </div>
+
+
+        <h3>
+          Multi-Site Infrastructure Standardization
+        </h3>
+
+
+        <p>
+          Structured approach to improving consistency
+          across distributed business technology.
+        </p>
+
+
+        <div class="build-tags">
+
+          <span>
+            NETWORKING
+          </span>
+
+          <span>
+            SERVERS
+          </span>
+
+          <span>
+            POS
+          </span>
+
+          <span>
+            KIOSKS
+          </span>
+
+        </div>
+
+
+        <span class="build-open">
+          PROJECT BUILD
+        </span>
+
+      </button>
+
+
+      <!-- BUILD 06 -->
+
+      <button
+        class="build-card"
+        data-projection="build"
+        data-build="application-deployment"
+        type="button"
+      >
+
+        <div class="build-topline">
+
+          <span>
+            BUILD // 06
+          </span>
+
+          <span class="build-status">
+            ACTIVE
+          </span>
+
+        </div>
+
+
+        <h3>
+          Managed Application Deployment
+        </h3>
+
+
+        <p>
+          Packaging and deployment workflows for
+          applications across managed Windows endpoints.
+        </p>
+
+
+        <div class="build-tags">
+
+          <span>
+            INTUNE
+          </span>
+
+          <span>
+            WIN32
+          </span>
+
+          <span>
+            DEPLOYMENT
+          </span>
+
+        </div>
+
+
+        <span class="build-open">
+          PROJECT BUILD
+        </span>
+
+      </button>
 
 
     </div>
 
-  </div>
+  </section>
 
 
 
   <!-- ==================================================
-       CLOSE
+       UNIVERSAL HOLOGRAPHIC PROJECTION SYSTEM
   =================================================== -->
 
-  <button
-    id="close-projection"
-    class="close-projection"
-    type="button"
+  <div
+    id="projection-background"
+    class="projection-background"
+    aria-hidden="true"
+  ></div>
+
+
+  <section
+    id="projection-layer"
+    class="projection-layer"
+    aria-hidden="true"
   >
-    CLOSE SYSTEM
-  </button>
 
 
-</section>
+    <div
+      id="projection-beam"
+      class="projection-beam"
+    ></div>
+
+
+    <div class="projection-frame">
+
+
+      <div
+        class="
+          projection-frame-line
+          projection-frame-horizontal
+          projection-frame-top
+        "
+      ></div>
+
+
+      <div
+        class="
+          projection-frame-line
+          projection-frame-horizontal
+          projection-frame-bottom
+        "
+      ></div>
+
+
+      <div
+        class="
+          projection-frame-line
+          projection-frame-vertical
+          projection-frame-left
+        "
+      ></div>
+
+
+      <div
+        class="
+          projection-frame-line
+          projection-frame-vertical
+          projection-frame-right
+        "
+      ></div>
+
+
+      <div class="projection-content">
+
+
+        <header class="projection-header">
+
+
+          <div>
+
+            <p
+              id="projection-label"
+              class="projection-label"
+            >
+              SYSTEM PROJECTION
+            </p>
+
+
+            <h2 id="projection-title">
+              System
+            </h2>
+
+          </div>
+
+
+          <div class="projection-state">
+
+            <span class="online-dot"></span>
+
+            <span id="projection-state-text">
+              SYSTEM ONLINE
+            </span>
+
+          </div>
+
+
+        </header>
+
+
+        <div
+          id="projection-body"
+          class="projection-body"
+        ></div>
+
+
+      </div>
+
+    </div>
+
+
+    <button
+      id="close-projection"
+      class="close-projection"
+      type="button"
+    >
+      CLOSE SYSTEM
+    </button>
+
+
+  </section>
 
 
 
@@ -1683,7 +1866,6 @@
     </div>
 
 
-
     <p class="section-intro">
       Career history and technical progression across
       systems administration, endpoint engineering,
@@ -1691,11 +1873,10 @@
     </p>
 
 
-
     <div class="timeline">
 
 
-      <div class="timeline-item">
+      <article class="timeline-item">
 
         <span class="timeline-year">
           2026
@@ -1715,17 +1896,16 @@
           <p>
             Endpoint management, identity administration,
             infrastructure, automation, security,
-            technical standardization, and multi-site
-            IT operations.
+            technical standardization,
+            and multi-site IT operations.
           </p>
 
         </div>
 
-      </div>
+      </article>
 
 
-
-      <div class="timeline-item">
+      <article class="timeline-item">
 
         <span class="timeline-year">
           2025
@@ -1739,19 +1919,19 @@
           </h3>
 
           <p>
-            Enterprise endpoint deployment, Intune,
-            Windows Autopilot, identity administration,
+            Enterprise endpoint deployment,
+            Intune, Windows Autopilot,
+            identity administration,
             networking, collaboration technology,
             and lifecycle support.
           </p>
 
         </div>
 
-      </div>
+      </article>
 
 
-
-      <div class="timeline-item">
+      <article class="timeline-item">
 
         <span class="timeline-year">
           2025
@@ -1765,18 +1945,20 @@
           </h3>
 
           <p>
-            Technical operations, AI integration,
-            documentation, workflow coordination,
-            ticket management, and knowledge systems.
+            Technical operations,
+            AI integration,
+            documentation,
+            workflow coordination,
+            ticket management,
+            and knowledge systems.
           </p>
 
         </div>
 
-      </div>
+      </article>
 
 
-
-      <div class="timeline-item">
+      <article class="timeline-item">
 
         <span class="timeline-year">
           2024
@@ -1791,15 +1973,18 @@
 
           <p>
             Enterprise healthcare endpoint deployment,
-            imaging, ServiceNow workflows, asset tracking,
-            inventory operations, and device lifecycle refresh.
+            imaging, ServiceNow workflows,
+            asset tracking, inventory operations,
+            and device lifecycle refresh.
           </p>
 
         </div>
 
-      </div>
+      </article>
+
 
     </div>
+
 
   </section>
 
@@ -1834,31 +2019,30 @@
     </div>
 
 
-
     <div class="creative-placeholder">
 
       <span class="workspace-tag">
         ARCHIVE ONLINE
       </span>
 
-
       <h3>
         Visual Projects + Experiments
       </h3>
 
-
       <p>
-        Graphic design projects, visual experiments,
-        portfolio artwork, and future creative work
+        Graphic design projects,
+        visual experiments,
+        portfolio artwork,
+        and future creative work
         will be indexed here.
       </p>
-
 
       <div class="archive-status">
         COLLECTION INITIALIZED
       </div>
 
     </div>
+
 
   </section>
 
@@ -1893,7 +2077,6 @@
     </div>
 
 
-
     <div class="contact-grid">
 
 
@@ -1910,12 +2093,7 @@
           Ctranq.it@gmail.com
         </strong>
 
-        <span>
-          
-        </span>
-
       </a>
-
 
 
       <a
@@ -1933,13 +2111,11 @@
           Charlie Tranquilino
         </strong>
 
-        <span>
-          
-        </span>
-
       </a>
 
+
     </div>
+
 
   </section>
 
@@ -1957,11 +2133,12 @@
       TRANQUILINO OS
 
       <span class="footer-muted">
-        // CHARLIE TRANQUILINO
+        //
       </span>
 
-    </div>
+      CHARLIE TRANQUILINO
 
+    </div>
 
 
     <div class="footer-center">
@@ -1973,15 +2150,11 @@
     </div>
 
 
-
     <div class="footer-links">
 
-      <a
-        href="mailto:Ctranq.it@gmail.com"
-      >
+      <a href="mailto:Ctranq.it@gmail.com">
         EMAIL
       </a>
-
 
       <a
         href="https://linkedin.com/in/charlie-tranquilino"
@@ -1993,18 +2166,23 @@
 
     </div>
 
+
   </footer>
 
-</div>
+
+</main>
 
 
 
 <!-- ======================================================
-     SCRIPT
+     JAVASCRIPT
 ======================================================= -->
 
 <script src="script.js"></script>
+
 <script src="projector.js"></script>
 
+
 </body>
+
 </html>
