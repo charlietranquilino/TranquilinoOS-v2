@@ -1,8 +1,7 @@
 // =========================================================
 // TRANQUILINO OS v2.0
 // MAIN SYSTEM CONTROLLER
-// DYNAMIC PARALLEL INITIALIZATION ENGINE
-// FULL REPLACEMENT
+// COMPLETE REWRITE
 // =========================================================
 
 
@@ -42,7 +41,7 @@ const telemetryMemory =
 
 
 // =========================================================
-// STATE
+// GLOBAL STATE
 // =========================================================
 
 let initializationRunning =
@@ -118,20 +117,25 @@ function updateStartupTelemetry() {
   if (telemetryCPU) {
 
     telemetryCPU.textContent =
-      `${randomBetween(
-        14,
-        31
-      )}%`;
+      `${
+        randomBetween(
+          14,
+          31
+        )
+      }%`;
 
   }
+
 
   if (telemetryMemory) {
 
     telemetryMemory.textContent =
-      `${randomBetween(
-        38,
-        52
-      )}%`;
+      `${
+        randomBetween(
+          38,
+          52
+        )
+      }%`;
 
   }
 
@@ -141,7 +145,7 @@ function updateStartupTelemetry() {
 updateStartupTelemetry();
 
 
-setInterval(
+window.setInterval(
   () => {
 
     if (
@@ -161,7 +165,7 @@ setInterval(
 
 
 // =========================================================
-// BUILD SERVICE OBJECTS
+// INITIALIZATION SERVICES
 // =========================================================
 
 function getInitializationServices() {
@@ -182,12 +186,19 @@ function getInitializationServices() {
 
 
   const keys = [
+
     "endpoint",
+
     "identity",
+
     "infrastructure",
+
     "automation",
+
     "security",
+
     "build-index"
+
   ];
 
 
@@ -242,7 +253,7 @@ function getInitializationServices() {
 
 
 // =========================================================
-// RESET
+// RESET INITIALIZATION
 // =========================================================
 
 function resetInitialization(
@@ -272,9 +283,13 @@ function resetInitialization(
 
 
       service.row.classList.remove(
+
         "init-active",
+
         "init-verifying",
+
         "init-complete"
+
       );
 
 
@@ -302,15 +317,18 @@ function resetInitialization(
       "init-overall-percent"
     );
 
+
   const overallBar =
     document.getElementById(
       "init-overall-bar"
     );
 
+
   const eta =
     document.getElementById(
       "init-eta"
     );
+
 
   const message =
     document.getElementById(
@@ -365,263 +383,129 @@ function getServicePhase(
   progress
 ) {
 
-  if (progress <= 0) {
+  if (
+    progress <=
+    0
+  ) {
 
     return {
-      name: "STANDBY",
-      className: ""
+
+      name:
+        "STANDBY",
+
+      className:
+        ""
+
     };
 
   }
 
 
-  if (progress < 10) {
+  if (
+    progress <
+    10
+  ) {
 
     return {
-      name: "QUEUED",
-      className: "init-active"
+
+      name:
+        "QUEUED",
+
+      className:
+        "init-active"
+
     };
 
   }
 
 
-  if (progress < 55) {
+  if (
+    progress <
+    55
+  ) {
 
     return {
-      name: "TRANSFERRING",
-      className: "init-active"
+
+      name:
+        "TRANSFERRING",
+
+      className:
+        "init-active"
+
     };
 
   }
 
 
-  if (progress < 78) {
+  if (
+    progress <
+    78
+  ) {
 
     return {
-      name: "MOUNTING",
-      className: "init-active"
+
+      name:
+        "MOUNTING",
+
+      className:
+        "init-active"
+
     };
 
   }
 
 
-  if (progress < 95) {
+  if (
+    progress <
+    95
+  ) {
 
     return {
-      name: "VALIDATING",
-      className: "init-verifying"
+
+      name:
+        "VALIDATING",
+
+      className:
+        "init-verifying"
+
     };
 
   }
 
 
-  if (progress < 100) {
+  if (
+    progress <
+    100
+  ) {
 
     return {
-      name: "VERIFYING",
-      className: "init-verifying"
+
+      name:
+        "VERIFYING",
+
+      className:
+        "init-verifying"
+
     };
 
   }
 
 
   return {
-    name: "ONLINE",
-    className: "init-complete"
+
+    name:
+      "ONLINE",
+
+    className:
+      "init-complete"
+
   };
 
 }
 
 
 // =========================================================
-// ACTIVATE INITIAL SERVICES
-//
-// Starts multiple services almost immediately.
-// =========================================================
-
-function activateInitialServices(
-  services
-) {
-
-  services.forEach(
-    (
-      service,
-      index
-    ) => {
-
-      if (index < 3) {
-
-        service.active =
-          true;
-
-        service.targetSpeed =
-          randomBetween(
-            11,
-            20
-          );
-
-      }
-
-    }
-  );
-
-}
-
-
-// =========================================================
-// DYNAMIC PRIORITY SHUFFLE
-//
-// This is the important part.
-//
-// Every cycle:
-//
-// - active services receive different target speeds
-// - fastest service changes
-// - slower service can suddenly become priority
-// - standby services join as capacity opens
-// =========================================================
-
-function reshuffleServicePriorities(
-  services
-) {
-
-  const unfinished =
-    services.filter(
-      service =>
-        !service.complete
-    );
-
-
-  if (!unfinished.length) {
-
-    return;
-
-  }
-
-
-  const active =
-    unfinished.filter(
-      service =>
-        service.active
-    );
-
-
-  const standby =
-    unfinished.filter(
-      service =>
-        !service.active
-    );
-
-
-  // Keep roughly 3-4 transfers alive simultaneously.
-
-  const desiredActive =
-    Math.min(
-      unfinished.length,
-      randomBetween(
-        3,
-        4
-      )
-    );
-
-
-  while (
-    active.length <
-      desiredActive &&
-    standby.length
-  ) {
-
-    const next =
-      standby.shift();
-
-
-    next.active =
-      true;
-
-
-    active.push(
-      next
-    );
-
-  }
-
-
-  // Pick one active transfer to be the temporary leader.
-
-  const leader =
-    active[
-      randomBetween(
-        0,
-        active.length - 1
-      )
-    ];
-
-
-  active.forEach(
-    service => {
-
-      if (
-        service === leader
-      ) {
-
-        service.targetSpeed =
-          randomBetween(
-            24,
-            34
-          );
-
-      }
-
-      else {
-
-        service.targetSpeed =
-          randomBetween(
-            8,
-            23
-          );
-
-      }
-
-    }
-  );
-
-
-  // Occasionally throttle one service heavily,
-  // making the visual priority visibly switch.
-
-  if (
-    active.length >= 3 &&
-    Math.random() < 0.55
-  ) {
-
-    const throttled =
-      active[
-        randomBetween(
-          0,
-          active.length - 1
-        )
-      ];
-
-
-    if (
-      throttled !== leader
-    ) {
-
-      throttled.targetSpeed =
-        randomBetween(
-          3,
-          8
-        );
-
-    }
-
-  }
-
-}
-
-
-// =========================================================
-// UPDATE SERVICE UI
+// SERVICE UI
 // =========================================================
 
 function updateServiceUI(
@@ -639,13 +523,19 @@ function updateServiceUI(
 
 
   service.row.classList.remove(
+
     "init-active",
+
     "init-verifying",
+
     "init-complete"
+
   );
 
 
-  if (phase.className) {
+  if (
+    phase.className
+  ) {
 
     service.row.classList.add(
       phase.className
@@ -657,7 +547,9 @@ function updateServiceUI(
   if (service.bar) {
 
     service.bar.style.width =
-      `${service.progress}%`;
+      `${
+        service.progress
+      }%`;
 
   }
 
@@ -666,10 +558,16 @@ function updateServiceUI(
 
     service.status.textContent =
       service.progress >= 100
+
         ? "100% ONLINE"
-        : `${Math.floor(
-            service.progress
-          )}% ${phase.name}`;
+
+        : `${
+            Math.floor(
+              service.progress
+            )
+          }% ${
+            phase.name
+          }`;
 
   }
 
@@ -677,10 +575,7 @@ function updateServiceUI(
 
 
 // =========================================================
-// SMOOTH SIDE SIGNALS
-//
-// Instead of snapping wildly,
-// heights smoothly transition toward new targets.
+// SIDE SIGNAL BARS
 // =========================================================
 
 function startSmoothSideSignals() {
@@ -693,7 +588,9 @@ function startSmoothSideSignals() {
     );
 
 
-  if (!bars.length) {
+  if (
+    !bars.length
+  ) {
 
     return;
 
@@ -703,21 +600,30 @@ function startSmoothSideSignals() {
   bars.forEach(
     bar => {
 
-      bar.dataset.signalHeight =
+      const startingHeight =
         randomBetween(
           25,
           75
         );
 
+
+      bar.dataset.signalHeight =
+        startingHeight;
+
+
+      bar.style.height =
+        `${startingHeight}%`;
+
+
       bar.style.transition =
-        "height 0.55s ease, opacity 0.55s ease";
+        "height .55s ease, opacity .55s ease";
 
     }
   );
 
 
   signalActivityTimer =
-    setInterval(
+    window.setInterval(
       () => {
 
         bars.forEach(
@@ -732,8 +638,8 @@ function startSmoothSideSignals() {
 
             const change =
               randomBetween(
-                -22,
-                22
+                -14,
+                14
               );
 
 
@@ -755,10 +661,9 @@ function startSmoothSideSignals() {
 
 
             bar.style.opacity =
-              (
-                0.45 +
-                next / 200
-              );
+              0.45 +
+              next /
+              200;
 
           }
         );
@@ -771,7 +676,7 @@ function startSmoothSideSignals() {
 
 
 // =========================================================
-// HEADER ACTIVITY
+// INITIALIZATION HEADER ACTIVITY
 // =========================================================
 
 function startHeaderActivity() {
@@ -796,26 +701,32 @@ function startHeaderActivity() {
 
 
   const states = [
+
     [
       "DEPLOYMENT ENGINE",
       "LIVE TRANSFER"
     ],
+
     [
       "SYSTEM BUS",
       "THREAD SYNC"
     ],
+
     [
       "TRANSFER ENGINE",
       "PARALLEL I/O"
     ],
+
     [
       "SERVICE CONTROL",
       "MOUNT SEQUENCE"
     ],
+
     [
       "VALIDATION CORE",
       "DEPLOYMENT ACTIVE"
     ]
+
   ];
 
 
@@ -824,7 +735,7 @@ function startHeaderActivity() {
 
 
   headerActivityTimer =
-    setInterval(
+    window.setInterval(
       () => {
 
         index =
@@ -870,10 +781,15 @@ function updateDeploymentSidePanel(
 
 
   const map = [
+
     services[0],
+
     services[1],
+
     services[4],
+
     services[3]
+
   ];
 
 
@@ -904,7 +820,8 @@ function updateDeploymentSidePanel(
 
 
       if (
-        service.progress <= 0
+        service.progress <=
+        0
       ) {
 
         strong.textContent =
@@ -912,8 +829,10 @@ function updateDeploymentSidePanel(
 
       }
 
+
       else if (
-        service.progress < 55
+        service.progress <
+        55
       ) {
 
         strong.textContent =
@@ -921,8 +840,10 @@ function updateDeploymentSidePanel(
 
       }
 
+
       else if (
-        service.progress < 78
+        service.progress <
+        78
       ) {
 
         strong.textContent =
@@ -930,14 +851,17 @@ function updateDeploymentSidePanel(
 
       }
 
+
       else if (
-        service.progress < 100
+        service.progress <
+        100
       ) {
 
         strong.textContent =
           "VERIFY";
 
       }
+
 
       else {
 
@@ -953,156 +877,157 @@ function updateDeploymentSidePanel(
 
 
 // =========================================================
-// UPDATE SUMMARY
+// PRIORITY SHUFFLE
 // =========================================================
 
-function updateSummary(
-  services,
-  elapsed,
-  expectedDuration
+function reshufflePriorities(
+  services
 ) {
 
-  const overallPercent =
-    document.getElementById(
-      "init-overall-percent"
-    );
-
-  const overallBar =
-    document.getElementById(
-      "init-overall-bar"
-    );
-
-  const eta =
-    document.getElementById(
-      "init-eta"
-    );
-
-  const message =
-    document.getElementById(
-      "init-transfer-message"
-    );
-
-
-  const total =
-    services.reduce(
-      (
-        sum,
-        service
-      ) =>
-        sum +
-        service.progress,
-      0
-    );
-
-
-  const overall =
-    Math.round(
-      total /
-      services.length
-    );
-
-
-  const active =
+  const unfinished =
     services.filter(
       service =>
-        service.active &&
         !service.complete
-    ).length;
-
-
-  const online =
-    services.filter(
-      service =>
-        service.complete
-    ).length;
-
-
-  if (overallPercent) {
-
-    overallPercent.textContent =
-      `${overall}%`;
-
-  }
-
-
-  if (overallBar) {
-
-    overallBar.style.width =
-      `${overall}%`;
-
-  }
-
-
-  const remaining =
-    Math.max(
-      0,
-      Math.ceil(
-        (
-          expectedDuration -
-          elapsed
-        ) /
-        1000
-      )
     );
 
 
-  if (eta) {
+  if (
+    !unfinished.length
+  ) {
 
-    eta.textContent =
-      `00:${String(
-        remaining
-      ).padStart(
-        2,
-        "0"
-      )}`;
+    return;
 
   }
 
 
-  if (message) {
+  unfinished.forEach(
+    service => {
 
-    if (
-      online ===
-      services.length
+      service.active =
+        true;
+
+
+      service.targetSpeed =
+        randomBetween(
+          7,
+          17
+        );
+
+    }
+  );
+
+
+  const leader =
+    unfinished[
+      randomBetween(
+        0,
+        unfinished.length -
+        1
+      )
+    ];
+
+
+  leader.targetSpeed =
+    randomBetween(
+      24,
+      34
+    );
+
+
+  if (
+    unfinished.length >
+    1
+  ) {
+
+    let secondary =
+      leader;
+
+
+    while (
+      secondary ===
+      leader
     ) {
 
-      message.textContent =
-        "ALL SERVICES VERIFIED // ENVIRONMENT ONLINE";
+      secondary =
+        unfinished[
+          randomBetween(
+            0,
+            unfinished.length -
+            1
+          )
+        ];
 
     }
 
-    else {
 
-      const leader =
-        services
-          .filter(
-            service =>
-              service.active &&
-              !service.complete
-          )
-          .sort(
-            (
-              a,
-              b
-            ) =>
-              b.speed -
-              a.speed
-          )[0];
+    secondary.targetSpeed =
+      randomBetween(
+        18,
+        25
+      );
+
+  }
 
 
-      if (leader) {
+  if (
+    unfinished.length >
+    2
+  ) {
 
-        message.textContent =
-          `${active} PARALLEL THREADS // PRIORITY ${leader.key.toUpperCase()}`;
+    const slowed =
+      unfinished[
+        randomBetween(
+          0,
+          unfinished.length -
+          1
+        )
+      ];
 
-      }
+
+    if (
+      slowed !==
+      leader
+    ) {
+
+      slowed.targetSpeed =
+        randomBetween(
+          4,
+          9
+        );
 
     }
 
   }
 
+}
 
-  updateDeploymentSidePanel(
+
+// =========================================================
+// INITIAL SERVICE START
+// =========================================================
+
+function activateInitialServices(
+  services
+) {
+
+  services.forEach(
+    service => {
+
+      service.active =
+        true;
+
+
+      service.targetSpeed =
+        randomBetween(
+          7,
+          17
+        );
+
+    }
+  );
+
+
+  reshufflePriorities(
     services
   );
 
@@ -1110,10 +1035,7 @@ function updateSummary(
 
 
 // =========================================================
-// DYNAMIC PARALLEL ENGINE
-//
-// ALL SIX SERVICES PARTICIPATE EARLY.
-// SPEED PRIORITY ROTATES DURING THE TRANSFER.
+// DYNAMIC INITIALIZATION
 // =========================================================
 
 function runDynamicInitialization(
@@ -1123,7 +1045,9 @@ function runDynamicInitialization(
   return new Promise(
     resolve => {
 
-      if (!services.length) {
+      if (
+        !services.length
+      ) {
 
         resolve();
 
@@ -1132,239 +1056,29 @@ function runDynamicInitialization(
       }
 
 
-      const startTime =
-        performance.now();
-
-
-      let lastFrame =
-        startTime;
-
-
-      let lastPriorityChange =
-        startTime;
-
-
-      let priorityInterval =
-        700;
-
-
-      // ---------------------------------------------------
-      // START EVERY SERVICE.
-      //
-      // They begin at different speeds instead of waiting
-      // for earlier services to finish.
-      // ---------------------------------------------------
-
-      services.forEach(
-        (
-          service,
-          index
-        ) => {
-
-          service.active =
-            true;
-
-
-          service.complete =
-            false;
-
-
-          // Slight initial staggering in progress,
-          // but every service is active immediately.
-
-          service.progress =
-            Math.max(
-              0,
-              4 -
-              index * 0.65
-            );
-
-
-          service.speed =
-            0;
-
-
-          service.targetSpeed =
-            randomBetween(
-              5,
-              15
-            );
-
-
-          updateServiceUI(
-            service
-          );
-
-        }
+      activateInitialServices(
+        services
       );
 
 
-      // Give the first few services an initial advantage,
-      // without putting Security / Build Index to sleep.
-
-      if (services[0]) {
-        services[0].targetSpeed = 22;
-      }
-
-      if (services[1]) {
-        services[1].targetSpeed = 18;
-      }
-
-      if (services[2]) {
-        services[2].targetSpeed = 14;
-      }
-
-      if (services[3]) {
-        services[3].targetSpeed = 11;
-      }
-
-      if (services[4]) {
-        services[4].targetSpeed = 8;
-      }
-
-      if (services[5]) {
-        services[5].targetSpeed = 6;
-      }
+      let lastFrame =
+        performance.now();
 
 
-      function changePriorities() {
-
-        const unfinished =
-          services.filter(
-            service =>
-              !service.complete
-          );
+      let lastPriorityChange =
+        lastFrame;
 
 
-        if (!unfinished.length) {
-
-          return;
-
-        }
-
-
-        // -----------------------------------------------
-        // EVERY SERVICE REMAINS MOVING.
-        // -----------------------------------------------
-
-        unfinished.forEach(
-          service => {
-
-            service.active =
-              true;
-
-
-            service.targetSpeed =
-              randomBetween(
-                7,
-                17
-              );
-
-          }
+      let priorityInterval =
+        randomBetween(
+          620,
+          900
         );
 
 
-        // -----------------------------------------------
-        // PICK A NEW FASTEST TRANSFER.
-        // -----------------------------------------------
-
-        const leader =
-          unfinished[
-            randomBetween(
-              0,
-              unfinished.length - 1
-            )
-          ];
-
-
-        leader.targetSpeed =
-          randomBetween(
-            24,
-            34
-          );
-
-
-        // -----------------------------------------------
-        // PICK A SECOND HIGH-PRIORITY SERVICE.
-        // -----------------------------------------------
-
-        if (
-          unfinished.length >
-          1
-        ) {
-
-          let secondary =
-            leader;
-
-
-          while (
-            secondary === leader
-          ) {
-
-            secondary =
-              unfinished[
-                randomBetween(
-                  0,
-                  unfinished.length - 1
-                )
-              ];
-
-          }
-
-
-          secondary.targetSpeed =
-            randomBetween(
-              18,
-              25
-            );
-
-        }
-
-
-        // -----------------------------------------------
-        // ONE SERVICE MAY TEMPORARILY SLOW,
-        // BUT NEVER STOPS.
-        // -----------------------------------------------
-
-        if (
-          unfinished.length >
-          2
-        ) {
-
-          const slowed =
-            unfinished[
-              randomBetween(
-                0,
-                unfinished.length - 1
-              )
-            ];
-
-
-          if (
-            slowed !== leader
-          ) {
-
-            slowed.targetSpeed =
-              randomBetween(
-                4,
-                9
-              );
-
-          }
-
-        }
-
-
-        priorityInterval =
-          randomBetween(
-            620,
-            900
-          );
-
-      }
-
-
-      function frame(now) {
+      function frame(
+        now
+      ) {
 
         const delta =
           Math.min(
@@ -1381,28 +1095,29 @@ function runDynamicInitialization(
           now;
 
 
-        // -----------------------------------------------
-        // PERIODIC SPEED / PRIORITY ROTATION
-        // -----------------------------------------------
-
         if (
           now -
           lastPriorityChange >=
           priorityInterval
         ) {
 
-          changePriorities();
+          reshufflePriorities(
+            services
+          );
 
 
           lastPriorityChange =
             now;
 
+
+          priorityInterval =
+            randomBetween(
+              620,
+              900
+            );
+
         }
 
-
-        // -----------------------------------------------
-        // UPDATE ALL SIX TRANSFERS
-        // -----------------------------------------------
 
         services.forEach(
           service => {
@@ -1415,9 +1130,6 @@ function runDynamicInitialization(
 
             }
 
-
-            // Smooth acceleration/deceleration.
-            // Prevents bars from jerking between speeds.
 
             const smoothing =
               1 -
@@ -1439,12 +1151,9 @@ function runDynamicInitialization(
               service.speed;
 
 
-            // -------------------------------------------
-            // VALIDATION SLOWDOWN
-            // -------------------------------------------
-
             if (
-              service.progress >= 88
+              service.progress >=
+              88
             ) {
 
               actualSpeed *=
@@ -1454,7 +1163,8 @@ function runDynamicInitialization(
 
 
             if (
-              service.progress >= 96
+              service.progress >=
+              96
             ) {
 
               actualSpeed =
@@ -1471,12 +1181,9 @@ function runDynamicInitialization(
               delta;
 
 
-            // -------------------------------------------
-            // COMPLETE
-            // -------------------------------------------
-
             if (
-              service.progress >= 100
+              service.progress >=
+              100
             ) {
 
               service.progress =
@@ -1509,139 +1216,9 @@ function runDynamicInitialization(
         );
 
 
-        // -----------------------------------------------
-        // SUMMARY / ETA
-        // -----------------------------------------------
-
-        const elapsed =
-          now -
-          startTime;
-
-
-        const totalProgress =
-          services.reduce(
-            (
-              total,
-              service
-            ) =>
-              total +
-              service.progress,
-            0
-          );
-
-
-        const overall =
-          totalProgress /
-          services.length;
-
-
-        // Dynamic ETA based on remaining progress instead
-        // of the old fixed sequence timing.
-
-        const unfinished =
-          services.filter(
-            service =>
-              !service.complete
-          );
-
-
-        const remainingProgress =
-          unfinished.reduce(
-            (
-              total,
-              service
-            ) =>
-              total +
-              (
-                100 -
-                service.progress
-              ),
-            0
-          );
-
-
-        const currentRate =
-          unfinished.reduce(
-            (
-              total,
-              service
-            ) =>
-              total +
-              Math.max(
-                service.speed,
-                1
-              ),
-            0
-          );
-
-
-        const estimatedSeconds =
-          currentRate > 0
-            ? Math.ceil(
-                remainingProgress /
-                currentRate
-              )
-            : 0;
-
-
-        const overallPercent =
-          document.getElementById(
-            "init-overall-percent"
-          );
-
-
-        const overallBar =
-          document.getElementById(
-            "init-overall-bar"
-          );
-
-
-        const eta =
-          document.getElementById(
-            "init-eta"
-          );
-
-
-        const message =
-          document.getElementById(
-            "init-transfer-message"
-          );
-
-
-        if (overallPercent) {
-
-          overallPercent.textContent =
-            `${Math.round(
-              overall
-            )}%`;
-
-        }
-
-
-        if (overallBar) {
-
-          overallBar.style.width =
-            `${overall}%`;
-
-        }
-
-
-        if (eta) {
-
-          eta.textContent =
-            `00:${
-              String(
-                Math.min(
-                  estimatedSeconds,
-                  99
-                )
-              ).padStart(
-                2,
-                "0"
-              )
-            }`;
-
-        }
+        updateInitializationSummary(
+          services
+        );
 
 
         updateDeploymentSidePanel(
@@ -1649,93 +1226,12 @@ function runDynamicInitialization(
         );
 
 
-        if (message) {
-
-          const moving =
-            unfinished
-              .slice()
-              .sort(
-                (
-                  a,
-                  b
-                ) =>
-                  b.speed -
-                  a.speed
-              );
-
-
-          const leader =
-            moving[0];
-
-
-          const secondary =
-            moving[1];
-
-
-          if (
-            unfinished.length ===
-            0
-          ) {
-
-            message.textContent =
-              "ALL SERVICES VERIFIED // ENVIRONMENT ONLINE";
-
-          }
-
-
-          else if (
-            leader &&
-            secondary
-          ) {
-
-            message.textContent =
-              `${
-                unfinished.length
-              } ACTIVE THREADS // PRIORITY ${
-                leader.key.toUpperCase()
-              } + ${
-                secondary.key.toUpperCase()
-              }`;
-
-          }
-
-        }
-
-
-        // -----------------------------------------------
-        // FINISHED?
-        // -----------------------------------------------
-
         if (
           services.every(
             service =>
               service.complete
           )
         ) {
-
-          if (overallPercent) {
-
-            overallPercent.textContent =
-              "100%";
-
-          }
-
-
-          if (overallBar) {
-
-            overallBar.style.width =
-              "100%";
-
-          }
-
-
-          if (eta) {
-
-            eta.textContent =
-              "00:00";
-
-          }
-
 
           resolve();
 
@@ -1762,16 +1258,210 @@ function runDynamicInitialization(
 
 
 // =========================================================
-// STOP ACTIVITY
+// INITIALIZATION SUMMARY
+// =========================================================
+
+function updateInitializationSummary(
+  services
+) {
+
+  const overallPercent =
+    document.getElementById(
+      "init-overall-percent"
+    );
+
+
+  const overallBar =
+    document.getElementById(
+      "init-overall-bar"
+    );
+
+
+  const eta =
+    document.getElementById(
+      "init-eta"
+    );
+
+
+  const message =
+    document.getElementById(
+      "init-transfer-message"
+    );
+
+
+  const totalProgress =
+    services.reduce(
+      (
+        total,
+        service
+      ) =>
+        total +
+        service.progress,
+      0
+    );
+
+
+  const overall =
+    totalProgress /
+    services.length;
+
+
+  const unfinished =
+    services.filter(
+      service =>
+        !service.complete
+    );
+
+
+  const remainingProgress =
+    unfinished.reduce(
+      (
+        total,
+        service
+      ) =>
+        total +
+        (
+          100 -
+          service.progress
+        ),
+      0
+    );
+
+
+  const currentRate =
+    unfinished.reduce(
+      (
+        total,
+        service
+      ) =>
+        total +
+        Math.max(
+          service.speed,
+          1
+        ),
+      0
+    );
+
+
+  const estimatedSeconds =
+    currentRate >
+    0
+
+      ? Math.ceil(
+          remainingProgress /
+          currentRate
+        )
+
+      : 0;
+
+
+  if (overallPercent) {
+
+    overallPercent.textContent =
+      `${
+        Math.round(
+          overall
+        )
+      }%`;
+
+  }
+
+
+  if (overallBar) {
+
+    overallBar.style.width =
+      `${overall}%`;
+
+  }
+
+
+  if (eta) {
+
+    eta.textContent =
+      `00:${
+        String(
+          Math.min(
+            estimatedSeconds,
+            99
+          )
+        ).padStart(
+          2,
+          "0"
+        )
+      }`;
+
+  }
+
+
+  if (message) {
+
+    const moving =
+      unfinished
+        .slice()
+        .sort(
+          (
+            a,
+            b
+          ) =>
+            b.speed -
+            a.speed
+        );
+
+
+    const leader =
+      moving[0];
+
+
+    const secondary =
+      moving[1];
+
+
+    if (
+      unfinished.length ===
+      0
+    ) {
+
+      message.textContent =
+        "ALL SERVICES VERIFIED // ENVIRONMENT ONLINE";
+
+    }
+
+
+    else if (
+      leader &&
+      secondary
+    ) {
+
+      message.textContent =
+        `${
+          unfinished.length
+        } ACTIVE THREADS // PRIORITY ${
+          leader.key.toUpperCase()
+        } + ${
+          secondary.key.toUpperCase()
+        }`;
+
+    }
+
+  }
+
+}
+
+
+// =========================================================
+// STOP INITIALIZATION ACTIVITY
 // =========================================================
 
 function stopInitializationActivity() {
 
-  if (headerActivityTimer) {
+  if (
+    headerActivityTimer
+  ) {
 
     clearInterval(
       headerActivityTimer
     );
+
 
     headerActivityTimer =
       null;
@@ -1779,11 +1469,14 @@ function stopInitializationActivity() {
   }
 
 
-  if (signalActivityTimer) {
+  if (
+    signalActivityTimer
+  ) {
 
     clearInterval(
       signalActivityTimer
     );
+
 
     signalActivityTimer =
       null;
@@ -1824,7 +1517,9 @@ async function initializeEnvironment() {
     true;
 
 
-  if (initializeButton) {
+  if (
+    initializeButton
+  ) {
 
     initializeButton.disabled =
       true;
@@ -1881,8 +1576,11 @@ async function initializeEnvironment() {
 
 
   initializationScreen.classList.remove(
+
     "hidden",
+
     "initialization-exit"
+
   );
 
 
@@ -1901,6 +1599,7 @@ async function initializeEnvironment() {
 
 
   startHeaderActivity();
+
 
   startSmoothSideSignals();
 
@@ -1986,8 +1685,11 @@ async function initializeEnvironment() {
 
 
   initializationScreen.classList.remove(
+
     "initialization-enter",
+
     "initialization-exit"
+
   );
 
 
@@ -2018,8 +1720,11 @@ async function initializeEnvironment() {
 
 
   showNotification(
+
     "SYSTEM ONLINE",
+
     "TranquilinoOS environment initialized"
+
   );
 
 }
@@ -2029,11 +1734,16 @@ async function initializeEnvironment() {
 // INITIALIZE BUTTON
 // =========================================================
 
-if (initializeButton) {
+if (
+  initializeButton
+) {
 
   initializeButton.addEventListener(
+
     "click",
+
     initializeEnvironment
+
   );
 
 }
@@ -2059,20 +1769,26 @@ document
 
 
           card.style.setProperty(
+
             "--mouse-x",
+
             `${
               event.clientX -
               rect.left
             }px`
+
           );
 
 
           card.style.setProperty(
+
             "--mouse-y",
+
             `${
               event.clientY -
               rect.top
             }px`
+
           );
 
         }
@@ -2108,28 +1824,45 @@ document
 const revealElements =
   document.querySelectorAll(
     [
+
       ".hero",
+
       ".system-metrics",
+
       ".modules-section",
+
       ".builds-section",
+
       ".experience-section",
+
       ".creative-section",
+
       ".contact-section",
+
+      ".resume-section",
+
       ".system-footer"
-    ].join(",")
+
+    ].join(
+      ","
+    )
   );
 
 
 revealElements.forEach(
-  element =>
+  element => {
+
     element.classList.add(
       "section-reveal"
-    )
+    );
+
+  }
 );
 
 
 if (
-  "IntersectionObserver" in window
+  "IntersectionObserver" in
+  window
 ) {
 
   const observer =
@@ -2162,25 +1895,32 @@ if (
 
       },
       {
-        threshold: 0.08,
+
+        threshold:
+          0.08,
+
         rootMargin:
           "0px 0px -35px 0px"
+
       }
     );
 
 
   revealElements.forEach(
-    element =>
+    element => {
+
       observer.observe(
         element
-      )
+      );
+
+    }
   );
 
 }
 
 
 // =========================================================
-// NOTIFICATION
+// NOTIFICATION SYSTEM
 // =========================================================
 
 function showNotification(
@@ -2188,15 +1928,17 @@ function showNotification(
   message
 ) {
 
-  const old =
+  const oldNotification =
     document.querySelector(
       ".system-notification"
     );
 
 
-  if (old) {
+  if (
+    oldNotification
+  ) {
 
-    old.remove();
+    oldNotification.remove();
 
   }
 
@@ -2213,9 +1955,13 @@ function showNotification(
 
   notification.innerHTML = `
 
-    <span class="notification-dot"></span>
+    <span
+      class="notification-dot"
+    ></span>
 
-    <div class="notification-copy">
+    <div
+      class="notification-copy"
+    >
 
       <strong>
         ${title}
@@ -2236,14 +1982,17 @@ function showNotification(
 
 
   requestAnimationFrame(
-    () =>
+    () => {
+
       notification.classList.add(
         "notification-visible"
-      )
+      );
+
+    }
   );
 
 
-  setTimeout(
+  window.setTimeout(
     () => {
 
       notification.classList.remove(
@@ -2251,9 +2000,12 @@ function showNotification(
       );
 
 
-      setTimeout(
-        () =>
-          notification.remove(),
+      window.setTimeout(
+        () => {
+
+          notification.remove();
+
+        },
         300
       );
 
@@ -2269,7 +2021,7 @@ window.showNotification =
 
 
 // =========================================================
-// NOTIFICATION STYLES
+// NOTIFICATION STYLE INJECTION
 // =========================================================
 
 const notificationStyles =
@@ -2380,4 +2132,315 @@ notificationStyles.textContent = `
 
 document.head.appendChild(
   notificationStyles
+);
+
+
+// =========================================================
+// INTERACTIVE RESUME VIEWER
+// TWO-PAGE FLIP SYSTEM
+// =========================================================
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    const openResumeViewer =
+      document.getElementById(
+        "open-resume-viewer"
+      );
+
+
+    const closeResumeViewer =
+      document.getElementById(
+        "close-resume-viewer"
+      );
+
+
+    const resumeViewer =
+      document.getElementById(
+        "resume-viewer"
+      );
+
+
+    const resumeBook =
+      document.getElementById(
+        "resume-book"
+      );
+
+
+    const pageIndicator =
+      document.getElementById(
+        "resume-page-indicator"
+      );
+
+
+    if (
+      !openResumeViewer ||
+      !closeResumeViewer ||
+      !resumeViewer ||
+      !resumeBook
+    ) {
+
+      return;
+
+    }
+
+
+    let currentPage =
+      1;
+
+
+    let flipping =
+      false;
+
+
+    function updatePageState() {
+
+      if (
+        currentPage ===
+        2
+      ) {
+
+        resumeBook.classList.add(
+          "flipped"
+        );
+
+
+        if (
+          pageIndicator
+        ) {
+
+          pageIndicator.textContent =
+            "PAGE 02 // 02";
+
+        }
+
+      }
+
+
+      else {
+
+        resumeBook.classList.remove(
+          "flipped"
+        );
+
+
+        if (
+          pageIndicator
+        ) {
+
+          pageIndicator.textContent =
+            "PAGE 01 // 02";
+
+        }
+
+      }
+
+    }
+
+
+    function openResume() {
+
+      currentPage =
+        1;
+
+
+      flipping =
+        false;
+
+
+      resumeBook.classList.remove(
+
+        "flipped",
+
+        "resume-rotated"
+
+      );
+
+
+      updatePageState();
+
+
+      resumeViewer.classList.add(
+        "active"
+      );
+
+
+      resumeViewer.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+
+      document.body.style.overflow =
+        "hidden";
+
+    }
+
+
+    function closeResume() {
+
+      resumeViewer.classList.remove(
+        "active"
+      );
+
+
+      resumeViewer.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+
+      currentPage =
+        1;
+
+
+      flipping =
+        false;
+
+
+      resumeBook.classList.remove(
+
+        "flipped",
+
+        "resume-rotated"
+
+      );
+
+
+      updatePageState();
+
+
+      document.body.style.overflow =
+        "";
+
+    }
+
+
+    function flipResume() {
+
+      if (
+        flipping
+      ) {
+
+        return;
+
+      }
+
+
+      flipping =
+        true;
+
+
+      currentPage =
+        currentPage ===
+        1
+
+          ? 2
+
+          : 1;
+
+
+      updatePageState();
+
+
+      window.setTimeout(
+        () => {
+
+          flipping =
+            false;
+
+        },
+        1500
+      );
+
+    }
+
+
+    openResumeViewer.addEventListener(
+
+      "click",
+
+      openResume
+
+    );
+
+
+    closeResumeViewer.addEventListener(
+
+      "click",
+
+      closeResume
+
+    );
+
+
+    resumeBook.addEventListener(
+
+      "click",
+
+      flipResume
+
+    );
+
+
+    resumeBook.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key ===
+          "Enter" ||
+          event.key ===
+          " "
+        ) {
+
+          event.preventDefault();
+
+
+          flipResume();
+
+        }
+
+      }
+    );
+
+
+    resumeViewer.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target ===
+          resumeViewer
+        ) {
+
+          closeResume();
+
+        }
+
+      }
+    );
+
+
+    document.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key ===
+          "Escape" &&
+          resumeViewer.classList.contains(
+            "active"
+          )
+        ) {
+
+          closeResume();
+
+        }
+
+      }
+    );
+
+  }
 );
