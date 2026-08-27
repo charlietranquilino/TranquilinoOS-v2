@@ -2119,6 +2119,118 @@
 
   </section>
 
+<!-- ======================================================
+     RESUME ARCHIVE
+======================================================= -->
+
+<section
+  class="resume-section"
+  id="resume"
+>
+
+  <div class="section-heading">
+
+    <span class="section-number">
+      06
+    </span>
+
+    <div>
+
+      <p class="section-label">
+        PERSONNEL FILE
+      </p>
+
+      <h2>
+        Resume Archive
+      </h2>
+
+    </div>
+
+  </div>
+
+
+  <p class="section-intro">
+
+    Conventional career documentation for recruiters,
+    hiring managers, and anyone who prefers the standard format.
+
+  </p>
+
+
+  <div class="resume-console">
+
+    <div class="resume-console-grid">
+
+
+      <div>
+
+        <span class="resume-console-label">
+          SYS://CAREER/RESUME.PDF
+        </span>
+
+        <h3>
+          Professional Resume
+        </h3>
+
+        <p>
+
+          Systems administration, endpoint engineering,
+          infrastructure operations, identity,
+          automation, deployment, and enterprise
+          lifecycle experience.
+
+        </p>
+
+
+        <div class="resume-meta">
+
+          <span>
+            SYSTEMS ADMINISTRATION
+          </span>
+
+          <span>
+            ENDPOINT ENGINEERING
+          </span>
+
+          <span>
+            AUTOMATION
+          </span>
+
+          <span>
+            INFRASTRUCTURE
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="resume-actions">
+
+    <button
+    id="open-resume-viewer"
+    class="resume-action"
+    type="button"
+>
+    VIEW RESUME
+</button>
+
+    <a
+  href="Charlie Tranquilino's Resume.pdf"
+  download="Charlie Tranquilino's Resume.pdf"
+  class="resume-action"
+>
+  DOWNLOAD PDF
+</a>
+
+</div>
+
+
+    </div>
+
+  </div>
+
+</section>
 
 
   <!-- ==================================================
@@ -2182,7 +2294,128 @@
 
 <script src="projector.js"></script>
 
+<!-- ======================================================
+     INTERACTIVE RESUME VIEWER
+     TWO-PAGE FLIP SYSTEM
+======================================================= -->
+
+<div
+  id="resume-viewer"
+  class="resume-viewer"
+  aria-hidden="true"
+>
+
+  <!-- ================================================
+       CLOSE
+  ================================================= -->
+
+  <button
+    id="close-resume-viewer"
+    class="resume-viewer-close"
+    type="button"
+  >
+    CLOSE FILE
+  </button>
+
+
+  <!-- ================================================
+       VIEWER STAGE
+  ================================================= -->
+
+  <div class="resume-viewer-stage">
+
+
+    <div class="resume-viewer-status">
+
+      <span class="online-dot"></span>
+
+      <span>
+        PERSONNEL FILE // INTERACTIVE VIEW
+      </span>
+
+    </div>
+
+
+    <!-- ================================================
+         RESUME BOOK
+    ================================================= -->
+
+    <div
+      id="resume-book"
+      class="resume-book"
+      role="button"
+      tabindex="0"
+      aria-label="Flip resume between page 1 and page 2"
+    >
+
+
+      <!-- ==============================================
+           PAGE 01
+      =============================================== -->
+
+      <div class="resume-page resume-page-front">
+
+  <img
+    src="Charlie Tranquilino_s Resume1.PNG"
+    alt="Charlie Tranquilino Resume Page 1"
+    draggable="false"
+  >
+
+</div>
+
+
+<div class="resume-page resume-page-back">
+
+
+      <!-- ==============================================
+           PAGE 02
+      =============================================== -->
+  <img
+    src="Charlie Tranquilino_s Resume2.PNG"
+    alt="Charlie Tranquilino Resume Page 2"
+    draggable="false"
+  >
+
+</div>
+
+
+    </div>
+
+
+    <!-- ================================================
+         PAGE STATE
+    ================================================= -->
+
+    <div class="resume-viewer-controls">
+
+      <span
+        id="resume-page-indicator"
+        class="resume-page-indicator"
+      >
+        PAGE 01 // 02
+      </span>
+
+
+      <span class="resume-viewer-instruction">
+        CLICK DOCUMENT // FLIP PAGE
+      </span>
+
+    </div>
+
+
+  </div>
+
+</div>
+
 
 </body>
 
 </html>
+
+</body>
+
+</html>
+
+
+
+
